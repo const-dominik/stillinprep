@@ -2,7 +2,7 @@
 
 import styles from "./styles.module.scss";
 import { initialBoard, pieceAssets } from "@/app/utils";
-import type { Chessboard, PiecePosition } from "@/app/types";
+import type { Chessboard, PiecePosition, Player } from "@/app/types";
 import { Pieces } from "@/app/types";
 import Image from "next/image";
 import { useState } from "react";
