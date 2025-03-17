@@ -41,7 +41,7 @@ const Chessboard = () => {
     const [currentPiece, setCurrentPiece] = useState<PiecePosition | null>(
         null
     );
-    console.log("xd");
+
     const handleSquareClick = (x: number, y: number) => {
         if (currentPiece === null) {
             if (board[y][x] === Pieces.EMPTY) return;
