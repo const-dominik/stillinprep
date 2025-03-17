@@ -17,3 +17,5 @@ export const enum Pieces {
 }
 
 export type Chessboard = Pieces[][];
+export type Player = "white" | "black";
+export type PiecePosition = [y: number, x: number];

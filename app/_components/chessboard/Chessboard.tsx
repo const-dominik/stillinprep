@@ -2,7 +2,8 @@
 
 import styles from "./styles.module.scss";
 import { initialBoard, pieceAssets } from "@/app/utils";
-import { type Chessboard, Pieces } from "@/app/types";
+import type { Chessboard, Player, PiecePosition } from "@/app/types";
+import { Pieces } from "@/app/types";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -14,11 +15,32 @@ type SquareProps = {
     onClick: (x: number, y: number) => void;
 };
 
+const getLegalMoves = (
+    board: Chessboard,
+    position: PiecePosition
+): PiecePosition[] => {
+    const [y, x] = position;
+    const piece = board[y][x];
+
+    return [[0, 0]];
+};
+
+const isMoveLegal = (
+    board: Chessboard,
+    startPosition: PiecePosition,
+    endPosition: PiecePosition
+): boolean => {
+    const legalMoves = getLegalMoves(board, startPosition);
+    return !!legalMoves.find(
+        ([y, x]) => y === endPosition[0] && x === endPosition[1]
+    );
+};
+
 const Chessboard = () => {
-    const [board, setBoard] = useState<Chessboard>(initialBoard);
-    const [currentPiece, setCurrentPiece] = useState<
-        [y: number, x: number] | null
-    >(null);
+    const [board, setBoard] = useState(initialBoard);
+    const [currentPiece, setCurrentPiece] = useState<PiecePosition | null>(
+        null
+    );
 
     const handleSquareClick = (x: number, y: number) => {
         if (currentPiece === null) {
@@ -27,12 +49,14 @@ const Chessboard = () => {
         } else if (currentPiece[0] === y && currentPiece[1] === x) {
             setCurrentPiece(null);
         } else {
-            const [currentY, currentX] = currentPiece;
-            const newBoard = board.map((row) => [...row]);
-            newBoard[y][x] = board[currentY][currentX];
-            newBoard[currentY][currentX] = Pieces.EMPTY;
+            if (isMoveLegal(board, currentPiece, [y, x])) {
+                const [currentY, currentX] = currentPiece;
+                const newBoard = board.map((row) => [...row]);
+                newBoard[y][x] = board[currentY][currentX];
+                newBoard[currentY][currentX] = Pieces.EMPTY;
 
-            setBoard(newBoard);
+                setBoard(newBoard);
+            }
             setCurrentPiece(null);
         }
     };
