@@ -22,6 +22,10 @@ const getLegalMoves = (
     const [y, x] = position;
     const piece = board[y][x];
 
+    const isInBoard = (move: PiecePosition): boolean => {
+        const [y, x] = move;
+        return 0 <= y && y < 8 && 0 <= x;
+    };
     return [[0, 0]];
 };
 
