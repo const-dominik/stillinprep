@@ -3,7 +3,7 @@ Node ^20
 
 ## Running
 
-1. clone this repo
+1. `git clone https://github.com/const-dominik/stillinprep-front.git`
 2. `npm install`
 3. `npm run dev`
 
