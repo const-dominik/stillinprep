@@ -1,7 +1,11 @@
+## Prerequisites
+Node ^20
+
 ## Running
 
 1. clone this repo
-2. `npm run dev`
+2. `npm install`
+3. `npm run dev`
 
 App should be launched at [http://localhost:3000](http://localhost:3000).
 
