@@ -2,7 +2,7 @@
 
 import styles from "./styles.module.scss";
 import { initialBoard, pieceAssets } from "@/app/utils";
-import type { Chessboard, Player, PiecePosition } from "@/app/types";
+import type { Chessboard, PiecePosition } from "@/app/types";
 import { Pieces } from "@/app/types";
 import Image from "next/image";
 import { useState } from "react";
@@ -20,7 +20,7 @@ const getLegalMoves = (
     position: PiecePosition
 ): PiecePosition[] => {
     const [y, x] = position;
-    const piece = board[y][x];
+    const piece = board[y][x]; // eslint-disable-line
 
     return [[0, 0]];
 };
@@ -41,7 +41,7 @@ const Chessboard = () => {
     const [currentPiece, setCurrentPiece] = useState<PiecePosition | null>(
         null
     );
-
+    console.log("xd");
     const handleSquareClick = (x: number, y: number) => {
         if (currentPiece === null) {
             if (board[y][x] === Pieces.EMPTY) return;
