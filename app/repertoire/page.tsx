@@ -1,10 +1,12 @@
 import Chessboard from "../_components/chessboard/Chessboard";
 import styles from "./page.module.css";
 
-export default () => {
+const Content = () => {
     return (
         <div className={styles.container}>
             <Chessboard />
         </div>
     );
 };
+
+export default Content;

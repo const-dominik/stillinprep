@@ -26,6 +26,19 @@ $light-color: #DEE2E6;
     border: 2px solid greenyellow;
 }
 
+.legalmove {
+    border: 2px solid green;
+}
+
+.infobar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
 .board {
     width: $square-size * 8;
     height: $square-size * 8;
