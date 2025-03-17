@@ -12,6 +12,7 @@ type SquareProps = {
     y: number;
     piece: Pieces;
     isSelected: boolean;
+    isMoveLegal: boolean;
     onClick: (x: number, y: number) => void;
 };
 
@@ -21,9 +22,13 @@ const switchPlayer = (player: Player): Player => {
 
 const getLegalMoves = (
     board: Chessboard,
-    position: PiecePosition,
+    position: PiecePosition | null,
     currentPlayer: Player
 ): PiecePosition[] => {
+    if (position === null) {
+        return [];
+    }
+
     const [y, x] = position;
     const piece = board[y][x];
     let moves: PiecePosition[] = [];
@@ -159,7 +164,7 @@ const getLegalMoves = (
         return getBishopMoves().concat(getRookMoves());
     };
 
-    const getKingsMoves = (): PiecePosition[] => {
+    const getKingMoves = (): PiecePosition[] => {
         const possibleMoves: PiecePosition[] = [
             [y - 1, x - 1],
             [y - 1, x],
@@ -193,7 +198,7 @@ const getLegalMoves = (
             moves = getQueenMoves();
         }
         if (piece === Pieces.BLACK_KING || piece === Pieces.WHITE_KING) {
-            moves = getKingsMoves();
+            moves = getKingMoves();
         }
     };
 
@@ -203,24 +208,26 @@ const getLegalMoves = (
     return filterIllegalMoves(moves);
 };
 
-const isMoveLegal = (
-    board: Chessboard,
-    startPosition: PiecePosition,
-    endPosition: PiecePosition,
-    currentPlayer: Player
-): boolean => {
-    const legalMoves = getLegalMoves(board, startPosition, currentPlayer);
-    return !!legalMoves.find(
-        ([y, x]) => y === endPosition[0] && x === endPosition[1]
-    );
-};
-
 const Chessboard = () => {
     const [board, setBoard] = useState(initialBoard);
     const [currentPiece, setCurrentPiece] = useState<PiecePosition | null>(
         null
     );
     const [currentPlayer, setCurrentPlayer] = useState<Player>("white");
+
+    const resetBoard = () => {
+        setBoard(initialBoard);
+        setCurrentPiece(null);
+        setCurrentPlayer("white");
+    };
+
+    const legalMoves = getLegalMoves(board, currentPiece, currentPlayer);
+
+    const isMoveLegal = (endPosition: PiecePosition): boolean => {
+        return !!legalMoves.find(
+            ([y, x]) => y === endPosition[0] && x === endPosition[1]
+        );
+    };
 
     const handleSquareClick = (x: number, y: number) => {
         if (currentPiece === null) {
@@ -229,7 +236,7 @@ const Chessboard = () => {
         } else if (currentPiece[0] === y && currentPiece[1] === x) {
             setCurrentPiece(null);
         } else {
-            if (isMoveLegal(board, currentPiece, [y, x], currentPlayer)) {
+            if (isMoveLegal([y, x])) {
                 const [currentY, currentX] = currentPiece;
                 const newBoard = board.map((row) => [...row]);
                 newBoard[y][x] = board[currentY][currentX];
@@ -244,6 +251,12 @@ const Chessboard = () => {
 
     return (
         <div className={styles.board}>
+            <div className={styles.infobar}>
+                <span>It&apos;s {currentPlayer}s turn.</span>
+                <span onClick={() => resetBoard()} className={styles.pointer}>
+                    Reset board.
+                </span>
+            </div>
             {board.map((row, y) => (
                 <div className={styles.row} key={y}>
                     {row.map((piece, x) => {
@@ -257,6 +270,9 @@ const Chessboard = () => {
                                     currentPiece[0] === y &&
                                     currentPiece[1] === x
                                 }
+                                isMoveLegal={
+                                    !!currentPiece && isMoveLegal([y, x])
+                                }
                                 onClick={handleSquareClick}
                                 key={`${x}${y}`}
                             />
@@ -268,16 +284,26 @@ const Chessboard = () => {
     );
 };
 
-const Square = ({ x, y, piece, isSelected, onClick }: SquareProps) => {
+const Square = ({
+    x,
+    y,
+    piece,
+    isSelected,
+    isMoveLegal,
+    onClick,
+}: SquareProps) => {
     const isDark = (x + y) % 2 === 1;
-    const squareClass = isDark ? styles.dark : styles.light;
-    const selectionClass = isSelected ? styles.selected : "";
+    const classes = [];
+    classes.push(isDark ? styles.dark : styles.light);
+    if (isSelected) {
+        classes.push(styles.selected);
+    }
+    if (isMoveLegal) {
+        classes.push(styles.legalmove);
+    }
 
     return (
-        <div
-            className={[squareClass, selectionClass].join(" ")}
-            onClick={() => onClick(x, y)}
-        >
+        <div className={classes.join(" ")} onClick={() => onClick(x, y)}>
             {piece !== Pieces.EMPTY && (
                 <Image
                     src={pieceAssets[piece]}
