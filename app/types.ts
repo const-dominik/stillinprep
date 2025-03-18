@@ -17,5 +17,10 @@ export const enum Pieces {
 }
 
 export type Chessboard = Pieces[][];
-export type Player = "white" | "black"; // eslint-disable-line
+export type Player = "white" | "black";
 export type PiecePosition = [y: number, x: number];
+export type CastlingRigths = "both" | "short" | "long" | "none"
+export type Move = {
+    from: PiecePosition,
+    to: PiecePosition
+}
