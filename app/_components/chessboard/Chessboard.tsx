@@ -7,7 +7,7 @@ import { Pieces } from "@/app/types";
 import { MovesTree } from "@/app/_components/chessboard/MovesTree";
 import Image from "next/image";
 import { useState } from "react";
-import { getLegalMoves } from "./chessLogic";
+import { getLegalMoves, isMate } from "./chessLogic";
 
 type SquareProps = {
     x: number;
@@ -64,14 +64,13 @@ const Chessboard = () => {
                 const newBoard = board.map((row) => [...row]);
                 newBoard[y][x] = board[currentY][currentX];
                 newBoard[currentY][currentX] = Pieces.EMPTY;
-                movesTree.addMove(newBoard[y][x], currentPiece, [y, x]);
+                movesTree.addMove(newBoard[y][x], currentPiece, [y, x], board);
                 if (
                     [Pieces.BLACK_KING, Pieces.WHITE_KING].includes(
                         board[currentY][currentX]
                     ) &&
                     Math.abs(currentX - x) === 2
                 ) {
-                    console.log("szarada");
                     newBoard[y][x === 2 ? 0 : 7] = Pieces.EMPTY;
                     newBoard[y][x === 2 ? 3 : 5] =
                         y === 0 ? Pieces.BLACK_ROOK : Pieces.WHITE_ROOK;
@@ -79,6 +78,14 @@ const Chessboard = () => {
 
                 setBoard(newBoard);
                 setSelectedPiece(switchPlayer(selectedPiece));
+
+                const matedKing = isMate(newBoard, movesTree);
+                if (matedKing !== Pieces.EMPTY) {
+                    console.log(
+                        "Mate! %s wins!",
+                        matedKing === Pieces.BLACK_KING ? "White" : "Black"
+                    );
+                }
             }
             setCurrentPiece(null);
         }

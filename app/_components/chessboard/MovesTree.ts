@@ -1,5 +1,11 @@
-import type { CastlingRigths, PiecePosition, Player } from "@/app/types";
+import type {
+    CastlingRigths,
+    Chessboard,
+    PiecePosition,
+    Player,
+} from "@/app/types";
 import { Pieces } from "@/app/types";
+import { initialBoard } from "@/app/utils";
 
 export class MovesTreeNode {
     public parent: MovesTreeNode;
@@ -9,8 +15,14 @@ export class MovesTreeNode {
     public from: PiecePosition;
     public to: PiecePosition;
     public player: Player;
+    public board: Chessboard;
 
-    constructor(piece: Pieces, from: PiecePosition, to: PiecePosition) {
+    constructor(
+        piece: Pieces,
+        from: PiecePosition,
+        to: PiecePosition,
+        board: Chessboard = initialBoard
+    ) {
         this.parent = this;
         this.children = [];
         this.moveId = 0;
@@ -18,6 +30,7 @@ export class MovesTreeNode {
         this.piece = piece;
         this.from = from;
         this.to = to;
+        this.board = board;
     }
 
     public addChild(child: MovesTreeNode) {
@@ -28,9 +41,10 @@ export class MovesTreeNode {
     public addMove(
         piece: Pieces,
         from: PiecePosition,
-        to: PiecePosition
+        to: PiecePosition,
+        board: Chessboard
     ): MovesTreeNode {
-        const child = new MovesTreeNode(piece, from, to);
+        const child = new MovesTreeNode(piece, from, to, board);
         child.moveId = this.player === "black" ? this.moveId + 1 : this.moveId;
         child.player = this.player === "black" ? "white" : "black";
         child.parent = this;
@@ -75,8 +89,14 @@ export class MovesTree {
         this.currentNode = this.root;
     }
 
-    public addMove(piece: Pieces, from: PiecePosition, to: PiecePosition) {
-        this.currentNode = this.currentNode.addMove(piece, from, to);
+    public addMove(
+        piece: Pieces,
+        from: PiecePosition,
+        to: PiecePosition,
+        board: Chessboard
+    ) {
+        const newBoard = board.map((row) => [...row]);
+        this.currentNode = this.currentNode.addMove(piece, from, to, newBoard);
     }
 
     public checkCastlingRigths(): CastlingRigths {
