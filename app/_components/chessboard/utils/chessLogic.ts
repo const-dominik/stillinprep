@@ -1,7 +1,7 @@
 import { Pieces } from "@/app/types";
-import { MovesTree } from "@/app/_components/chessboard/MovesTree";
+import { MovesTree } from "@/app/_components/chessboard/utils/MovesTree";
 import type { Chessboard, PiecePosition, Player } from "@/app/types";
-import { whitePieces, blackPieces } from "@/app/utils";
+import { whitePieces, blackPieces, copyBoard } from "@/app/utils";
 
 const isKingChecked = (board: Chessboard): Pieces => {
     let whiteKingPosition: PiecePosition | null = null;
@@ -214,7 +214,7 @@ export const getLegalMoves = (
     };
 
     const isNotUnderCheck = ([newY, newX]: PiecePosition): boolean => {
-        const boardAfterMove = board.map((row) => [...row]);
+        const boardAfterMove = copyBoard(board);
         boardAfterMove[newY][newX] = board[position[0]][position[1]];
         boardAfterMove[position[0]][position[1]] = Pieces.EMPTY;
         const checkedKing = isKingChecked(boardAfterMove);

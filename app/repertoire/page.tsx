@@ -1,5 +1,5 @@
 import Chessboard from "../_components/chessboard/Chessboard";
-import styles from "./page.module.css";
+import styles from "./page.module.scss";
 
 const Content = () => {
     return (

@@ -5,7 +5,7 @@ import type {
     Player,
 } from "@/app/types";
 import { Pieces } from "@/app/types";
-import { initialBoard } from "@/app/utils";
+import { initialBoard, copyBoard } from "@/app/utils";
 
 export class MovesTreeNode {
     public parent: MovesTreeNode;
@@ -95,7 +95,7 @@ export class MovesTree {
         to: PiecePosition,
         board: Chessboard
     ) {
-        const newBoard = board.map((row) => [...row]);
+        const newBoard = copyBoard(board);
         this.currentNode = this.currentNode.addMove(piece, from, to, newBoard);
     }
 

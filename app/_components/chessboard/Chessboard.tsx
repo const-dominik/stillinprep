@@ -1,22 +1,17 @@
 "use client";
 
+import { useState } from "react";
+
 import styles from "./styles.module.scss";
-import { initialBoard, pieceAssets } from "@/app/utils";
+
+import { copyBoard, initialBoard, getCurrentPlayerPieces } from "@/app/utils";
 import type { Chessboard, PiecePosition, Player } from "@/app/types";
 import { Pieces } from "@/app/types";
-import { MovesTree } from "@/app/_components/chessboard/MovesTree";
-import Image from "next/image";
-import { useState } from "react";
-import { getLegalMoves, isMate } from "./chessLogic";
+import { MovesTree } from "@/app/_components/chessboard/utils/MovesTree";
 
-type SquareProps = {
-    x: number;
-    y: number;
-    piece: Pieces;
-    isSelected: boolean;
-    isMoveLegal: boolean;
-    onClick: (x: number, y: number) => void;
-};
+import { getLegalMoves, isMate } from "./utils/chessLogic";
+
+import Square from "./Square";
 
 const Chessboard = () => {
     const [board, setBoard] = useState(initialBoard);
@@ -24,16 +19,16 @@ const Chessboard = () => {
     const [currentPiece, setCurrentPiece] = useState<PiecePosition | null>(
         null
     );
-    const [selectedPiece, setSelectedPiece] = useState<Player>("white");
+    const [currentPlayer, setCurrentPlayer] = useState<Player>("white");
 
     const resetBoard = () => {
         setBoard(initialBoard);
         setCurrentPiece(null);
-        setSelectedPiece("white");
+        setCurrentPlayer("white");
         setMovesTree(new MovesTree());
     };
 
-    const switchPlayer = (player: Player): Player => {
+    const getOppositePlayer = (player: Player): Player => {
         return player === "white" ? "black" : "white";
     };
 
@@ -44,7 +39,7 @@ const Chessboard = () => {
         const legalMoves = getLegalMoves(
             board,
             currentPiece,
-            selectedPiece,
+            currentPlayer,
             movesTree
         );
         return !!legalMoves.find(
@@ -54,16 +49,24 @@ const Chessboard = () => {
 
     const handleSquareClick = (x: number, y: number) => {
         if (currentPiece === null) {
-            if (board[y][x] === Pieces.EMPTY) return;
+            if (
+                board[y][x] === Pieces.EMPTY ||
+                getCurrentPlayerPieces(
+                    getOppositePlayer(currentPlayer)
+                ).includes(board[y][x])
+            )
+                return;
             setCurrentPiece([y, x]);
         } else if (currentPiece[0] === y && currentPiece[1] === x) {
             setCurrentPiece(null);
         } else {
             if (isMoveLegal([y, x], movesTree)) {
                 const [currentY, currentX] = currentPiece;
-                const newBoard = board.map((row) => [...row]);
+                const newBoard = copyBoard(board);
+
                 newBoard[y][x] = board[currentY][currentX];
                 newBoard[currentY][currentX] = Pieces.EMPTY;
+
                 movesTree.addMove(newBoard[y][x], currentPiece, [y, x], board);
                 if (
                     [Pieces.BLACK_KING, Pieces.WHITE_KING].includes(
@@ -77,7 +80,7 @@ const Chessboard = () => {
                 }
 
                 setBoard(newBoard);
-                setSelectedPiece(switchPlayer(selectedPiece));
+                setCurrentPlayer(getOppositePlayer(currentPlayer));
 
                 const matedKing = isMate(newBoard, movesTree);
                 if (matedKing !== Pieces.EMPTY) {
@@ -94,7 +97,7 @@ const Chessboard = () => {
     return (
         <div className={styles.board}>
             <div className={styles.infobar}>
-                <span>It&apos;s {selectedPiece}s turn.</span>
+                <span>It&apos;s {currentPlayer}s turn.</span>
                 <span onClick={() => resetBoard()} className={styles.pointer}>
                     Reset board.
                 </span>
@@ -123,38 +126,6 @@ const Chessboard = () => {
                     })}
                 </div>
             ))}
-        </div>
-    );
-};
-
-const Square = ({
-    x,
-    y,
-    piece,
-    isSelected,
-    isMoveLegal,
-    onClick,
-}: SquareProps) => {
-    const isDark = (x + y) % 2 === 1;
-    const classes = [];
-    classes.push(isDark ? styles.dark : styles.light);
-    if (isSelected) {
-        classes.push(styles.selected);
-    }
-    if (isMoveLegal) {
-        classes.push(styles.legalmove);
-    }
-
-    return (
-        <div className={classes.join(" ")} onClick={() => onClick(x, y)}>
-            {piece !== Pieces.EMPTY && (
-                <Image
-                    src={pieceAssets[piece]}
-                    alt="piece"
-                    width={70}
-                    height={70}
-                />
-            )}
         </div>
     );
 };
