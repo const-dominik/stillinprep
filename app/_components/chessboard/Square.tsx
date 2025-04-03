@@ -9,6 +9,7 @@ type SquareProps = {
     piece: Pieces;
     isSelected: boolean;
     isMoveLegal: boolean;
+    isPieceOnSquare: boolean;
     onClick: (x: number, y: number) => void;
 };
 
@@ -18,16 +19,36 @@ const Square = ({
     piece,
     isSelected,
     isMoveLegal,
+    isPieceOnSquare,
     onClick,
 }: SquareProps) => {
     const isDark = (x + y) % 2 === 1;
     const classes = [];
-    classes.push(isDark ? styles.dark : styles.light);
+
+    if (isDark) {
+        classes.push(styles.dark);
+
+        if (isMoveLegal) {
+            if (isPieceOnSquare) {
+                classes.push(styles["under-attack-dark"]);
+            } else {
+                classes.push(styles["legal-dark-move"]);
+            }
+        }
+    } else {
+        classes.push(styles.light);
+
+        if (isMoveLegal) {
+            if (isPieceOnSquare) {
+                classes.push(styles["under-attack-light"]);
+            } else {
+                classes.push(styles["legal-light-move"]);
+            }
+        }
+    }
+
     if (isSelected) {
         classes.push(styles.selected);
-    }
-    if (isMoveLegal) {
-        classes.push(styles.legalmove);
     }
 
     return (

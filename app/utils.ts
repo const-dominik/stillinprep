@@ -50,3 +50,7 @@ export const getCurrentPlayerPieces = (player: Player) => {
     if (player === "white") return whitePieces;
     return blackPieces;
 }
+
+export const getOppositePlayer = (player: Player): Player => {
+    return player === "white" ? "black" : "white";
+};

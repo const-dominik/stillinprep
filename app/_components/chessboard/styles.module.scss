@@ -1,10 +1,5 @@
-$square-size: 80px;
-$dark-color: #495057;
-$light-color: #DEE2E6;
-
 .square {
-    width: $square-size;
-    height: $square-size;
+    width: 12.5%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,25 +9,48 @@ $light-color: #DEE2E6;
 
 .dark {
     @extend .square;
-    background: $dark-color;
+    background: v.$palette-6;
 }
 
 .light {
     @extend .square;
-    background: $light-color;
+    background: v.$palette-2;
 }
 
 .selected {
-    border: 2px solid greenyellow;
+    background: v.$secondary-dark;
 }
 
-.legalmove {
-    border: 10px solid red;
+.legal-light-move {
+   background: radial-gradient(v.$secondary-light 10%, v.$palette-2 33%);
+
+   &:hover {
+        background: v.$secondary-light;
+   }
 }
 
-.infobar {
-    display: flex;
-    justify-content: space-between;
+.legal-dark-move {
+    background: radial-gradient(v.$secondary-light 10%, v.$palette-6 33%);
+    
+    &:hover {
+        background: v.$secondary-light;
+    }
+}
+
+.under-attack-light {
+    background: radial-gradient(v.$palette-2 0%, v.$palette-2 79%, v.$secondary-lighter 80%);
+
+    &:hover {
+        background: v.$secondary-lighter;
+    }
+}
+
+.under-attack-dark {
+    background: radial-gradient(v.$palette-6 0%, v.$palette-6 79%, v.$secondary-lighter 80%);
+
+    &:hover {
+        background: v.$secondary-lighter;
+    }
 }
 
 .pointer {
@@ -40,12 +58,53 @@ $light-color: #DEE2E6;
 }
 
 .board {
-    width: $square-size * 8;
-    height: $square-size * 8;
+    width: v.$square-size * 8;
+    height: v.$square-size * 8;
 }
 
 .row {
     display: flex;
-    height: $square-size;
-    width: $square-size * 8;
+    height: v.$square-size;
+    width: v.$square-size * 8;
+}
+
+.sidebar {
+    width: v.$square-size * 4;
+    height: v.$square-size * 8;
+    background: v.$palette-7;
+    margin-left: 1rem;
+}
+
+.move-pair {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.move {
+    width: v.$square-size * 1.75;
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+    padding: 1rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: v.$palette-4;
+    border-bottom: 1px solid v.$palette-6;
+    border-right: 1px solid v.$palette-6;
+
+    &:hover {
+        background: v.$palette-6;
+    }
+}
+
+.move-number {
+    width: calc(v.$square-size / 2);
+    background: v.$palette-5;
+    border-right: 1px solid v.$palette-4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: v.$palette-1;
 }

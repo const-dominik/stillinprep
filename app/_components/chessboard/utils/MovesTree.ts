@@ -1,11 +1,13 @@
 import type {
+    AlgebraicPromotionPieces,
+    CastleType,
     CastlingRigths,
     Chessboard,
     PiecePosition,
     Player,
 } from "@/app/types";
 import { Pieces } from "@/app/types";
-import { initialBoard, copyBoard } from "@/app/utils";
+import { initialBoard, copyBoard, getOppositePlayer } from "@/app/utils";
 
 export class MovesTreeNode {
     public parent: MovesTreeNode;
@@ -30,7 +32,7 @@ export class MovesTreeNode {
         this.piece = piece;
         this.from = from;
         this.to = to;
-        this.board = board;
+        this.board = copyBoard(board);
     }
 
     public addChild(child: MovesTreeNode) {
@@ -46,13 +48,16 @@ export class MovesTreeNode {
     ): MovesTreeNode {
         const child = new MovesTreeNode(piece, from, to, board);
         child.moveId = this.player === "black" ? this.moveId + 1 : this.moveId;
-        child.player = this.player === "black" ? "white" : "black";
-        child.parent = this;
+        child.player = getOppositePlayer(this.player);
         this.addChild(child);
         return child;
     }
 
-    public checkCastlingRigths(rights: CastlingRigths): CastlingRigths {
+    public checkCastlingRigths(rights?: CastlingRigths): CastlingRigths {
+        if (!rights) {
+            return this.parent.checkCastlingRigths("both");
+        }
+
         if (this.moveId <= 1) return rights;
 
         if (
@@ -78,28 +83,38 @@ export class MovesTreeNode {
         }
         return this.parent.parent.checkCastlingRigths(rights);
     }
-}
 
-export class MovesTree {
-    private root: MovesTreeNode;
-    private currentNode: MovesTreeNode;
+    public getAllMoves(): MovesTreeNode[] {
+        const allMoves: MovesTreeNode[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        let node: MovesTreeNode = this;
 
-    constructor() {
-        this.root = new MovesTreeNode(Pieces.EMPTY, [0, 0], [0, 0]);
-        this.currentNode = this.root;
+        while (node.piece !== Pieces.EMPTY) {
+            allMoves.push(node);
+            node = node.parent;
+        }
+
+        return allMoves.toReversed();
     }
 
-    public addMove(
-        piece: Pieces,
-        from: PiecePosition,
-        to: PiecePosition,
-        board: Chessboard
-    ) {
-        const newBoard = copyBoard(board);
-        this.currentNode = this.currentNode.addMove(piece, from, to, newBoard);
+    public isCheck(): boolean {
+        // Did this move result in check?
+        return false;
     }
 
-    public checkCastlingRigths(): CastlingRigths {
-        return this.currentNode.parent.checkCastlingRigths("both");
+    public isMate(): boolean {
+        // Did this move result in checkmate?
+        return false;
+    }
+
+    public castled(): CastleType | false {
+        // Was this move a castle? 
+        return false;
+    }
+
+    public promotedTo(): AlgebraicPromotionPieces | false {
+        // If this was a promiton, what was pawn promoted to?
+
+        return false;
     }
 }

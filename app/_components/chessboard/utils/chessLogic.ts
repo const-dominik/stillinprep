@@ -1,5 +1,5 @@
 import { Pieces } from "@/app/types";
-import { MovesTree } from "@/app/_components/chessboard/utils/MovesTree";
+import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
 import type { Chessboard, PiecePosition, Player } from "@/app/types";
 import { whitePieces, blackPieces, copyBoard } from "@/app/utils";
 
@@ -158,7 +158,7 @@ export const getLegalMoves = (
     board: Chessboard,
     position: PiecePosition | null,
     currentPlayer: Player,
-    movesTree: MovesTree
+    currentNode: MovesTreeNode
 ): PiecePosition[] => {
     if (position === null) {
         return [];
@@ -320,7 +320,7 @@ export const getLegalMoves = (
             [y + 1, x + 1],
         ];
         if (isKingChecked(board) === Pieces.EMPTY) {
-            const castlingRigths = movesTree.checkCastlingRigths();
+            const castlingRigths = currentNode.checkCastlingRigths();
             const row = piece === Pieces.BLACK_KING ? 0 : 7;
             if (
                 ["both", "long"].includes(castlingRigths) &&
@@ -372,7 +372,7 @@ export const getLegalMoves = (
     }
 
     moves = filterIllegalMoves(moves);
-    const castlingRights = movesTree.checkCastlingRigths();
+    const castlingRights = currentNode.checkCastlingRigths();
 
     if (
         (piece === Pieces.BLACK_KING || piece === Pieces.WHITE_KING) &&
@@ -396,7 +396,7 @@ export const getLegalMoves = (
     return moves;
 };
 
-export const isMate = (board: Chessboard, movesTree: MovesTree): Pieces => {
+export const isMate = (board: Chessboard, currentNode: MovesTreeNode): Pieces => {
     const checkedKing = isKingChecked(board);
     if (checkedKing === Pieces.EMPTY) return Pieces.EMPTY;
 
@@ -407,11 +407,30 @@ export const isMate = (board: Chessboard, movesTree: MovesTree): Pieces => {
                     board,
                     [y, x],
                     checkedKing === Pieces.BLACK_KING ? "black" : "white",
-                    movesTree
+                    currentNode
                 ).length > 0
             )
                 return Pieces.EMPTY;
         }
     }
     return checkedKing;
+};
+
+
+export const isMoveLegal = (
+    board: Chessboard,
+    selectedPiece: PiecePosition,
+    currentPlayer: Player,
+    endPosition: PiecePosition,
+    currentNode: MovesTreeNode
+): boolean => {
+    const legalMoves = getLegalMoves(
+        board,
+        selectedPiece,
+        currentPlayer,
+        currentNode
+    );
+    return !!legalMoves.find(
+        ([y, x]) => y === endPosition[0] && x === endPosition[1]
+    );
 };
