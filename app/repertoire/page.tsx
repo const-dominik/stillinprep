@@ -1,12 +1,11 @@
-import Chessboard from "../_components/chessboard/Chessboard";
-import styles from "./page.module.css";
+// This is server component - here we'll download the MovesTree from db
+// and pass it to ChildComponent - which is client component
+// this way we can utilize Next.js SSR properly (I think)
+
+import ChildComponent from "./ChildComponent";
 
 const Content = () => {
-    return (
-        <div className={styles.container}>
-            <Chessboard />
-        </div>
-    );
+    return <ChildComponent />;
 };
 
 export default Content;
