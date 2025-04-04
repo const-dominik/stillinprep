@@ -31,26 +31,32 @@ const MoveHistory = ({
     }
 
     return (
-        <div className={styles["sidebar"]}>
-            {/* <p>{getOppositePlayer(currentNode.player)}&apos;s turn</p> */}
-            <div className={styles["move-history"]}>
-                {groupedMoves.map(({ moveNumber, whiteMove, blackMove }) => (
-                    <div key={moveNumber} className={styles["move-pair"]}>
-                        <span className={styles["move-number"]}>
-                            {moveNumber}
-                        </span>
-                        <Move
-                            move={whiteMove}
-                            setCurrentNode={setCurrentNode}
-                        />
-                        {blackMove && (
-                            <Move
-                                move={blackMove}
-                                setCurrentNode={setCurrentNode}
-                            />
-                        )}
-                    </div>
-                ))}
+        <div className={styles["sidebar-scroll-wrapper"]}>
+            <div className={styles["sidebar"]}>
+                <div className={styles["move-history"]}>
+                    {groupedMoves.map(
+                        ({ moveNumber, whiteMove, blackMove }) => (
+                            <div
+                                key={moveNumber}
+                                className={styles["move-pair"]}
+                            >
+                                <span className={styles["move-number"]}>
+                                    {moveNumber}
+                                </span>
+                                <Move
+                                    move={whiteMove}
+                                    setCurrentNode={setCurrentNode}
+                                />
+                                {blackMove && (
+                                    <Move
+                                        move={blackMove}
+                                        setCurrentNode={setCurrentNode}
+                                    />
+                                )}
+                            </div>
+                        )
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -68,11 +68,30 @@
     width: v.$square-size * 8;
 }
 
-.sidebar {
+.sidebar-scroll-wrapper {
     width: v.$square-size * 4;
     height: v.$square-size * 8;
     background: v.$palette-7;
+    overflow-y: auto;
+    overflow-x: hidden;
     margin-left: 1rem;
+
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: darken(v.$palette-7, 10%) lighten(v.$palette-7, 5%);
+}
+
+.sidebar {
+    width: v.$square-size * 4;
 }
 
 .move-pair {
