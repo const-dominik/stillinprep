@@ -58,8 +58,7 @@ export const getAlgebraicMove = (fullMove: MovesTreeNode) => {
 
     const endPosition = positionToAlgebraicNotation(fullMove.to);
     const promotedTo = fullMove.promotedTo();
+    const extraPrecision = fullMove.getPrecisePosition();
 
-    // TODO: precision, e.g Rad5
-
-    return `${algebraicPiece}${take}${endPosition}${promotedTo ? `=${promotedTo}` : ""}${check}${mate}`;
+    return `${algebraicPiece}${extraPrecision}${take}${endPosition}${promotedTo ? `=${promotedTo}` : ""}${check}${mate}`;
 }

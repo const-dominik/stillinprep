@@ -1,10 +1,13 @@
 import type {
+    AlgebraicPosition,
     AlgebraicPromotionPieces,
     CastleType,
     CastlingRigths,
     Chessboard,
+    File,
     PiecePosition,
     Player,
+    Rank,
 } from "@/app/types";
 import { Pieces } from "@/app/types";
 import { initialBoard, copyBoard, getOppositePlayer } from "@/app/utils";
@@ -116,5 +119,12 @@ export class MovesTreeNode {
         // If this was a promiton, what was pawn promoted to?
 
         return false;
+    }
+
+    public getPrecisePosition(): File | Rank | AlgebraicPosition | "" {
+        // Do we need to define piece more precisely, e.g. Raxe5? 
+        // Should return piece file/rank/full position if extra precision is needed, else ""
+
+        return "";
     }
 }
