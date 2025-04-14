@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .square {
     width: 12.5%;
     display: flex;
@@ -68,13 +70,21 @@
     width: v.$square-size * 8;
 }
 
-.sidebar-scroll-wrapper {
+.move-history {
     width: v.$square-size * 4;
     height: v.$square-size * 8;
     background: v.$palette-7;
+
+    margin-left: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar-scroll-wrapper {
     overflow-y: auto;
     overflow-x: hidden;
-    margin-left: 1rem;
 
     scrollbar-gutter: stable;
 
@@ -87,11 +97,37 @@
     }
 
     scrollbar-width: thin;
-    scrollbar-color: darken(v.$palette-7, 10%) lighten(v.$palette-7, 5%);
+    scrollbar-color: color.adjust(v.$palette-7, $lightness: -10%) color.adjust(v.$palette-7, $lightness: 5%);
 }
 
 .sidebar {
     width: v.$square-size * 4;
+}
+
+.tree-navigator {
+    height: 40px;
+    width: v.$square-size * 4;
+
+    border-top: 5px solid v.$palette-8;
+    display: flex;
+
+}
+
+.arrow {
+    @extend .pointer;
+
+    width: 50%;
+    height: 40px;
+    background: v.$palette-6;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+
+    &:hover {
+        background: v.$palette-5;
+    }
 }
 
 .move-pair {
@@ -112,10 +148,31 @@
     color: v.$palette-4;
     border-bottom: 1px solid v.$palette-6;
     border-right: 1px solid v.$palette-6;
+    user-select: none;
 
     &:hover {
         background: v.$palette-6;
     }
+}
+
+.saved-line-move {
+    @extend .move;
+    border-right: none;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.saved-lines-header {
+    text-align: center;
+    color: v.$palette-4;
+    border-bottom: 3px solid v.$palette-6;
+    padding: 0.3rem;
+}
+
+.current-move {
+    background: color.adjust(v.$palette-7, $lightness: -10%)
 }
 
 .move-number {
@@ -126,4 +183,21 @@
     justify-content: center;
     align-items: center;
     color: v.$palette-1;
+    user-select: none;
+}
+
+.history-container {
+    display: flex;
+    align-items: flex-start;
+}
+
+.saved-lines {
+    width: v.$square-size * 1.75;
+    background: v.$palette-7;
+
+    margin-left: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

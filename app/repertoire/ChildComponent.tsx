@@ -11,16 +11,20 @@ const ChildComponent = () => {
     const [currentNode, setCurrentNode] = useState(
         new MovesTreeNode(Pieces.EMPTY, [0, 0], [0, 0])
     );
+    const [lastNode, setLastNode] = useState(currentNode);
 
     return (
         <div className={styles.container}>
             <Chessboard
                 currentNode={currentNode}
                 setCurrentNode={setCurrentNode}
+                setLastNode={setLastNode}
             />
             <MoveHistory
                 currentNode={currentNode}
                 setCurrentNode={setCurrentNode}
+                lastNode={lastNode}
+                setLastNode={setLastNode}
             />
         </div>
     );

@@ -20,9 +20,11 @@ import Square from "./Square";
 const Chessboard = ({
     currentNode,
     setCurrentNode,
+    setLastNode,
 }: {
     currentNode: MovesTreeNode;
     setCurrentNode: Dispatch<SetStateAction<MovesTreeNode>>;
+    setLastNode: Dispatch<SetStateAction<MovesTreeNode>>;
 }) => {
     const [selectedPiece, setSelectedPiece] = useState<PiecePosition | null>(
         null
@@ -60,16 +62,16 @@ const Chessboard = ({
                 newBoard[y][x] = newBoard[currentY][currentX];
                 newBoard[currentY][currentX] = Pieces.EMPTY;
 
-                setCurrentNode(
-                    currentNode.addMove(
-                        newBoard[y][x],
-                        selectedPiece,
-                        [y, x],
-                        newBoard
-                    )
+                const newMove = currentNode.addMove(
+                    newBoard[y][x],
+                    selectedPiece,
+                    [y, x],
+                    newBoard
                 );
 
-                // TODO: nazwij to jak sie dowiesz co robi
+                setCurrentNode(newMove);
+                setLastNode(newMove);
+
                 const michaelCondition =
                     [Pieces.BLACK_KING, Pieces.WHITE_KING].includes(
                         board[currentY][currentX]
