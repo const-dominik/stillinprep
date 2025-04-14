@@ -38,7 +38,7 @@ const MoveHistory = ({
     const setLine = (node: MovesTreeNode) => {
         let lastNode = node;
         while (lastNode.children.length === 1) {
-            lastNode = node.children[0];
+            lastNode = lastNode.children[0];
         }
         setLastNode(lastNode);
         setCurrentNode(node);
