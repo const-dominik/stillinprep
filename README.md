@@ -9,6 +9,9 @@ Node ^20
 
 App should be launched at [http://localhost:3000](http://localhost:3000).
 
+## Testing
+run tests using `npm run test`, check test coverage with `npx jest --coverage` - obviously the higher test coverage the better, good think to check if you're not sure if your code is tested well 
+
 ## Important stuff
 [Next.js Docs](https://nextjs.org/docs)
 
