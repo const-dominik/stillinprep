@@ -4,7 +4,7 @@ import { MovesTreeNode } from "./utils/MovesTree";
 import styles from "./styles.module.scss";
 import { getAlgebraicMove } from "./utils/chessAlgebraicNotation";
 import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
-import { Pieces, type Move } from "@/app/types";
+import Move from "./Move";
 
 const MoveHistory = ({
     currentNode,
@@ -45,24 +45,26 @@ const MoveHistory = ({
     };
 
     const moveLeft = useCallback(() => {
-        const prev = currentNode.parent;
-        if (prev.piece !== Pieces.EMPTY) {
-            setCurrentNode(prev);
+        if (currentNode !== currentNode.parent) {
+            setCurrentNode(currentNode.parent);
         }
     }, [currentNode, setCurrentNode]);
 
     const moveRight = useCallback(() => {
-        if (currentNode.children.length === 0) return;
-        const next = currentNode.children[0];
-        setCurrentNode(next);
-    }, [currentNode, setCurrentNode]);
+        if (currentNode.children.length === 0 || currentNode === lastNode)
+            return;
+        let currentNextMove = lastNode;
+        while (currentNextMove.parent !== currentNode) {
+            currentNextMove = currentNextMove.parent;
+        }
+        setCurrentNode(currentNextMove);
+    }, [currentNode, setCurrentNode, lastNode]);
 
     const getOtherSavedLines = (node: MovesTreeNode) => {
         let currentNextMove = lastNode;
         while (currentNextMove.parent !== node) {
             currentNextMove = currentNextMove.parent;
         }
-        console.log(currentNextMove);
         return node.children.filter((child) => child !== currentNextMove);
     };
 
@@ -147,33 +149,4 @@ const MoveHistory = ({
     );
 };
 
-const Move = ({
-    move,
-    currentNode,
-    setCurrentNode,
-}: {
-    move: MovesTreeNode;
-    currentNode: MovesTreeNode;
-    setCurrentNode: Dispatch<SetStateAction<MovesTreeNode>>;
-}) => {
-    const isCurrentNode =
-        move.moveId === currentNode.moveId &&
-        move.player === currentNode.player;
-
-    const classes = [styles.move];
-
-    if (isCurrentNode) {
-        classes.push(styles["current-move"]);
-    }
-
-    return (
-        <div
-            className={classes.join(" ")}
-            key={`${move.moveId}${move.player}`}
-            onClick={() => setCurrentNode(move)}
-        >
-            {getAlgebraicMove(move)}
-        </div>
-    );
-};
 export default MoveHistory;

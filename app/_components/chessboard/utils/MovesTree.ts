@@ -11,6 +11,7 @@ import type {
 } from "@/app/types";
 import { Pieces } from "@/app/types";
 import { initialBoard, copyBoard, getOppositePlayer } from "@/app/utils";
+import { getAlgebraicMove } from "./chessAlgebraicNotation";
 
 export class MovesTreeNode {
     public parent: MovesTreeNode;
@@ -21,11 +22,12 @@ export class MovesTreeNode {
     public to: PiecePosition;
     public player: Player;
     public board: Chessboard;
+    private algebraicNotation: string;
 
     constructor(
-        piece: Pieces,
-        from: PiecePosition,
-        to: PiecePosition,
+        piece: Pieces = Pieces.EMPTY,
+        from: PiecePosition = [0, 0],
+        to: PiecePosition = [0, 0],
         board: Chessboard = initialBoard
     ) {
         this.parent = this;
@@ -36,9 +38,10 @@ export class MovesTreeNode {
         this.from = from;
         this.to = to;
         this.board = copyBoard(board);
+        this.algebraicNotation = "";
     }
 
-    public addChild(child: MovesTreeNode) {
+    private addChild(child: MovesTreeNode) {
         this.children.push(child);
         child.parent = this;
     }
@@ -111,7 +114,7 @@ export class MovesTreeNode {
     }
 
     public castled(): CastleType | false {
-        // Was this move a castle? 
+        // Was this move a castle?
         return false;
     }
 
@@ -122,9 +125,17 @@ export class MovesTreeNode {
     }
 
     public getPrecisePosition(): File | Rank | AlgebraicPosition | "" {
-        // Do we need to define piece more precisely, e.g. Raxe5? 
+        // Do we need to define piece more precisely, e.g. Raxe5?
         // Should return piece file/rank/full position if extra precision is needed, else ""
 
         return "";
+    }
+
+    public getAlgebraicNotation(): string {
+        if (this.algebraicNotation === "") {
+            this.algebraicNotation = getAlgebraicMove(this);
+        }
+
+        return this.algebraicNotation;
     }
 }

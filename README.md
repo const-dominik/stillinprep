@@ -14,4 +14,10 @@ App should be launched at [http://localhost:3000](http://localhost:3000).
 
 [CSS Modules Docs](https://github.com/css-modules/css-modules)
 
+[Jest Docs](https://jestjs.io/docs/)
+
+[Testing Library](https://testing-library.com/docs/)
+
+[React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
+
 [Used color palette](https://coolors.co/palette/f8f9fa-e9ecef-dee2e6-ced4da-adb5bd-6c757d-495057-343a40-212529)
