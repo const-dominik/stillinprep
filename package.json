@@ -9,7 +9,8 @@
     "lint": "next lint",
     "prepare": "husky",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "e2etest": "npx playwright test"
   },
   "husky": {
     "hooks": {
