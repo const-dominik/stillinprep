@@ -11,6 +11,7 @@ import type {
 } from "@/app/types";
 import { Pieces } from "@/app/types";
 import { initialBoard, copyBoard, getOppositePlayer } from "@/app/utils";
+import { isMate as checkMate, isKingChecked } from "./chessLogic";
 
 export class MovesTreeNode {
     public parent: MovesTreeNode;
@@ -54,6 +55,10 @@ export class MovesTreeNode {
         child.player = getOppositePlayer(this.player);
         this.addChild(child);
         return child;
+    }
+
+    public getCurrentPlayer() {
+        return getOppositePlayer(this.player);
     }
 
     public checkCastlingRigths(rights?: CastlingRigths): CastlingRigths {
@@ -101,28 +106,74 @@ export class MovesTreeNode {
     }
 
     public isCheck(): boolean {
-        // Did this move result in check?
-        return false;
+        return isKingChecked(this.board).length > 0;
     }
 
     public isMate(): boolean {
-        // Did this move result in checkmate?
-        return false;
+        return checkMate(this) > 0;
     }
 
     public castled(): CastleType | false {
-        // Was this move a castle? 
+        const kings = [Pieces.BLACK_KING, Pieces.WHITE_KING];
+        const rooks = [Pieces.BLACK_ROOK, Pieces.WHITE_ROOK];
+
+        /// === black's castling ===
+        if (
+            kings.includes(this.parent.board[0][4]) &&
+            rooks.includes(this.parent.board[0][7]) &&
+            kings.includes(this.board[0][6]) &&
+            rooks.includes(this.board[0][5])
+        )
+            return "short";
+        if (
+            kings.includes(this.parent.board[0][4]) &&
+            rooks.includes(this.parent.board[0][0]) &&
+            kings.includes(this.board[0][3]) &&
+            rooks.includes(this.board[0][2])
+        )
+            return "long";
+
+        /// === white's castling ===
+        if (
+            kings.includes(this.parent.board[7][4]) &&
+            rooks.includes(this.parent.board[7][7]) &&
+            kings.includes(this.board[7][6]) &&
+            rooks.includes(this.board[7][5])
+        )
+            return "short";
+        if (
+            kings.includes(this.parent.board[7][4]) &&
+            rooks.includes(this.parent.board[7][0]) &&
+            kings.includes(this.board[7][3]) &&
+            rooks.includes(this.board[7][2])
+        )
+            return "long";
+
         return false;
     }
 
     public promotedTo(): AlgebraicPromotionPieces | false {
-        // If this was a promiton, what was pawn promoted to?
+        if (
+            this.parent.board[this.from[0]][this.from[1]] !==
+            this.board[this.to[0]][this.to[1]]
+        ) {
+            const piece = this.board[this.to[0]][this.to[1]];
+
+            if ([Pieces.BLACK_BISHOP, Pieces.WHITE_BISHOP].includes(piece))
+                return "B";
+            if ([Pieces.BLACK_KNIGHT, Pieces.WHITE_KNIGHT].includes(piece))
+                return "N";
+            if ([Pieces.BLACK_ROOK, Pieces.WHITE_ROOK].includes(piece))
+                return "R";
+            if ([Pieces.BLACK_QUEEN, Pieces.WHITE_QUEEN].includes(piece))
+                return "Q";
+        }
 
         return false;
     }
 
     public getPrecisePosition(): File | Rank | AlgebraicPosition | "" {
-        // Do we need to define piece more precisely, e.g. Raxe5? 
+        // Do we need to define piece more precisely, e.g. Raxe5?
         // Should return piece file/rank/full position if extra precision is needed, else ""
 
         return "";

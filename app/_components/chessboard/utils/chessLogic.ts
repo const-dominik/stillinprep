@@ -1,12 +1,294 @@
 import { Pieces } from "@/app/types";
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
-import type { Chessboard, PiecePosition, Player } from "@/app/types";
-import { whitePieces, blackPieces, copyBoard } from "@/app/utils";
+import type { Chessboard, PiecePosition, MoveType } from "@/app/types";
+import {
+    whitePieces,
+    blackPieces,
+    copyBoard,
+    knightMoves,
+    kingMoves,
+    bishopMoves,
+    rookMoves,
+} from "@/app/utils";
 
-const isKingChecked = (board: Chessboard): Pieces => {
-    let whiteKingPosition: PiecePosition | null = null;
-    let blackKingPosition: PiecePosition | null = null;
+const isInBoard = (move: PiecePosition): boolean => {
+    const [y, x] = move;
+    return y >= 0 && y < 8 && x >= 0 && x < 8;
+};
 
+const isSquareAttack = (
+    board: Chessboard,
+    [y, x]: PiecePosition,
+    attackedBy: "white" | "black"
+): boolean => {
+    // === PAWNS ===
+    if (
+        attackedBy === "white" &&
+        y < 7 &&
+        ((x > 0 && board[y + 1][x - 1] === Pieces.WHITE_PAWN) ||
+            (x < 7 && board[y + 1][x + 1] === Pieces.WHITE_PAWN))
+    )
+        return true;
+
+    if (
+        attackedBy === "black" &&
+        y > 0 &&
+        ((x > 0 && board[y - 1][x - 1] === Pieces.BLACK_PAWN) ||
+            (x < 7 && board[y - 1][x + 1] === Pieces.BLACK_PAWN))
+    )
+        return true;
+
+    // === KNIGHTS ===
+    const knight =
+        attackedBy === "white" ? Pieces.WHITE_KNIGHT : Pieces.BLACK_KNIGHT;
+    for (const [dy, dx] of knightMoves) {
+        const ny = y + dy;
+        const nx = x + dx;
+        if (isInBoard([ny, nx]) && board[ny][nx] === knight) return true;
+    }
+
+    // === KINGS ===
+    const king =
+        attackedBy === "white" ? Pieces.WHITE_KNIGHT : Pieces.BLACK_KNIGHT;
+
+    for (const [dy, dx] of kingMoves) {
+        const ny = y + dy;
+        const nx = x + dx;
+        if (isInBoard([ny, nx]) && board[ny][nx] === king) return true;
+    }
+
+    // === BISHOP AND QUEENS ===
+    const piecesBQ =
+        attackedBy === "white"
+            ? [Pieces.WHITE_BISHOP, Pieces.WHITE_QUEEN]
+            : [Pieces.BLACK_BISHOP, Pieces.BLACK_QUEEN];
+    for (const [dy, dx] of bishopMoves) {
+        let ny = y + dy;
+        let nx = x + dx;
+        while (isInBoard([ny, nx]) && board[ny][nx] === Pieces.EMPTY) {
+            ny += dy;
+            nx += dx;
+        }
+        if (isInBoard([ny, nx]) && piecesBQ.includes(board[ny][nx]))
+            return true;
+    }
+
+    // === ROOK AND QUEEN ===
+    const piecesRQ =
+        attackedBy === "white"
+            ? [Pieces.WHITE_ROOK, Pieces.WHITE_QUEEN]
+            : [Pieces.BLACK_ROOK, Pieces.BLACK_QUEEN];
+    for (const [dy, dx] of rookMoves) {
+        let ny = y + dy;
+        let nx = x + dx;
+        while (isInBoard([ny, nx]) && board[ny][nx] === Pieces.EMPTY) {
+            ny += dy;
+            nx += dx;
+        }
+        if (isInBoard([ny, nx]) && piecesRQ.includes(board[ny][nx]))
+            return true;
+    }
+
+    return false;
+};
+
+const getBlackPawnMoves = (
+    movesTree: MovesTreeNode,
+    [y, x]: PiecePosition
+): [PiecePosition, MoveType][] => {
+    const possibleMoves: [PiecePosition, MoveType][] = [];
+    const board = movesTree.board;
+
+    // === GOING FORWAD ===
+    if (board[y + 1][x] === Pieces.EMPTY) {
+        possibleMoves.push([[y + 1, x], y === 6 ? "promotion" : "normal"]);
+        if (y === 1 && board[y + 2][x] === Pieces.EMPTY)
+            possibleMoves.push([[y + 2, x], "normal"]);
+    }
+    // === CATPURES ===
+    if (x !== 0 && whitePieces.includes(board[y + 1][x - 1]))
+        possibleMoves.push([[y + 1, x - 1], y === 6 ? "promotion" : "normal"]);
+    if (x !== 7 && whitePieces.includes(board[y + 1][x + 1]))
+        possibleMoves.push([[y + 1, x + 1], y === 6 ? "promotion" : "normal"]);
+
+    // === EN PASSANT ===
+    if (
+        y === 4 &&
+        movesTree.piece === Pieces.WHITE_PAWN &&
+        movesTree.from[0] === 6 &&
+        movesTree.to[0] === 4
+    ) {
+        if (movesTree.from[1] === x - 1)
+            possibleMoves.push([[5, x - 1], "en passant"]);
+        if (movesTree.from[1] === x + 1)
+            possibleMoves.push([[5, x + 1], "en passant"]);
+    }
+
+    return possibleMoves;
+};
+
+const getWhitePawnMoves = (
+    movesTree: MovesTreeNode,
+    [y, x]: PiecePosition
+): [PiecePosition, MoveType][] => {
+    const possibleMoves: [PiecePosition, MoveType][] = [];
+    const board = movesTree.board;
+
+    // === PROMOTION ===
+
+    // === GOING FORWAD ===
+    if (board[y - 1][x] === Pieces.EMPTY) {
+        possibleMoves.push([[y - 1, x], y === 1 ? "promotion" : "normal"]);
+        if (y === 6 && board[y - 2][x] === Pieces.EMPTY)
+            possibleMoves.push([[y - 2, x], "normal"]);
+    }
+    // === CATPURES ===
+    if (x !== 0 && blackPieces.includes(board[y - 1][x - 1]))
+        possibleMoves.push([[y - 1, x - 1], "normal"]);
+    if (x !== 7 && blackPieces.includes(board[y - 1][x + 1]))
+        possibleMoves.push([[y - 1, x + 1], "normal"]);
+
+    // === EN PASSANT ===
+    if (
+        y === 3 &&
+        movesTree.piece === Pieces.BLACK_PAWN &&
+        movesTree.from[0] === 1 &&
+        movesTree.to[0] === 3
+    ) {
+        if (movesTree.from[1] === x - 1)
+            possibleMoves.push([[2, x - 1], "en passant"]);
+        if (movesTree.from[1] === x + 1)
+            possibleMoves.push([[2, x + 1], "en passant"]);
+    }
+
+    // === PROMOTION ===
+
+    return possibleMoves;
+};
+const getKnightMoves = (
+    movesTree: MovesTreeNode,
+    [y, x]: PiecePosition
+): [PiecePosition, MoveType][] => {
+    const possibleMoves: [PiecePosition, MoveType][] = [];
+    const board = movesTree.board;
+    const capturablePieces =
+        board[y][x] === Pieces.WHITE_KNIGHT ? blackPieces : whitePieces;
+    for (const [dy, dx] of knightMoves) {
+        const ny = y + dy;
+        const nx = x + dx;
+        if (
+            isInBoard([ny, nx]) &&
+            (capturablePieces.includes(board[ny][nx]) ||
+                board[ny][nx] === Pieces.EMPTY)
+        )
+            possibleMoves.push([[ny, nx], "normal"]);
+    }
+
+    return possibleMoves;
+};
+
+const getLongRangePieceMoves = (
+    movesTree: MovesTreeNode,
+    [y, x]: PiecePosition,
+    movement: PiecePosition[]
+): [PiecePosition, MoveType][] => {
+    const possibleMoves: [PiecePosition, MoveType][] = [];
+    const board = movesTree.board;
+    const capturablePieces = whitePieces.includes(board[y][x])
+        ? blackPieces
+        : whitePieces;
+    for (const [dy, dx] of movement) {
+        let ny = y + dy;
+        let nx = x + dx;
+        while (isInBoard([ny, nx]) && board[ny][nx] === Pieces.EMPTY) {
+            possibleMoves.push([[ny, nx], "normal"]);
+            ny += dy;
+            nx += dx;
+        }
+        if (isInBoard([ny, nx]) && capturablePieces.includes(board[ny][nx]))
+            possibleMoves.push([[ny, nx], "normal"]);
+    }
+
+    return possibleMoves;
+};
+
+const getBishopMoves = (
+    movesTree: MovesTreeNode,
+    pos: PiecePosition
+): [PiecePosition, MoveType][] => {
+    return getLongRangePieceMoves(movesTree, pos, bishopMoves);
+};
+
+const getRookMoves = (
+    movesTree: MovesTreeNode,
+    pos: PiecePosition
+): [PiecePosition, MoveType][] => {
+    return getLongRangePieceMoves(movesTree, pos, rookMoves);
+};
+
+const getQueenMoves = (
+    movesTree: MovesTreeNode,
+    pos: PiecePosition
+): [PiecePosition, MoveType][] => {
+    return getLongRangePieceMoves(
+        movesTree,
+        pos,
+        bishopMoves.concat(rookMoves)
+    );
+};
+
+const getKingMoves = (
+    movesTree: MovesTreeNode,
+    [y, x]: PiecePosition
+): [PiecePosition, MoveType][] => {
+    const possibleMoves: [PiecePosition, MoveType][] = [];
+    const board = movesTree.board;
+    const oppositeSite = board[y][x] === Pieces.WHITE_KING ? "black" : "white";
+    const capturablePieces =
+        board[y][x] === Pieces.WHITE_KING ? blackPieces : whitePieces;
+    for (const [dy, dx] of kingMoves) {
+        let ny = y + dy;
+        let nx = x + dx;
+        if (
+            isInBoard([ny, nx]) &&
+            (capturablePieces.includes(board[ny][nx]) ||
+                board[ny][nx] === Pieces.EMPTY)
+        )
+            possibleMoves.push([[ny, nx], "normal"]);
+    }
+
+    // === SHORT CASTLING ===
+    if (
+        (movesTree.checkCastlingRigths() === "both" ||
+            movesTree.checkCastlingRigths() === "short") &&
+        board[y][x + 1] === Pieces.EMPTY &&
+        board[y][x + 2] === Pieces.EMPTY &&
+        !isSquareAttack(board, [y, x], oppositeSite) &&
+        !isSquareAttack(board, [y, x + 1], oppositeSite) &&
+        !isSquareAttack(board, [y, x + 2], oppositeSite)
+    )
+        possibleMoves.push([[y, x + 2], "short castling"]);
+
+    // === LONG CASTLING ===
+    if (
+        (movesTree.checkCastlingRigths() === "both" ||
+            movesTree.checkCastlingRigths() === "long") &&
+        board[y][x - 1] === Pieces.EMPTY &&
+        board[y][x - 2] === Pieces.EMPTY &&
+        board[y][x - 3] === Pieces.EMPTY &&
+        !isSquareAttack(board, [y, x], oppositeSite) &&
+        !isSquareAttack(board, [y, x - 1], oppositeSite) &&
+        !isSquareAttack(board, [y, x - 2], oppositeSite)
+    )
+        possibleMoves.push([[y, x - 2], "long castling"]);
+
+    return possibleMoves;
+};
+
+export const isKingChecked = (board: Chessboard): Pieces[] => {
+    const checkedKings: Pieces[] = [];
+    let whiteKingPosition: PiecePosition = [-1, -1];
+    let blackKingPosition: PiecePosition = [-1, -1];
     for (let y = 0; y < 8; y++) {
         for (let x = 0; x < 8; x++) {
             if (board[y][x] === Pieces.WHITE_KING) {
@@ -17,420 +299,164 @@ const isKingChecked = (board: Chessboard): Pieces => {
             }
         }
     }
+    if (isSquareAttack(board, whiteKingPosition, "black"))
+        checkedKings.push(Pieces.WHITE_KING);
 
-    const isAttacked = (kingPos: PiecePosition, isWhite: boolean): boolean => {
-        const [y, x] = kingPos;
+    if (isSquareAttack(board, blackKingPosition, "white"))
+        checkedKings.push(Pieces.BLACK_KING);
 
-        const pawnOffsets = isWhite
-            ? [
-                  [-1, -1],
-                  [-1, 1],
-              ]
-            : [
-                  [1, -1],
-                  [1, 1],
-              ];
-        for (const [dy, dx] of pawnOffsets) {
-            const ny = y + dy,
-                nx = x + dx;
-            if (ny >= 0 && ny < 8 && nx >= 0 && nx < 8) {
-                const pawn = isWhite ? Pieces.BLACK_PAWN : Pieces.WHITE_PAWN;
-                if (board[ny][nx] === pawn) return true;
-            }
-        }
+    return checkedKings;
+};
 
-        const knightMoves = [
-            [-2, -1],
-            [-2, 1],
-            [2, -1],
-            [2, 1],
-            [-1, -2],
-            [-1, 2],
-            [1, -2],
-            [1, 2],
-        ];
-        for (const [dy, dx] of knightMoves) {
-            const ny = y + dy,
-                nx = x + dx;
-            if (ny >= 0 && ny < 8 && nx >= 0 && nx < 8) {
-                const knight = isWhite
-                    ? Pieces.BLACK_KNIGHT
-                    : Pieces.WHITE_KNIGHT;
-                if (board[ny][nx] === knight) return true;
-            }
-        }
+const getMovesToCheck = (
+    movesTree: MovesTreeNode,
+    [y, x]: PiecePosition
+): [PiecePosition, MoveType][] => {
+    const piece = movesTree.board[y][x];
+    const movablePieces =
+        movesTree.getCurrentPlayer() === "white" ? whitePieces : blackPieces;
 
-        const rookQueenDirs = [
-            [1, 0],
-            [-1, 0],
-            [0, 1],
-            [0, -1],
-        ];
-        for (const [dy, dx] of rookQueenDirs) {
-            let ny = y,
-                nx = x;
-            while (true) {
-                ny += dy;
-                nx += dx;
-                if (ny < 0 || ny >= 8 || nx < 0 || nx >= 8) break;
-                const piece = board[ny][nx];
-                if (piece !== Pieces.EMPTY) {
-                    if (
-                        (isWhite &&
-                            (piece === Pieces.BLACK_ROOK ||
-                                piece === Pieces.BLACK_QUEEN)) ||
-                        (!isWhite &&
-                            (piece === Pieces.WHITE_ROOK ||
-                                piece === Pieces.WHITE_QUEEN))
-                    ) {
-                        return true;
-                    }
-                    break;
-                }
-            }
-        }
+    if (!movablePieces.includes(piece)) return [];
 
-        const bishopQueenDirs = [
-            [1, 1],
-            [1, -1],
-            [-1, 1],
-            [-1, -1],
-        ];
-        for (const [dy, dx] of bishopQueenDirs) {
-            let ny = y,
-                nx = x;
-            while (true) {
-                ny += dy;
-                nx += dx;
-                if (ny < 0 || ny >= 8 || nx < 0 || nx >= 8) break;
-                const piece = board[ny][nx];
-                if (piece !== Pieces.EMPTY) {
-                    if (
-                        (isWhite &&
-                            (piece === Pieces.BLACK_BISHOP ||
-                                piece === Pieces.BLACK_QUEEN)) ||
-                        (!isWhite &&
-                            (piece === Pieces.WHITE_BISHOP ||
-                                piece === Pieces.WHITE_QUEEN))
-                    ) {
-                        return true;
-                    }
-                    break;
-                }
-            }
-        }
-
-        const kingMoves = [
-            [-1, -1],
-            [-1, 0],
-            [-1, 1],
-            [0, -1],
-            [0, 1],
-            [1, -1],
-            [1, 0],
-            [1, 1],
-        ];
-        for (const [dy, dx] of kingMoves) {
-            const ny = y + dy,
-                nx = x + dx;
-            if (ny >= 0 && ny < 8 && nx >= 0 && nx < 8) {
-                const enemyKing = isWhite
-                    ? Pieces.BLACK_KING
-                    : Pieces.WHITE_KING;
-                if (board[ny][nx] === enemyKing) return true;
-            }
-        }
-
-        return false;
-    };
-
-    if (whiteKingPosition && isAttacked(whiteKingPosition, true)) {
-        return Pieces.WHITE_KING;
+    if (piece === Pieces.BLACK_PAWN) {
+        return getBlackPawnMoves(movesTree, [y, x]);
     }
-    if (blackKingPosition && isAttacked(blackKingPosition, false)) {
-        return Pieces.BLACK_KING;
+    if (piece === Pieces.WHITE_PAWN) {
+        return getWhitePawnMoves(movesTree, [y, x]);
+    }
+    if (piece === Pieces.BLACK_KNIGHT || piece === Pieces.WHITE_KNIGHT) {
+        return getKnightMoves(movesTree, [y, x]);
+    }
+    if (piece === Pieces.BLACK_BISHOP || piece === Pieces.WHITE_BISHOP) {
+        return getBishopMoves(movesTree, [y, x]);
+    }
+    if (piece === Pieces.BLACK_ROOK || piece === Pieces.WHITE_ROOK) {
+        return getRookMoves(movesTree, [y, x]);
+    }
+    if (piece === Pieces.BLACK_QUEEN || piece === Pieces.WHITE_QUEEN) {
+        return getQueenMoves(movesTree, [y, x]);
+    }
+    if (piece === Pieces.BLACK_KING || piece === Pieces.WHITE_KING) {
+        return getKingMoves(movesTree, [y, x]);
     }
 
-    return Pieces.EMPTY;
+    return [];
+};
+
+export const makeMove = (
+    board: Chessboard,
+    from: PiecePosition,
+    to: PiecePosition,
+    moveType: MoveType,
+    promotingTo: Pieces
+): Chessboard => {
+    const newBoard = copyBoard(board);
+    const piece = board[from[0]][from[1]];
+
+    if (moveType !== "normal") {
+        // === CASTLING ===
+        if (piece === Pieces.BLACK_KING || piece === Pieces.WHITE_KING) {
+            const y = from[0];
+            const rook =
+                piece === Pieces.WHITE_KING
+                    ? Pieces.WHITE_ROOK
+                    : Pieces.BLACK_ROOK;
+            if (to[1] === 6) {
+                newBoard[y][4] = Pieces.EMPTY;
+                newBoard[y][5] = rook;
+                newBoard[y][6] = piece;
+                newBoard[y][7] = Pieces.EMPTY;
+            }
+            if (to[1] === 2) {
+                newBoard[y][4] = Pieces.EMPTY;
+                newBoard[y][3] = rook;
+                newBoard[y][2] = piece;
+                newBoard[y][0] = Pieces.EMPTY;
+            }
+
+            return newBoard;
+        }
+
+        if (piece === Pieces.BLACK_PAWN || piece === Pieces.WHITE_PAWN) {
+            // === PROMOTION
+            if (moveType === "promotion") {
+                newBoard[from[0]][from[1]] = Pieces.EMPTY;
+                newBoard[to[0]][to[1]] = promotingTo;
+                return newBoard;
+            }
+            if (moveType === "en passant")
+                newBoard[from[0]][from[1]] = Pieces.EMPTY;
+            newBoard[to[0]][to[1]] = piece;
+            newBoard[from[0]][to[1]] = Pieces.EMPTY;
+
+            return newBoard;
+        }
+    }
+    newBoard[from[0]][from[1]] = Pieces.EMPTY;
+    newBoard[to[0]][to[1]] = piece;
+    return newBoard;
 };
 
 export const getLegalMoves = (
-    board: Chessboard,
-    position: PiecePosition | null,
-    currentPlayer: Player,
-    currentNode: MovesTreeNode
-): PiecePosition[] => {
-    if (position === null) {
-        return [];
-    }
+    movesTree: MovesTreeNode,
+    piecePosition: PiecePosition
+): [PiecePosition, MoveType][] => {
+    const movesToCheck = getMovesToCheck(movesTree, piecePosition);
+    const legalMoves: [PiecePosition, MoveType][] = [];
+    const currentPlayer = movesTree.getCurrentPlayer();
 
-    const [y, x] = position;
-    const piece = board[y][x];
-    let moves: PiecePosition[] = [];
-
-    const isRightTurn = (): boolean => {
-        return (
-            (currentPlayer === "white" && whitePieces.includes(piece)) ||
-            (currentPlayer === "black" && blackPieces.includes(piece))
+    for (const [to, moveType] of movesToCheck) {
+        const newBoard = makeMove(
+            movesTree.board,
+            piecePosition,
+            to,
+            moveType,
+            Pieces.WHITE_PAWN
         );
-    };
-
-    const isInBoard = (move: PiecePosition): boolean => {
-        const [y, x] = move;
-        return y >= 0 && y < 8 && x >= 0 && x < 8;
-    };
-
-    const isNotOverstepping = ([newY, newX]: PiecePosition): boolean => {
-        return (
-            (currentPlayer === "white" &&
-                !whitePieces.includes(board[newY][newX])) ||
-            (currentPlayer === "black" &&
-                !blackPieces.includes(board[newY][newX]))
-        );
-    };
-
-    const isNotJumpingOver = ([newY, newX]: PiecePosition): boolean => {
-        if (piece === Pieces.BLACK_KNIGHT || piece === Pieces.WHITE_KNIGHT) {
-            return true;
-        }
-
-        const [y, x] = position;
-
-        const deltaY = Math.sign(newY - y);
-        const deltaX = Math.sign(newX - x);
-
-        let currY = y + deltaY;
-        let currX = x + deltaX;
-
-        while (currY !== newY || currX !== newX) {
-            if (board[currY][currX] !== Pieces.EMPTY) {
-                return false;
-            }
-            currY += deltaY;
-            currX += deltaX;
-        }
-
-        return true;
-    };
-
-    const isNotUnderCheck = ([newY, newX]: PiecePosition): boolean => {
-        const boardAfterMove = copyBoard(board);
-        boardAfterMove[newY][newX] = board[position[0]][position[1]];
-        boardAfterMove[position[0]][position[1]] = Pieces.EMPTY;
-        const checkedKing = isKingChecked(boardAfterMove);
-        return !(
-            (whitePieces.includes(checkedKing) && currentPlayer === "white") ||
-            (blackPieces.includes(checkedKing) && currentPlayer === "black")
-        );
-    };
-
-    const filterIllegalMoves = (
-        possibleMoves: PiecePosition[]
-    ): PiecePosition[] => {
-        const movesFilter = (possibleMove: PiecePosition): boolean => {
-            return (
-                isInBoard(possibleMove) &&
-                isNotOverstepping(possibleMove) &&
-                isNotJumpingOver(possibleMove) &&
-                isNotUnderCheck(possibleMove)
-            );
-        };
-        return possibleMoves.filter(movesFilter);
-    };
-
-    const getBlackPawnMoves = (): PiecePosition[] => {
-        const possibleMoves: PiecePosition[] = [];
-
-        if (board[y + 1][x] === Pieces.EMPTY) {
-            possibleMoves.push([y + 1, x]);
-            if (y === 1 && board[y + 2][x] === Pieces.EMPTY)
-                possibleMoves.push([y + 2, x]);
-        }
-        if (x !== 0 && whitePieces.includes(board[y + 1][x - 1]))
-            possibleMoves.push([y + 1, x - 1]);
-        if (x !== 7 && whitePieces.includes(board[y + 1][x + 1]))
-            possibleMoves.push([y + 1, x + 1]);
-        return possibleMoves;
-    };
-
-    const getWhitePawnMoves = (): PiecePosition[] => {
-        const possibleMoves: PiecePosition[] = [];
-
-        if (board[y - 1][x] === Pieces.EMPTY) {
-            possibleMoves.push([y - 1, x]);
-            if (y === 6 && board[y - 2][x] === Pieces.EMPTY)
-                possibleMoves.push([y - 2, x]);
-        }
-        if (x !== 0 && blackPieces.includes(board[y - 1][x - 1]))
-            possibleMoves.push([y - 1, x - 1]);
-        if (x !== 7 && blackPieces.includes(board[y - 1][x + 1]))
-            possibleMoves.push([y - 1, x + 1]);
-        return possibleMoves;
-    };
-
-    const getKnightMoves = (): PiecePosition[] => {
-        const possibleMoves: PiecePosition[] = [
-            [y - 2, x - 1],
-            [y - 2, x + 1],
-            [y - 1, x - 2],
-            [y - 1, x + 2],
-            [y + 1, x - 2],
-            [y + 1, x + 2],
-            [y + 2, x - 1],
-            [y + 2, x + 1],
-        ];
-        return possibleMoves;
-    };
-
-    const getBishopMoves = (): PiecePosition[] => {
-        const possibleMoves: PiecePosition[] = [];
-        for (let i = 1; i < 8; i++) {
-            possibleMoves.push([y - i, x - i]);
-            possibleMoves.push([y - i, x + i]);
-            possibleMoves.push([y + i, x - i]);
-            possibleMoves.push([y + i, x + i]);
-        }
-        return possibleMoves;
-    };
-
-    const getRookMoves = (): PiecePosition[] => {
-        const possibleMoves: PiecePosition[] = [];
-        for (let i = 1; i < 8; i++) {
-            possibleMoves.push([y, x - i]);
-            possibleMoves.push([y, x + i]);
-            possibleMoves.push([y - i, x]);
-            possibleMoves.push([y + i, x]);
-        }
-        return possibleMoves;
-    };
-
-    const getQueenMoves = (): PiecePosition[] => {
-        return getBishopMoves().concat(getRookMoves());
-    };
-
-    const getKingMoves = (): PiecePosition[] => {
-        const possibleMoves: PiecePosition[] = [
-            [y - 1, x - 1],
-            [y - 1, x],
-            [y - 1, x + 1],
-            [y, x - 1],
-            [y, x + 1],
-            [y + 1, x - 1],
-            [y + 1, x],
-            [y + 1, x + 1],
-        ];
-        if (isKingChecked(board) === Pieces.EMPTY) {
-            const castlingRigths = currentNode.checkCastlingRigths();
-            const row = piece === Pieces.BLACK_KING ? 0 : 7;
-            if (
-                ["both", "long"].includes(castlingRigths) &&
-                board[row][1] === Pieces.EMPTY &&
-                board[row][2] === Pieces.EMPTY &&
-                board[row][3] === Pieces.EMPTY
-            ) {
-                possibleMoves.push([row, 2]);
-            }
-
-            if (
-                ["both", "short"].includes(castlingRigths) &&
-                board[row][5] === Pieces.EMPTY &&
-                board[row][6] === Pieces.EMPTY
-            ) {
-                possibleMoves.push([row, 6]);
-            }
-        }
-
-        return possibleMoves;
-    };
-
-    const getMoves = () => {
-        if (piece === Pieces.BLACK_PAWN) {
-            moves = getBlackPawnMoves();
-        }
-        if (piece === Pieces.WHITE_PAWN) {
-            moves = getWhitePawnMoves();
-        }
-        if (piece === Pieces.BLACK_KNIGHT || piece === Pieces.WHITE_KNIGHT) {
-            moves = getKnightMoves();
-        }
-        if (piece === Pieces.BLACK_BISHOP || piece === Pieces.WHITE_BISHOP) {
-            moves = getBishopMoves();
-        }
-        if (piece === Pieces.BLACK_ROOK || piece === Pieces.WHITE_ROOK) {
-            moves = getRookMoves();
-        }
-        if (piece === Pieces.BLACK_QUEEN || piece === Pieces.WHITE_QUEEN) {
-            moves = getQueenMoves();
-        }
-        if (piece === Pieces.BLACK_KING || piece === Pieces.WHITE_KING) {
-            moves = getKingMoves();
-        }
-    };
-
-    if (isRightTurn()) {
-        getMoves();
-    }
-
-    moves = filterIllegalMoves(moves);
-    const castlingRights = currentNode.checkCastlingRigths();
-
-    if (
-        (piece === Pieces.BLACK_KING || piece === Pieces.WHITE_KING) &&
-        castlingRights !== "none"
-    ) {
-        const row = piece === Pieces.BLACK_KING ? 0 : 7;
+        /// mogą być problemy, ale może będzie git
+        const checkedKing = isKingChecked(newBoard);
         if (
-            moves.some(([y, x]) => y === row && x === 2) &&
-            !moves.some(([y, x]) => y === row && x === 3)
-        ) {
-            moves = moves.filter(([y, x]) => !(y === row && x === 2));
-        }
-
-        if (
-            moves.some(([y, x]) => y === row && x === 6) &&
-            !moves.some(([y, x]) => y === row && x === 5)
-        ) {
-            moves = moves.filter(([y, x]) => !(y === row && x === 6));
-        }
+            checkedKing.length === 0 ||
+            (!checkedKing.includes(Pieces.BLACK_KING) &&
+                currentPlayer === "black") ||
+            (!checkedKing.includes(Pieces.WHITE_KING) &&
+                currentPlayer === "white")
+        )
+            legalMoves.push([to, moveType]);
     }
-    return moves;
+
+    return legalMoves;
 };
 
-export const isMate = (board: Chessboard, currentNode: MovesTreeNode): Pieces => {
+export const isMate = (movesTree: MovesTreeNode): Pieces => {
+    const board = movesTree.board;
     const checkedKing = isKingChecked(board);
-    if (checkedKing === Pieces.EMPTY) return Pieces.EMPTY;
+    if (checkedKing.length === 0) return Pieces.EMPTY;
+
+    const movablePieces = checkedKing.includes(Pieces.WHITE_KING)
+        ? whitePieces
+        : blackPieces;
 
     for (let y = 0; y < 8; y++) {
         for (let x = 0; x < 8; x++) {
-            if (
-                getLegalMoves(
-                    board,
-                    [y, x],
-                    checkedKing === Pieces.BLACK_KING ? "black" : "white",
-                    currentNode
-                ).length > 0
-            )
-                return Pieces.EMPTY;
+            if (movablePieces.includes(board[y][x])) {
+                const legalMoves = getLegalMoves(movesTree, [y, x]);
+                if (legalMoves.length > 0) return Pieces.EMPTY;
+            }
         }
     }
-    return checkedKing;
+    return checkedKing[0];
 };
 
-
 export const isMoveLegal = (
-    board: Chessboard,
-    selectedPiece: PiecePosition,
-    currentPlayer: Player,
-    endPosition: PiecePosition,
-    currentNode: MovesTreeNode
+    movesTree: MovesTreeNode,
+    from: PiecePosition,
+    [ny, nx]: PiecePosition
 ): boolean => {
-    const legalMoves = getLegalMoves(
-        board,
-        selectedPiece,
-        currentPlayer,
-        currentNode
-    );
-    return !!legalMoves.find(
-        ([y, x]) => y === endPosition[0] && x === endPosition[1]
-    );
+    const legalMoves = getLegalMoves(movesTree, from);
+    for (const [move, isSpecial] of legalMoves) {
+        if (move[0] === ny && move[1] === nx) return true;
+    }
+
+    return false;
 };
