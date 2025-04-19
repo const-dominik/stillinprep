@@ -11,7 +11,7 @@ import {
     rookMoves,
 } from "@/app/utils";
 
-const isInBoard = (move: PiecePosition): boolean => {
+export const isInBoard = (move: PiecePosition): boolean => {
     const [y, x] = move;
     return y >= 0 && y < 8 && x >= 0 && x < 8;
 };
@@ -144,9 +144,9 @@ const getWhitePawnMoves = (
     }
     // === CATPURES ===
     if (x !== 0 && blackPieces.includes(board[y - 1][x - 1]))
-        possibleMoves.push([[y - 1, x - 1], "normal"]);
+        possibleMoves.push([[y - 1, x - 1], y === 1 ? "promotion" : "normal"]);
     if (x !== 7 && blackPieces.includes(board[y - 1][x + 1]))
-        possibleMoves.push([[y - 1, x + 1], "normal"]);
+        possibleMoves.push([[y - 1, x + 1], y === 1 ? "promotion" : "normal"]);
 
     // === EN PASSANT ===
     if (
@@ -160,8 +160,6 @@ const getWhitePawnMoves = (
         if (movesTree.from[1] === x + 1)
             possibleMoves.push([[2, x + 1], "en passant"]);
     }
-
-    // === PROMOTION ===
 
     return possibleMoves;
 };
@@ -454,7 +452,7 @@ export const isMoveLegal = (
     [ny, nx]: PiecePosition
 ): boolean => {
     const legalMoves = getLegalMoves(movesTree, from);
-    for (const [move, isSpecial] of legalMoves) {
+    for (const [move, _isSpecial] of legalMoves) {
         if (move[0] === ny && move[1] === nx) return true;
     }
 

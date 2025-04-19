@@ -1,19 +1,29 @@
-import { AlgebraicPiece, AlgebraicPosition, File, PiecePosition, Pieces, Rank } from "@/app/types";
+import {
+    AlgebraicPiece,
+    AlgebraicPosition,
+    File,
+    PiecePosition,
+    Pieces,
+    Rank,
+} from "@/app/types";
 import { MovesTreeNode } from "./MovesTree";
 
-const xToFile = (x: number): File => {
+export const xToFile = (x: number): File => {
     const files = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;
 
     return files[x];
-}
+};
 
-const yToRank = (y: number): Rank => {
+export const yToRank = (y: number): Rank => {
     const ranks = [8, 7, 6, 5, 4, 3, 2, 1] as const;
-    
-    return ranks[y];
-}
 
-const positionToAlgebraicNotation = ([y, x]: PiecePosition): AlgebraicPosition => `${xToFile(x)}${yToRank(y)}`;
+    return ranks[y];
+};
+
+export const positionToAlgebraicNotation = ([
+    y,
+    x,
+]: PiecePosition): AlgebraicPosition => `${xToFile(x)}${yToRank(y)}`;
 
 const pieceToAlgebraicPiece = (piece: Pieces): AlgebraicPiece => {
     if ([Pieces.EMPTY, Pieces.BLACK_PAWN, Pieces.WHITE_PAWN].includes(piece)) {
@@ -29,10 +39,10 @@ const pieceToAlgebraicPiece = (piece: Pieces): AlgebraicPiece => {
         return "R";
     }
     if ([Pieces.BLACK_QUEEN, Pieces.WHITE_QUEEN].includes(piece)) {
-        return "Q"
+        return "Q";
     }
     return "K";
-}
+};
 
 export const getAlgebraicMove = (fullMove: MovesTreeNode) => {
     const prevBoard = fullMove.parent.board;
@@ -43,7 +53,9 @@ export const getAlgebraicMove = (fullMove: MovesTreeNode) => {
     const mate = fullMove.isMate() ? "#" : "";
     const check = fullMove.isCheck() && !mate ? "+" : "";
 
-    let algebraicPiece: AlgebraicPiece | File = pieceToAlgebraicPiece(fullMove.piece);
+    let algebraicPiece: AlgebraicPiece | File = pieceToAlgebraicPiece(
+        fullMove.piece
+    );
     if (algebraicPiece === "" && take) {
         algebraicPiece = xToFile(fullMove.from[1]);
     }
@@ -61,4 +73,4 @@ export const getAlgebraicMove = (fullMove: MovesTreeNode) => {
     const extraPrecision = fullMove.getPrecisePosition();
 
     return `${algebraicPiece}${extraPrecision}${take}${endPosition}${promotedTo ? `=${promotedTo}` : ""}${check}${mate}`;
-}
+};

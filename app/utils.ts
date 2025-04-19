@@ -128,7 +128,7 @@ export const kingMoves = [
     [1, 1],
 ];
 
-export const knightMoves = [
+export const knightMoves: PiecePosition[] = [
     [-2, -1],
     [-2, 1],
     [2, -1],
