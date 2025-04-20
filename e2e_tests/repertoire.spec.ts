@@ -2,7 +2,13 @@ import { test, expect } from "@playwright/test";
 import { getSquareSelector } from "./e2e_utils";
 
 test("test repertoire", async ({ page }) => {
-    await page.goto("http://localhost:3000/repertoire");
+    await page.route("**/api/repertoire/**", async (route) => {
+        route.fulfill({
+            status: 200,
+            body: JSON.stringify({ id: "mock-id", name: "Mock Repertoire" }),
+        });
+    });
+    await page.goto("http://localhost:3000/repertoire/mock-id");
 
     await test.step("Clicking piece of opposite player doesn't do anything", async () => {
         const a8 = await page.$(getSquareSelector([0, 0]));
