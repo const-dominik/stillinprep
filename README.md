@@ -12,7 +12,7 @@ App should be launched at [http://localhost:3000](http://localhost:3000).
 ## Testing
 
 ### Unit
-Run tests using `npm run test`, check test coverage with `npx jest --coverage` - obviously the higher test coverage the better, good think to check if you're not sure if your code is tested well.
+Run tests using `npm run test`, check test coverage with `npx jest --coverage` - obviously the higher test coverage the better, good thing to check if you're not sure if your code is tested well.
 
 ### E2E
 Run tests using `npm run e2etest`.
