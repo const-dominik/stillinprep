@@ -8,7 +8,7 @@ const buildEslintCommand = (filenames) => {
 
   if (stagedFiles.length === 0) return "next lint"
 
-  return `next lint --fix --files ${stagedFiles}`;
+  return `next lint --fix --file ${stagedFiles}`;
 
 }
 module.exports = {

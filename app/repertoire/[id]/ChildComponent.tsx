@@ -1,8 +1,8 @@
 "use client";
 
-import { MovesTreeNode } from "../_components/chessboard/utils/MovesTree";
-import Chessboard from "../_components/chessboard/Chessboard";
-import MoveHistory from "../_components/chessboard/MoveHistory";
+import { MovesTreeNode } from "../../_components/chessboard/utils/MovesTree";
+import Chessboard from "../../_components/chessboard/Chessboard";
+import MoveHistory from "../../_components/chessboard/MoveHistory";
 import styles from "./page.module.scss";
 import { useState } from "react";
 

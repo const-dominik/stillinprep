@@ -19,10 +19,6 @@ describe("Square component", () => {
         onClick: jest.fn(),
     };
 
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
     it("renders square with dark/light background depending on x+y", () => {
         for (let i = 0; i <= 7; i++) {
             for (let j = 0; j <= 7; j++) {

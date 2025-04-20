@@ -2,9 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { create_e4_e5_Nf3 } from "@/__tests__/testing_utils";
-import Move from "@/app/_components/chessboard/Move";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Chessboard from "@/app/_components/chessboard/Chessboard";
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";

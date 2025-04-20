@@ -1,11 +1,7 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const Home = () => {
-    return (
-        <div>
-            hello :) <Link href="/repertoire">Repertoire</Link>
-        </div>
-    );
+    redirect("/repertoire");
 };
 
 export default Home;

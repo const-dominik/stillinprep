@@ -1,0 +1,88 @@
+@use "sass:color";
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.repertoires-list {
+    width: 30vw;
+    height: 80vh;
+    border-radius: 5px;
+    background: v.$palette-7;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: color.adjust(v.$palette-7, $lightness: -10%) color.adjust(v.$palette-7, $lightness: 5%);
+}
+
+.repertoire-element {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 10vh;
+    font-size: 2rem;
+    color: v.$palette-3;
+    background: v.$palette-6;
+    cursor: pointer;
+    border-bottom: 1px solid v.$palette-5;
+    user-select: none;
+
+    &:hover {
+        background: v.$palette-5;
+    }
+
+    &:last-child {
+        border: none;
+    }
+}
+
+.container-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 1px solid v.$palette-5;
+}
+  
+.input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background: transparent;
+    color: v.$palette-3;
+}
+
+.plus {
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s ease;
+    color: v.$palette-3;
+}
+
+.plus:hover {
+    color: v.$palette-5;
+}
+
+.no-repertoires {
+    color: v.$palette-4;
+    padding: 1rem;
+    text-align: center;
+}
