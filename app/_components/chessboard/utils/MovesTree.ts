@@ -23,6 +23,7 @@ import {
     xToFile,
     yToRank,
     positionToAlgebraicNotation,
+    getAlgebraicMove,
 } from "./chessAlgebraicNotation";
 
 export class MovesTreeNode {
@@ -34,11 +35,12 @@ export class MovesTreeNode {
     public to: PiecePosition;
     public player: Player;
     public board: Chessboard;
+    private algebraicNotation: string;
 
     constructor(
-        piece: Pieces,
-        from: PiecePosition,
-        to: PiecePosition,
+        piece: Pieces = Pieces.EMPTY,
+        from: PiecePosition = [0, 0],
+        to: PiecePosition = [0, 0],
         board: Chessboard = initialBoard
     ) {
         this.parent = this;
@@ -49,9 +51,10 @@ export class MovesTreeNode {
         this.from = from;
         this.to = to;
         this.board = copyBoard(board);
+        this.algebraicNotation = "";
     }
 
-    public addChild(child: MovesTreeNode) {
+    private addChild(child: MovesTreeNode) {
         this.children.push(child);
         child.parent = this;
     }
@@ -126,41 +129,7 @@ export class MovesTreeNode {
     }
 
     public castled(): CastleType | false {
-        const kings = [Pieces.BLACK_KING, Pieces.WHITE_KING];
-        const rooks = [Pieces.BLACK_ROOK, Pieces.WHITE_ROOK];
-
-        /// === black's castling ===
-        if (
-            kings.includes(this.parent.board[0][4]) &&
-            rooks.includes(this.parent.board[0][7]) &&
-            kings.includes(this.board[0][6]) &&
-            rooks.includes(this.board[0][5])
-        )
-            return "short";
-        if (
-            kings.includes(this.parent.board[0][4]) &&
-            rooks.includes(this.parent.board[0][0]) &&
-            kings.includes(this.board[0][3]) &&
-            rooks.includes(this.board[0][2])
-        )
-            return "long";
-
-        /// === white's castling ===
-        if (
-            kings.includes(this.parent.board[7][4]) &&
-            rooks.includes(this.parent.board[7][7]) &&
-            kings.includes(this.board[7][6]) &&
-            rooks.includes(this.board[7][5])
-        )
-            return "short";
-        if (
-            kings.includes(this.parent.board[7][4]) &&
-            rooks.includes(this.parent.board[7][0]) &&
-            kings.includes(this.board[7][3]) &&
-            rooks.includes(this.board[7][2])
-        )
-            return "long";
-
+        // Was this move a castle?
         return false;
     }
 
@@ -268,5 +237,13 @@ export class MovesTreeNode {
         }
 
         return "";
+    }
+
+    public getAlgebraicNotation(): string {
+        if (this.algebraicNotation === "") {
+            this.algebraicNotation = getAlgebraicMove(this);
+        }
+
+        return this.algebraicNotation;
     }
 }

@@ -1,5 +1,14 @@
 import { Pieces } from "./types";
-import type { Chessboard, MoveType, PiecePosition, Player } from "./types";
+import type {
+    AlgebraicPosition,
+    Chessboard,
+    PiecePosition,
+    Player,
+    Rank,
+    File,
+    AlgebraicPiece,
+    MoveType,
+} from "./types";
 
 export const initialBoard: Chessboard = [
     [
@@ -169,4 +178,40 @@ export const includesMove = (
 
 export const getOppositePlayer = (player: Player): Player => {
     return player === "white" ? "black" : "white";
+};
+
+export const xToFile = (x: number): File => {
+    const files = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;
+
+    return files[x];
+};
+
+export const yToRank = (y: number): Rank => {
+    const ranks = [8, 7, 6, 5, 4, 3, 2, 1] as const;
+
+    return ranks[y];
+};
+
+export const positionToAlgebraicNotation = ([
+    y,
+    x,
+]: PiecePosition): AlgebraicPosition => `${xToFile(x)}${yToRank(y)}`;
+
+export const pieceToAlgebraicPiece = (piece: Pieces): AlgebraicPiece => {
+    if ([Pieces.EMPTY, Pieces.BLACK_PAWN, Pieces.WHITE_PAWN].includes(piece)) {
+        return "";
+    }
+    if ([Pieces.BLACK_KNIGHT, Pieces.WHITE_KNIGHT].includes(piece)) {
+        return "N";
+    }
+    if ([Pieces.BLACK_BISHOP, Pieces.WHITE_BISHOP].includes(piece)) {
+        return "B";
+    }
+    if ([Pieces.BLACK_ROOK, Pieces.WHITE_ROOK].includes(piece)) {
+        return "R";
+    }
+    if ([Pieces.BLACK_QUEEN, Pieces.WHITE_QUEEN].includes(piece)) {
+        return "Q";
+    }
+    return "K";
 };

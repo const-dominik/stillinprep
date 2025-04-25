@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "e2etest": "npx playwright test"
   },
   "husky": {
     "hooks": {
@@ -21,15 +24,26 @@
     ]
   },
   "dependencies": {
+    "@testing-library/user-event": "^14.6.1",
+    "@types/mongoose": "^5.11.96",
+    "dotenv": "^16.5.0",
+    "neo4j-driver": "^5.28.1",
     "next": "15.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sass": "^1.85.1",
-    "stillinprep": "file:"
+    "stillinprep": "file:",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.26.3",
     "@eslint/eslintrc": "^3",
     "@eslint/js": "^9.22.0",
+    "@playwright/test": "^1.52.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -39,8 +53,12 @@
     "eslint-plugin-react": "^7.37.4",
     "globals": "^16.0.0",
     "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
+    "ts-jest": "^29.3.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5",
     "typescript-eslint": "^8.26.1"
   }

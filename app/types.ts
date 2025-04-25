@@ -37,3 +37,8 @@ export type File = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h";
 export type AlgebraicPiece = "" | "K" | "Q" | "N" | "B" | "R";
 export type AlgebraicPromotionPieces = "Q" | "N" | "B" | "R";
 export type AlgebraicPosition = `${File}${Rank}`;
+
+export type Repertoire = {
+    id: string;
+    name: string;
+};

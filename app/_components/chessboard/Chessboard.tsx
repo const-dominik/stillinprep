@@ -25,9 +25,11 @@ import Square from "./Square";
 const Chessboard = ({
     currentNode,
     setCurrentNode,
+    setLastNode,
 }: {
     currentNode: MovesTreeNode;
     setCurrentNode: Dispatch<SetStateAction<MovesTreeNode>>;
+    setLastNode: Dispatch<SetStateAction<MovesTreeNode>>;
 }) => {
     const [selectedPiece, setSelectedPiece] = useState<PiecePosition | null>(
         null
@@ -90,15 +92,15 @@ const Chessboard = ({
                     promotingTo
                 );
 
-                setCurrentNode(
-                    currentNode.addMove(
-                        newBoard[y][x],
-                        selectedPiece,
-                        [y, x],
-                        newBoard
-                    )
+                const newMove = currentNode.addMove(
+                    newBoard[y][x],
+                    selectedPiece,
+                    [y, x],
+                    newBoard
                 );
 
+                setCurrentNode(newMove);
+                setLastNode(newMove);
                 setSelectedPiece(null);
                 setLegalMovesForPiece([]);
 

@@ -1,11 +1,12 @@
-// This is server component - here we'll download the MovesTree from db
-// and pass it to ChildComponent - which is client component
-// this way we can utilize Next.js SSR properly (I think)
+import RepertoireList from "../_components/repertoires/RepertoireList";
 
-import ChildComponent from "./ChildComponent";
+const Content = async () => {
+    const res = await fetch("http://localhost:3000/api/repertoire", {
+        method: "GET",
+    });
+    const { repertoires } = await res.json();
 
-const Content = () => {
-    return <ChildComponent />;
+    return <RepertoireList repertoires={repertoires} />;
 };
 
 export default Content;
