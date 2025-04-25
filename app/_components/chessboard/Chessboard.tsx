@@ -60,10 +60,9 @@ const Chessboard = ({
                 .map((piece, index) => [[y + index, x], piece]);
         }
 
-        return blackPromotionPieces.map((piece, index) => [
-            [y - index, x],
-            piece,
-        ]);
+        return blackPromotionPieces
+            .toReversed()
+            .map((piece, index) => [[y - index, x], piece]);
     };
 
     const board = currentNode.board;
