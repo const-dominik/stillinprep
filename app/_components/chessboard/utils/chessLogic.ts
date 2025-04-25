@@ -245,8 +245,8 @@ const getKingMoves = (
     const capturablePieces =
         board[y][x] === Pieces.WHITE_KING ? blackPieces : whitePieces;
     for (const [dy, dx] of kingMoves) {
-        let ny = y + dy;
-        let nx = x + dx;
+        const ny = y + dy;
+        const nx = x + dx;
         if (
             isInBoard([ny, nx]) &&
             (capturablePieces.includes(board[ny][nx]) ||
@@ -376,7 +376,6 @@ export const makeMove = (
         }
 
         if (piece === Pieces.BLACK_PAWN || piece === Pieces.WHITE_PAWN) {
-            // === PROMOTION
             if (moveType === "promotion") {
                 newBoard[from[0]][from[1]] = Pieces.EMPTY;
                 newBoard[to[0]][to[1]] = promotingTo;
@@ -452,7 +451,7 @@ export const isMoveLegal = (
     [ny, nx]: PiecePosition
 ): boolean => {
     const legalMoves = getLegalMoves(movesTree, from);
-    for (const [move, _isSpecial] of legalMoves) {
+    for (const [move] of legalMoves) {
         if (move[0] === ny && move[1] === nx) return true;
     }
 

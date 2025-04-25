@@ -24,7 +24,6 @@ import {
     yToRank,
     positionToAlgebraicNotation,
 } from "./chessAlgebraicNotation";
-import { M_PLUS_1_Code } from "next/font/google";
 
 export class MovesTreeNode {
     public parent: MovesTreeNode;
@@ -259,11 +258,9 @@ export class MovesTreeNode {
 
         if (positionsToCheck.length > 1) {
             const xFilter = positionsToCheck.filter(
-                ([_, x]) => x == this.from[1]
+                ([, x]) => x == this.from[1]
             );
-            const yFilter = positionsToCheck.filter(
-                ([y, _]) => y == this.from[0]
-            );
+            const yFilter = positionsToCheck.filter(([y]) => y == this.from[0]);
 
             if (xFilter.length === 1) return xToFile(this.from[1]);
             if (yFilter.length === 1) return yToRank(this.from[0]);

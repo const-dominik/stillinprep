@@ -5,7 +5,6 @@ import { Dispatch, SetStateAction, useState } from "react";
 import styles from "./styles.module.scss";
 
 import {
-    copyBoard,
     getCurrentPlayerPieces,
     getOppositePlayer,
     includesMove,
@@ -63,7 +62,7 @@ const Chessboard = ({
         } else {
             if (includesMove(legalMovesForPiece, [y, x])) {
                 const move = legalMovesForPiece.find(
-                    ([pos, _moveType]) => pos[0] === y && pos[1] === x
+                    ([pos]) => pos[0] === y && pos[1] === x
                 );
                 let promotingTo = Pieces.EMPTY;
 

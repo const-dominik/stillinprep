@@ -163,7 +163,7 @@ export const includesMove = (
     moveToCheck: PiecePosition
 ): boolean => {
     return moves.some(
-        ([pos, _val]) => pos[0] === moveToCheck[0] && pos[1] === moveToCheck[1]
+        ([pos]) => pos[0] === moveToCheck[0] && pos[1] === moveToCheck[1]
     );
 };
 
