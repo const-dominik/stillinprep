@@ -38,7 +38,7 @@ describe("chessAlgebraicNotation", () => {
         expect(Qxd5.getAlgebraicNotation()).toEqual("Qxd5");
     });
 
-    it.skip("works with piece precision", () => {
+    it("works with piece precision", () => {
         const twoRooksCanMove = new MovesTreeNode(
             Pieces.WHITE_PAWN,
             [1, 1],
@@ -56,7 +56,7 @@ describe("chessAlgebraicNotation", () => {
         expect(rookMove.getAlgebraicNotation()).toEqual("Rcd3");
     });
 
-    it.skip("detects check", () => {
+    it("detects check", () => {
         const [, , exd5] = create_e4_d5_exd5();
 
         const Qxd5 = exd5.addMove(
@@ -83,7 +83,7 @@ describe("chessAlgebraicNotation", () => {
         expect(queenCheck.getAlgebraicNotation()).toEqual("Qe5+");
     });
 
-    it.skip("detects mate", () => {
+    it("detects mate", () => {
         const game = new MovesTreeNode(
             Pieces.WHITE_PAWN,
             [6, 2],
@@ -105,7 +105,7 @@ describe("chessAlgebraicNotation", () => {
         expect(mate.getAlgebraicNotation()).toEqual("Qxf2#");
     });
 
-    it.skip("detects promotion", () => {
+    it("detects promotion", () => {
         const game = new MovesTreeNode(
             Pieces.BLACK_KING,
             [6, 0],
@@ -123,7 +123,7 @@ describe("chessAlgebraicNotation", () => {
         expect(promotion.getAlgebraicNotation()).toEqual("f8=Q");
     });
 
-    it.skip("works for complicated cases", () => {
+    it("works for complicated cases", () => {
         const game = new MovesTreeNode(
             Pieces.BLACK_KING,
             [1, 7],
@@ -138,7 +138,7 @@ describe("chessAlgebraicNotation", () => {
             FENToChessboard("6Qk/8/8/8/8/8/3K4/6R1")
         );
 
-        expect(complicatedMove.getAlgebraicNotation).toEqual("fxg8=Q#");
+        expect(complicatedMove.getAlgebraicNotation()).toEqual("fxg8=Q#");
     });
 
     it.todo("detects castle");

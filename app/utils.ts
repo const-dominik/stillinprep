@@ -7,6 +7,7 @@ import type {
     Rank,
     File,
     AlgebraicPiece,
+    MoveType,
 } from "./types";
 
 export const initialBoard: Chessboard = [
@@ -125,10 +126,54 @@ export const blackPieces = [
     Pieces.BLACK_KING,
 ];
 
+export const kingMoves = [
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0, 1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+];
+
+export const knightMoves: PiecePosition[] = [
+    [-2, -1],
+    [-2, 1],
+    [2, -1],
+    [2, 1],
+    [-1, -2],
+    [-1, 2],
+    [1, -2],
+    [1, 2],
+];
+
+export const bishopMoves: PiecePosition[] = [
+    [-1, -1],
+    [-1, 1],
+    [1, -1],
+    [1, 1],
+];
+
+export const rookMoves: PiecePosition[] = [
+    [0, -1],
+    [0, 1],
+    [-1, 0],
+    [1, 0],
+];
+
 export const copyBoard = (board: Chessboard) => board.map((row) => [...row]);
 export const getCurrentPlayerPieces = (player: Player) => {
     if (player === "white") return whitePieces;
     return blackPieces;
+};
+export const includesMove = (
+    moves: [PiecePosition, MoveType][],
+    moveToCheck: PiecePosition
+): boolean => {
+    return moves.some(
+        ([pos]) => pos[0] === moveToCheck[0] && pos[1] === moveToCheck[1]
+    );
 };
 
 export const getOppositePlayer = (player: Player): Player => {

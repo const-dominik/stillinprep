@@ -10,8 +10,21 @@ import type {
     Rank,
 } from "@/app/types";
 import { Pieces } from "@/app/types";
-import { initialBoard, copyBoard, getOppositePlayer } from "@/app/utils";
-import { getAlgebraicMove } from "./chessAlgebraicNotation";
+import {
+    initialBoard,
+    copyBoard,
+    getOppositePlayer,
+    bishopMoves,
+    knightMoves,
+    rookMoves,
+} from "@/app/utils";
+import { isInBoard, isMate as checkMate, isKingChecked } from "./chessLogic";
+import {
+    xToFile,
+    yToRank,
+    positionToAlgebraicNotation,
+    getAlgebraicMove,
+} from "./chessAlgebraicNotation";
 
 export class MovesTreeNode {
     public parent: MovesTreeNode;
@@ -59,6 +72,10 @@ export class MovesTreeNode {
         return child;
     }
 
+    public getCurrentPlayer() {
+        return getOppositePlayer(this.player);
+    }
+
     public checkCastlingRigths(rights?: CastlingRigths): CastlingRigths {
         if (!rights) {
             return this.parent.checkCastlingRigths("both");
@@ -104,13 +121,11 @@ export class MovesTreeNode {
     }
 
     public isCheck(): boolean {
-        // Did this move result in check?
-        return false;
+        return isKingChecked(this.board).length > 0;
     }
 
     public isMate(): boolean {
-        // Did this move result in checkmate?
-        return false;
+        return checkMate(this) > 0;
     }
 
     public castled(): CastleType | false {
@@ -119,14 +134,107 @@ export class MovesTreeNode {
     }
 
     public promotedTo(): AlgebraicPromotionPieces | false {
-        // If this was a promiton, what was pawn promoted to?
+        if (
+            this.parent.board[this.from[0]][this.from[1]] !==
+            this.board[this.to[0]][this.to[1]]
+        ) {
+            const piece = this.board[this.to[0]][this.to[1]];
+
+            if ([Pieces.BLACK_BISHOP, Pieces.WHITE_BISHOP].includes(piece))
+                return "B";
+            if ([Pieces.BLACK_KNIGHT, Pieces.WHITE_KNIGHT].includes(piece))
+                return "N";
+            if ([Pieces.BLACK_ROOK, Pieces.WHITE_ROOK].includes(piece))
+                return "R";
+            if ([Pieces.BLACK_QUEEN, Pieces.WHITE_QUEEN].includes(piece))
+                return "Q";
+        }
 
         return false;
+    }
+
+    private pieceDetection(
+        sqare: PiecePosition,
+        piece: Pieces
+    ): PiecePosition[] {
+        if (
+            [Pieces.EMPTY, Pieces.BLACK_KING, Pieces.WHITE_KING].includes(piece)
+        )
+            throw new Error("Only bishops, knighs, rooks and queens");
+        const [y, x] = sqare;
+        const detectedPieces: PiecePosition[] = [];
+
+        if ([Pieces.BLACK_KNIGHT, Pieces.WHITE_KNIGHT].includes(piece)) {
+            for (const [dy, dx] of knightMoves) {
+                const ny = y + dy;
+                const nx = x + dx;
+                if (isInBoard([ny, nx]) && piece === this.parent.board[ny][nx])
+                    detectedPieces.push([ny, nx]);
+            }
+        } else {
+            const movement: PiecePosition[] = [];
+            if ([Pieces.BLACK_BISHOP, Pieces.WHITE_BISHOP].includes(piece))
+                movement.push(...bishopMoves);
+            if ([Pieces.BLACK_ROOK, Pieces.WHITE_ROOK].includes(piece))
+                movement.push(...rookMoves);
+            if ([Pieces.BLACK_QUEEN, Pieces.WHITE_QUEEN].includes(piece)) {
+                movement.push(...bishopMoves);
+                movement.push(...rookMoves);
+            }
+
+            for (const [dy, dx] of movement) {
+                let ny = y + dy;
+                let nx = x + dx;
+                while (
+                    isInBoard([ny, nx]) &&
+                    this.parent.board[ny][nx] === Pieces.EMPTY
+                ) {
+                    ny += dy;
+                    nx += dx;
+                }
+
+                if (isInBoard([ny, nx]) && this.parent.board[ny][nx] === piece)
+                    detectedPieces.push([ny, nx]);
+            }
+        }
+
+        return detectedPieces;
     }
 
     public getPrecisePosition(): File | Rank | AlgebraicPosition | "" {
         // Do we need to define piece more precisely, e.g. Raxe5?
         // Should return piece file/rank/full position if extra precision is needed, else ""
+        const piece = this.board[this.to[0]][this.to[1]];
+        // === Pawns ===
+        if (
+            [Pieces.BLACK_PAWN, Pieces.WHITE_PAWN].includes(piece) &&
+            this.from[1] !== this.to[1]
+        ) {
+            const dx = this.to[1] - this.from[0];
+            const otherside: PiecePosition = [this.to[0], this.from[1] - dx];
+            if (
+                isInBoard(otherside) &&
+                this.board[otherside[0]][otherside[1]] === piece
+            )
+                return xToFile(otherside[0]);
+        }
+
+        // === Kings ===
+        if ([Pieces.BLACK_KING, Pieces.WHITE_KING].includes(piece)) return "";
+
+        // === Bishops, knighs, rooks and queens ===
+        const positionsToCheck = this.pieceDetection(this.to, piece);
+
+        if (positionsToCheck.length > 1) {
+            const xFilter = positionsToCheck.filter(
+                ([, x]) => x == this.from[1]
+            );
+            const yFilter = positionsToCheck.filter(([y]) => y == this.from[0]);
+
+            if (xFilter.length === 1) return xToFile(this.from[1]);
+            if (yFilter.length === 1) return yToRank(this.from[0]);
+            return positionToAlgebraicNotation(this.from);
+        }
 
         return "";
     }
