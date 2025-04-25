@@ -126,6 +126,20 @@ export const blackPieces = [
     Pieces.BLACK_KING,
 ];
 
+export const whitePromotionPieces = [
+    Pieces.WHITE_KNIGHT,
+    Pieces.WHITE_BISHOP,
+    Pieces.WHITE_ROOK,
+    Pieces.WHITE_QUEEN,
+];
+
+export const blackPromotionPieces = [
+    Pieces.BLACK_KNIGHT,
+    Pieces.BLACK_BISHOP,
+    Pieces.BLACK_ROOK,
+    Pieces.BLACK_QUEEN,
+];
+
 export const kingMoves = [
     [-1, -1],
     [-1, 0],

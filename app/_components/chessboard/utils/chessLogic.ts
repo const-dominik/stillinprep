@@ -402,7 +402,7 @@ export const getLegalMoves = (
     const legalMoves: [PiecePosition, MoveType][] = [];
     const currentPlayer = movesTree.getCurrentPlayer();
 
-    for (const [to, moveType] of movesToCheck) {
+    movesToCheck.forEach(([to, moveType]) => {
         const newBoard = makeMove(
             movesTree.board,
             piecePosition,
@@ -410,7 +410,7 @@ export const getLegalMoves = (
             moveType,
             Pieces.WHITE_PAWN
         );
-        /// mogą być problemy, ale może będzie git
+
         const checkedKing = isKingChecked(newBoard);
         if (
             checkedKing.length === 0 ||
@@ -420,7 +420,7 @@ export const getLegalMoves = (
                 currentPlayer === "white")
         )
             legalMoves.push([to, moveType]);
-    }
+    });
 
     return legalMoves;
 };

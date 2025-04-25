@@ -10,6 +10,8 @@ type SquareProps = {
     isSelected: boolean;
     isMoveLegal: boolean;
     isPieceOnSquare: boolean;
+    isChecked: boolean;
+    promotionData: [boolean, boolean];
     onClick: (x: number, y: number) => void;
 };
 
@@ -20,10 +22,14 @@ const Square = ({
     isSelected,
     isMoveLegal,
     isPieceOnSquare,
+    isChecked,
+    promotionData,
     onClick,
 }: SquareProps) => {
     const isDark = (x + y) % 2 === 1;
     const classes = [];
+    const [promoting, isChoosable] = promotionData;
+    if (!promoting || isChoosable) classes.push(styles.pointer);
 
     if (isDark) {
         classes.push(styles.dark);
@@ -35,6 +41,10 @@ const Square = ({
                 classes.push(styles["legal-dark-move"]);
             }
         }
+
+        if (isChecked) {
+            classes.push(styles["checked-dark"]);
+        }
     } else {
         classes.push(styles.light);
 
@@ -45,6 +55,10 @@ const Square = ({
                 classes.push(styles["legal-light-move"]);
             }
         }
+
+        if (isChecked) {
+            classes.push(styles["checked-light"]);
+        }
     }
 
     if (isSelected) {
@@ -53,6 +67,7 @@ const Square = ({
 
     return (
         <div className={classes.join(" ")} onClick={() => onClick(x, y)}>
+            {promoting && !isChoosable && <div className={styles.overlay} />}
             {piece !== Pieces.EMPTY && (
                 <Image
                     src={pieceAssets[piece]}

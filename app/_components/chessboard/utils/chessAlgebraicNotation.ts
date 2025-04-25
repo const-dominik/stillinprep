@@ -52,9 +52,10 @@ export const getAlgebraicMove = (fullMove: MovesTreeNode) => {
     const take = piece === Pieces.EMPTY ? "" : "x";
     const mate = fullMove.isMate() ? "#" : "";
     const check = fullMove.isCheck() && !mate ? "+" : "";
+    const promotedTo = fullMove.promotedTo();
 
     let algebraicPiece: AlgebraicPiece | File = pieceToAlgebraicPiece(
-        fullMove.piece
+        promotedTo ? promotedTo[0] : fullMove.piece
     );
     if (algebraicPiece === "" && take) {
         algebraicPiece = xToFile(fullMove.from[1]);
@@ -69,8 +70,7 @@ export const getAlgebraicMove = (fullMove: MovesTreeNode) => {
     }
 
     const endPosition = positionToAlgebraicNotation(fullMove.to);
-    const promotedTo = fullMove.promotedTo();
     const extraPrecision = fullMove.getPrecisePosition();
 
-    return `${algebraicPiece}${extraPrecision}${take}${endPosition}${promotedTo ? `=${promotedTo}` : ""}${check}${mate}`;
+    return `${algebraicPiece}${extraPrecision}${take}${endPosition}${promotedTo ? `=${promotedTo[1]}` : ""}${check}${mate}`;
 };

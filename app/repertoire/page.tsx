@@ -6,6 +6,12 @@ const Content = async () => {
     });
     const { repertoires } = await res.json();
 
+    if (!repertoires) {
+        throw new Error(
+            "Something wrong with db - no repertoires returned, probably instance paused :("
+        );
+    }
+
     return <RepertoireList repertoires={repertoires} />;
 };
 

@@ -16,6 +16,8 @@ describe("Square component", () => {
         isSelected: false,
         isMoveLegal: false,
         isPieceOnSquare: false,
+        isChecked: false,
+        promotionData: [false, false] as [boolean, boolean],
         onClick: jest.fn(),
     };
 
@@ -126,5 +128,38 @@ describe("Square component", () => {
         expect(square).toBeInTheDocument();
         fireEvent.click(square);
         expect(mockClick).toHaveBeenCalledWith(0, 0);
+    });
+
+    it("detects check", () => {
+        const { container } = render(
+            <Square {...baseProps} isChecked={true} />
+        );
+
+        const square = container.querySelector("div")!;
+        expect(square).toBeInTheDocument();
+        expect(square.className).toContain("checked");
+    });
+
+    it("renders overlay over square while promoting and isn't choosable", () => {
+        const { container } = render(
+            <Square {...baseProps} promotionData={[true, false]} />
+        );
+
+        const mainSquare = container.querySelector("div")!;
+        const overlayDiv = mainSquare.querySelector("div");
+
+        expect(overlayDiv).not.toBeNull();
+        expect(overlayDiv).toBeInTheDocument();
+    });
+
+    it("doesn't render overlay over square while promoting and is choosable", () => {
+        const { container } = render(
+            <Square {...baseProps} promotionData={[true, true]} />
+        );
+
+        const mainSquare = container.querySelector("div")!;
+        const overlayDiv = mainSquare.querySelector("div");
+
+        expect(overlayDiv).toBeNull();
     });
 });

@@ -133,26 +133,27 @@ export class MovesTreeNode {
         return false;
     }
 
-    public promotedTo(): AlgebraicPromotionPieces | false {
-        if (
-            this.parent.board[this.from[0]][this.from[1]] !==
-            this.board[this.to[0]][this.to[1]]
-        ) {
-            const piece = this.board[this.to[0]][this.to[1]];
+    public promotedTo(): [Pieces, AlgebraicPromotionPieces] | false {
+        const prevPiece = this.parent.board[this.from[0]][this.from[1]];
+        const currentPiece = this.board[this.to[0]][this.to[1]];
 
-            if ([Pieces.BLACK_BISHOP, Pieces.WHITE_BISHOP].includes(piece))
-                return "B";
-            if ([Pieces.BLACK_KNIGHT, Pieces.WHITE_KNIGHT].includes(piece))
-                return "N";
-            if ([Pieces.BLACK_ROOK, Pieces.WHITE_ROOK].includes(piece))
-                return "R";
-            if ([Pieces.BLACK_QUEEN, Pieces.WHITE_QUEEN].includes(piece))
-                return "Q";
+        if (prevPiece === currentPiece) return false;
+
+        const promotionMap: [Pieces[], AlgebraicPromotionPieces][] = [
+            [[Pieces.BLACK_BISHOP, Pieces.WHITE_BISHOP], "B"],
+            [[Pieces.BLACK_KNIGHT, Pieces.WHITE_KNIGHT], "N"],
+            [[Pieces.BLACK_ROOK, Pieces.WHITE_ROOK], "R"],
+            [[Pieces.BLACK_QUEEN, Pieces.WHITE_QUEEN], "Q"],
+        ];
+
+        for (const [pieces, algebraicPiece] of promotionMap) {
+            if (pieces.includes(currentPiece)) {
+                return [prevPiece, algebraicPiece];
+            }
         }
 
         return false;
     }
-
     private pieceDetection(
         sqare: PiecePosition,
         piece: Pieces
