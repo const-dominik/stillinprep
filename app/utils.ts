@@ -229,3 +229,85 @@ export const pieceToAlgebraicPiece = (piece: Pieces): AlgebraicPiece => {
     }
     return "K";
 };
+
+const charToPieceMap: Record<string, Pieces> = {
+    p: Pieces.BLACK_PAWN,
+    r: Pieces.BLACK_ROOK,
+    n: Pieces.BLACK_KNIGHT,
+    b: Pieces.BLACK_BISHOP,
+    q: Pieces.BLACK_QUEEN,
+    k: Pieces.BLACK_KING,
+    P: Pieces.WHITE_PAWN,
+    R: Pieces.WHITE_ROOK,
+    N: Pieces.WHITE_KNIGHT,
+    B: Pieces.WHITE_BISHOP,
+    Q: Pieces.WHITE_QUEEN,
+    K: Pieces.WHITE_KING,
+};
+
+const pieceToCharMap = {
+    ...Object.fromEntries(
+        Object.entries(charToPieceMap).map(([key, value]) => [value, key])
+    ),
+    [Pieces.EMPTY]: "",
+} as Record<Pieces, string>;
+
+export const FENToChessboard = (fen: string): Chessboard => {
+    const rows = fen.split(" ")[0].split("/");
+
+    const board = rows.map((rank) => {
+        const row: Pieces[] = [];
+
+        for (const char of rank) {
+            if (/\d/.test(char)) {
+                const emptySquares = parseInt(char, 10);
+                row.push(...Array(emptySquares).fill(Pieces.EMPTY));
+            } else {
+                row.push(charToPieceMap[char] ?? Pieces.EMPTY);
+            }
+        }
+
+        if (row.length !== 8) {
+            throw new Error(`Invalid FEN row: "${rank}"`);
+        }
+
+        return row;
+    });
+
+    if (board.length !== 8) {
+        throw new Error("FEN must describe 8 ranks.");
+    }
+
+    return board;
+};
+
+export const chessboardToFEN = (board: Chessboard): string => {
+    if (board.length !== 8 || board.some((row) => row.length !== 8)) {
+        throw new Error("Invalid board: must be 8x8.");
+    }
+
+    const fenRows = board.map((row) => {
+        let fenRow = "";
+        let emptyCount = 0;
+
+        for (const piece of row) {
+            if (piece === Pieces.EMPTY) {
+                emptyCount++;
+            } else {
+                if (emptyCount > 0) {
+                    fenRow += emptyCount;
+                    emptyCount = 0;
+                }
+                fenRow += pieceToCharMap[piece] || "";
+            }
+        }
+
+        if (emptyCount > 0) {
+            fenRow += emptyCount;
+        }
+
+        return fenRow;
+    });
+
+    return fenRows.join("/");
+};

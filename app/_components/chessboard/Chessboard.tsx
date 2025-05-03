@@ -15,18 +15,27 @@ import type { Chessboard, PiecePosition, MoveType } from "@/app/types";
 import { Pieces } from "@/app/types";
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
 
-import { getLegalMoves, isMoveLegal, makeMove } from "./utils/chessLogic";
+import {
+    getLegalMoves,
+    isMoveLegal,
+    getBoardAfterMove,
+} from "./utils/chessLogic";
 
 import Square from "./Square";
+import { addMove } from "@/app/actions/move";
 
 const Chessboard = ({
     currentNode,
+    lastNode,
     setCurrentNode,
     setLastNode,
+    repertoireId,
 }: {
     currentNode: MovesTreeNode;
+    lastNode: MovesTreeNode;
     setCurrentNode: Dispatch<SetStateAction<MovesTreeNode>>;
     setLastNode: Dispatch<SetStateAction<MovesTreeNode>>;
+    repertoireId: string;
 }) => {
     const [selectedPieceData, setSelectedPieceData] = useState<{
         position: PiecePosition | null;
@@ -35,9 +44,7 @@ const Chessboard = ({
     const [pendingPromotion, setPendingPromotion] = useState<{
         from: PiecePosition;
         to: PiecePosition;
-        type: "promotion";
     } | null>(null);
-
     const handleChangeSelectedPiece = (newPosition: PiecePosition | null) => {
         if (!newPosition) {
             setSelectedPieceData({ position: null, legalMoves: [] });
@@ -77,6 +84,99 @@ const Chessboard = ({
         getOppositePlayer(currentPlayer)
     );
 
+    const addMoveToDb = (node: MovesTreeNode) => {
+        const parentId = node.parent.createMoveHash();
+        const promotion = node.promotedTo();
+
+        const currentMoveData = {
+            name: node.getAlgebraicNotation(),
+            from: node.from,
+            to: node.to,
+            promotion: promotion ? promotion[1] : null,
+            id: node.createMoveHash(),
+        };
+
+        const moveData = {
+            parent: parentId,
+            repertoire: repertoireId,
+            move: currentMoveData,
+        };
+
+        addMove(moveData);
+    };
+
+    const finalizeMove = (
+        piece: Pieces,
+        from: [number, number],
+        to: [number, number],
+        boardAfterMove: Pieces[][]
+    ) => {
+        const { node, isNew } = currentNode.addMove(
+            piece,
+            from,
+            to,
+            boardAfterMove
+        );
+
+        setCurrentNode(node);
+
+        let finalNode = node;
+        if (!isNew) {
+            while (finalNode.children.length === 1) {
+                finalNode = finalNode.children[0];
+            }
+        }
+
+        setLastNode(finalNode.moveId > lastNode.moveId ? finalNode : node);
+        handleChangeSelectedPiece(null);
+
+        if (isNew) {
+            addMoveToDb(node);
+        }
+    };
+
+    const handleMove = (x: number, y: number) => {
+        const move = legalMovesForPiece.find(
+            ([pos]) => pos[0] === y && pos[1] === x
+        );
+
+        if (!move) throw new Error("Move is undefined, which is unexpected");
+
+        const from = selectedPiece!;
+        const to: [number, number] = [y, x];
+        const moveType = move[1];
+
+        if (moveType === "promotion") {
+            setPendingPromotion({ from, to });
+            return;
+        }
+
+        const newBoard = getBoardAfterMove(
+            board,
+            from,
+            to,
+            moveType,
+            Pieces.EMPTY
+        );
+        finalizeMove(newBoard[y][x], from, to, newBoard);
+    };
+
+    const handlePromotion = (promotedTo: Pieces) => {
+        if (!pendingPromotion) return;
+
+        const { from, to } = pendingPromotion;
+        const newBoard = getBoardAfterMove(
+            board,
+            from,
+            to,
+            "promotion",
+            promotedTo
+        );
+
+        finalizeMove(promotedTo, from, to, newBoard);
+        setPendingPromotion(null);
+    };
+
     const handleSquareClick = (x: number, y: number) => {
         const clickedPiece = board[y][x];
         const isSameSquare =
@@ -99,65 +199,11 @@ const Chessboard = ({
         }
 
         if (includesMove(legalMovesForPiece, [y, x])) {
-            const move = legalMovesForPiece.find(
-                ([pos]) => pos[0] === y && pos[1] === x
-            );
-            if (!move)
-                throw new Error("Move is undefined, which is unexpected");
-
-            if (move[1] === "promotion") {
-                setPendingPromotion({
-                    from: selectedPiece,
-                    to: [y, x],
-                    type: "promotion",
-                });
-                return;
-            }
-
-            const newBoard = makeMove(
-                board,
-                selectedPiece,
-                [y, x],
-                move[1],
-                Pieces.EMPTY
-            );
-
-            const newMove = currentNode.addMove(
-                newBoard[y][x],
-                selectedPiece,
-                [y, x],
-                newBoard
-            );
-
-            setCurrentNode(newMove);
-            setLastNode(newMove);
-            handleChangeSelectedPiece(null);
-        } else {
-            handleChangeSelectedPiece(isOwnPiece ? [y, x] : null);
+            handleMove(x, y);
+            return;
         }
-    };
 
-    const handlePromotion = (promotedTo: Pieces) => {
-        if (!pendingPromotion) return;
-        const newBoard = makeMove(
-            board,
-            pendingPromotion.from,
-            pendingPromotion.to,
-            "promotion",
-            promotedTo
-        );
-
-        const newMove = currentNode.addMove(
-            promotedTo,
-            pendingPromotion.from,
-            pendingPromotion.to,
-            newBoard
-        );
-
-        setCurrentNode(newMove);
-        setLastNode(newMove);
-        handleChangeSelectedPiece(null);
-        setPendingPromotion(null);
+        handleChangeSelectedPiece(isOwnPiece ? [y, x] : null);
     };
 
     return (

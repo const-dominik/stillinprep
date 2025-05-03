@@ -244,6 +244,7 @@ const getKingMoves = (
     const oppositeSite = board[y][x] === Pieces.WHITE_KING ? "black" : "white";
     const capturablePieces =
         board[y][x] === Pieces.WHITE_KING ? blackPieces : whitePieces;
+
     for (const [dy, dx] of kingMoves) {
         const ny = y + dy;
         const nx = x + dx;
@@ -341,7 +342,7 @@ const getMovesToCheck = (
     return [];
 };
 
-export const makeMove = (
+export const getBoardAfterMove = (
     board: Chessboard,
     from: PiecePosition,
     to: PiecePosition,
@@ -403,7 +404,7 @@ export const getLegalMoves = (
     const currentPlayer = movesTree.getCurrentPlayer();
 
     movesToCheck.forEach(([to, moveType]) => {
-        const newBoard = makeMove(
+        const newBoard = getBoardAfterMove(
             movesTree.board,
             piecePosition,
             to,
@@ -425,7 +426,7 @@ export const getLegalMoves = (
     return legalMoves;
 };
 
-export const isMate = (movesTree: MovesTreeNode): Pieces => {
+export const isCheckmate = (movesTree: MovesTreeNode): Pieces => {
     const board = movesTree.board;
     const checkedKing = isKingChecked(board);
     if (checkedKing.length === 0) return Pieces.EMPTY;

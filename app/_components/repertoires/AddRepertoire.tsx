@@ -3,6 +3,7 @@
 import { useState } from "react";
 import styles from "./styles.module.scss";
 import { useRouter } from "next/navigation";
+import { createRepertoire } from "@/app/actions/repertoire";
 
 const AddRepertoire = () => {
     const [name, setName] = useState("");
@@ -11,16 +12,8 @@ const AddRepertoire = () => {
     const addRepertoire = async () => {
         if (name.length === 0) return;
 
-        const res = await fetch("/api/repertoire", {
-            method: "POST",
-            body: JSON.stringify({ name }),
-            headers: { "Content-Type": "application/json" },
-        });
-
-        if (res.ok) {
-            const { repertoire } = await res.json();
-            router.push(`/repertoire/${repertoire.id}`);
-        }
+        const newRepertoire = await createRepertoire(name);
+        router.push(`/repertoire/${newRepertoire.id}`);
     };
 
     return (

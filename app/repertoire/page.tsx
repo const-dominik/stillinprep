@@ -1,10 +1,8 @@
 import RepertoireList from "../_components/repertoires/RepertoireList";
+import { getRepertoires } from "../actions/repertoire";
 
 const Content = async () => {
-    const res = await fetch("http://localhost:3000/api/repertoire", {
-        method: "GET",
-    });
-    const { repertoires } = await res.json();
+    const repertoires = await getRepertoires();
 
     if (!repertoires) {
         throw new Error(

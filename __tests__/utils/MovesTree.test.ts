@@ -4,8 +4,8 @@
 
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
 import { Pieces } from "@/app/types";
-import { copyBoard, initialBoard } from "@/app/utils";
-import { create_e4_e5_Nf3, FENToChessboard } from "../testing_utils";
+import { copyBoard, FENToChessboard, initialBoard } from "@/app/utils";
+import { create_e4_e5_Nf3 } from "../testing_utils";
 
 describe("MovesTreeNode", () => {
     it("initalizes to base values without arguments", () => {
@@ -42,7 +42,7 @@ describe("MovesTreeNode", () => {
     it("new child modifies node", () => {
         const root = new MovesTreeNode();
         // play e4
-        const newMove = root.addMove(
+        const { node: newMove } = root.addMove(
             Pieces.WHITE_PAWN,
             [6, 4],
             [4, 4],
@@ -58,7 +58,7 @@ describe("MovesTreeNode", () => {
         expect(newMove.player).toBe("white");
 
         // play d4
-        const d4 = root.addMove(
+        const { node: d4 } = root.addMove(
             Pieces.WHITE_PAWN,
             [6, 3],
             [4, 3],

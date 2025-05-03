@@ -4,11 +4,8 @@
 
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
 import { Pieces } from "@/app/types";
-import {
-    create_e4_d5_exd5,
-    create_e4_e5_Nf3,
-    FENToChessboard,
-} from "../testing_utils";
+import { create_e4_d5_exd5, create_e4_e5_Nf3 } from "../testing_utils";
+import { FENToChessboard } from "@/app/utils";
 
 describe("chessAlgebraicNotation", () => {
     it("works for simple moves", () => {
@@ -28,7 +25,7 @@ describe("chessAlgebraicNotation", () => {
     it("displays proper piece in notation", () => {
         const [, , exd5] = create_e4_d5_exd5();
 
-        const Qxd5 = exd5.addMove(
+        const { node: Qxd5 } = exd5.addMove(
             Pieces.BLACK_QUEEN,
             [0, 3],
             [3, 3],
@@ -46,7 +43,7 @@ describe("chessAlgebraicNotation", () => {
             FENToChessboard("8/8/8/1p6/8/2R1R3/8/8")
         );
 
-        const rookMove = twoRooksCanMove.addMove(
+        const { node: rookMove } = twoRooksCanMove.addMove(
             Pieces.WHITE_ROOK,
             [5, 2],
             [5, 3],
@@ -59,21 +56,21 @@ describe("chessAlgebraicNotation", () => {
     it("detects check", () => {
         const [, , exd5] = create_e4_d5_exd5();
 
-        const Qxd5 = exd5.addMove(
+        const { node: Qxd5 } = exd5.addMove(
             Pieces.BLACK_QUEEN,
             [0, 3],
             [3, 3],
             FENToChessboard("rnb1kbnr/ppp1pppp/8/3q4/8/8/PPPP1PPP/RNBQKBNR")
         );
 
-        const a3 = Qxd5.addMove(
+        const { node: a3 } = Qxd5.addMove(
             Pieces.WHITE_PAWN,
             [6, 0],
             [4, 0],
             FENToChessboard("rnb1kbnr/ppp1pppp/8/3q4/8/P7/1PPP1PPP/RNBQKBNR")
         );
 
-        const queenCheck = a3.addMove(
+        const { node: queenCheck } = a3.addMove(
             Pieces.BLACK_QUEEN,
             [3, 3],
             [3, 4],
@@ -93,7 +90,7 @@ describe("chessAlgebraicNotation", () => {
             )
         );
 
-        const mate = game.addMove(
+        const { node: mate } = game.addMove(
             Pieces.BLACK_QUEEN,
             [4, 5],
             [6, 5],
@@ -113,7 +110,7 @@ describe("chessAlgebraicNotation", () => {
             FENToChessboard("8/5P2/8/8/8/8/1k1K4/8")
         );
 
-        const promotion = game.addMove(
+        const { node: promotion } = game.addMove(
             Pieces.WHITE_PAWN,
             [1, 5],
             [0, 5],
@@ -131,7 +128,7 @@ describe("chessAlgebraicNotation", () => {
             FENToChessboard("6rk/5P2/8/8/8/8/3K4/6R1")
         );
 
-        const complicatedMove = game.addMove(
+        const { node: complicatedMove } = game.addMove(
             Pieces.WHITE_PAWN,
             [1, 5],
             [0, 6],

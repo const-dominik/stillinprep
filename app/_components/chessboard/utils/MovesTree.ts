@@ -17,14 +17,16 @@ import {
     bishopMoves,
     knightMoves,
     rookMoves,
+    chessboardToFEN,
 } from "@/app/utils";
-import { isInBoard, isMate as checkMate, isKingChecked } from "./chessLogic";
+import { isInBoard, isCheckmate, isKingChecked } from "./chessLogic";
 import {
     xToFile,
     yToRank,
     positionToAlgebraicNotation,
     getAlgebraicMove,
 } from "./chessAlgebraicNotation";
+import { createHash } from "crypto";
 
 export class MovesTreeNode {
     public parent: MovesTreeNode;
@@ -64,12 +66,26 @@ export class MovesTreeNode {
         from: PiecePosition,
         to: PiecePosition,
         board: Chessboard
-    ): MovesTreeNode {
+    ): { node: MovesTreeNode; isNew: boolean } {
+        const existingMove = this.children.find((move) => {
+            return (
+                move.piece === piece &&
+                from[0] === move.from[0] &&
+                from[1] === move.from[1] &&
+                to[0] === move.to[0] &&
+                to[1] === move.to[1]
+            );
+        });
+
+        if (existingMove) {
+            return { node: existingMove, isNew: false };
+        }
+
         const child = new MovesTreeNode(piece, from, to, board);
         child.moveId = this.player === "black" ? this.moveId + 1 : this.moveId;
         child.player = getOppositePlayer(this.player);
         this.addChild(child);
-        return child;
+        return { node: child, isNew: true };
     }
 
     public getCurrentPlayer() {
@@ -125,11 +141,20 @@ export class MovesTreeNode {
     }
 
     public isMate(): boolean {
-        return checkMate(this) > 0;
+        return isCheckmate(this) > 0;
     }
 
     public castled(): CastleType | false {
-        // Was this move a castle?
+        if (
+            this.piece !== Pieces.BLACK_KING &&
+            this.piece !== Pieces.WHITE_KING
+        ) {
+            return false;
+        }
+
+        const xDifference = this.from[1] - this.to[1];
+        if (xDifference === -2) return "short";
+        if (xDifference === 2) return "long";
         return false;
     }
 
@@ -203,8 +228,6 @@ export class MovesTreeNode {
     }
 
     public getPrecisePosition(): File | Rank | AlgebraicPosition | "" {
-        // Do we need to define piece more precisely, e.g. Raxe5?
-        // Should return piece file/rank/full position if extra precision is needed, else ""
         const piece = this.board[this.to[0]][this.to[1]];
         // === Pawns ===
         if (
@@ -246,5 +269,13 @@ export class MovesTreeNode {
         }
 
         return this.algebraicNotation;
+    }
+
+    public createMoveHash(): string {
+        const compositeKey = `${this.moveId}${this.from[0]}${this.from[1]}${this.to[0]}${this.to[1]}${chessboardToFEN(this.board)}`;
+
+        const hash = createHash("sha256").update(compositeKey).digest("hex");
+
+        return hash;
     }
 }

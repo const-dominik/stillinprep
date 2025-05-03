@@ -2,10 +2,11 @@
  * @jest-environment jsdom
  */
 
-import { create_e4_e5_Nf3, FENToChessboard } from "@/__tests__/testing_utils";
+import { create_e4_e5_Nf3 } from "@/__tests__/testing_utils";
 import MoveHistory from "@/app/_components/chessboard/MoveHistory";
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
 import { Pieces } from "@/app/types";
+import { FENToChessboard } from "@/app/utils";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
 
@@ -170,7 +171,7 @@ describe("Move history", () => {
 
     it("renders saved lines if more than one child", () => {
         const [e5, Nf3] = create_e4_e5_Nf3();
-        const Nc3 = e5.addMove(
+        const { node: Nc3 } = e5.addMove(
             Pieces.WHITE_KNIGHT,
             [7, 1],
             [5, 2],
@@ -191,14 +192,14 @@ describe("Move history", () => {
         const setCurrentNode = jest.fn();
         const setLastNode = jest.fn();
 
-        const Nc3 = e5.addMove(
+        const { node: Nc3 } = e5.addMove(
             Pieces.WHITE_KNIGHT,
             [7, 1],
             [5, 2],
             FENToChessboard("rnbqkbnr/pppp1ppp/8/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR")
         );
 
-        const d6 = Nc3.addMove(
+        const { node: d6 } = Nc3.addMove(
             Pieces.BLACK_PAWN,
             [1, 3],
             [2, 3],

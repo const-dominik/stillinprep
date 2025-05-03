@@ -14,6 +14,9 @@ const config: Config = {
         "<rootDir>/__tests__/testing_utils.ts",
         "<rootDir>/e2e_tests",
     ],
+    moduleNameMapper: {
+        "^@/(.*)$": "<rootDir>/$1",
+    },
     // Add more setup options before each test is run
     // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };

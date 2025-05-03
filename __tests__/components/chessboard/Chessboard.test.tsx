@@ -6,12 +6,15 @@ import { render } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Chessboard from "@/app/_components/chessboard/Chessboard";
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
+import { v4 as uuid } from "uuid";
 
 describe("Chessboard", () => {
     const baseProps = {
         currentNode: new MovesTreeNode(),
+        lastNode: new MovesTreeNode(),
         setCurrentNode: jest.fn(),
         setLastNode: jest.fn(),
+        repertoireId: uuid(),
     };
 
     it("renders the chessboard with the correct number of rows and columns", () => {
