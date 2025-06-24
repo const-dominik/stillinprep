@@ -1,4 +1,4 @@
-import { Pieces } from "@/app/types";
+import { Pieces } from "@/app/types/types";
 import Image from "next/image";
 import styles from "./styles.module.scss";
 import { pieceAssets } from "@/app/utils";

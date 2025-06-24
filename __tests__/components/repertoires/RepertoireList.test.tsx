@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 
 import RepertoireList from "@/app/_components/repertoires/RepertoireList";
 import { render, screen } from "@testing-library/react";
-import { Repertoire } from "@/app/types";
+import { Repertoire } from "@/app/types/types";
 import userEvent from "@testing-library/user-event";
 
 // in testing enviroment, there is no routing context, so useRouter fails - we need to mock it

@@ -1,6 +1,6 @@
-import { Pieces } from "@/app/types";
+import { Pieces } from "@/app/types/types";
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
-import type { Chessboard, PiecePosition, MoveType } from "@/app/types";
+import type { Chessboard, PiecePosition, MoveType } from "@/app/types/types";
 import {
     whitePieces,
     blackPieces,
@@ -457,4 +457,20 @@ export const isMoveLegal = (
     }
 
     return false;
+};
+
+export const isMoveOnPath = (
+    lastNode: MovesTreeNode,
+    node: MovesTreeNode
+): boolean => {
+    let currentNode = lastNode;
+
+    while (
+        currentNode.getMoveHash() !== node.getMoveHash() &&
+        currentNode.piece !== Pieces.EMPTY
+    ) {
+        currentNode = currentNode.parent;
+    }
+
+    return currentNode.piece !== Pieces.EMPTY;
 };

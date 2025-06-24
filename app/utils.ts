@@ -1,4 +1,5 @@
-import { Pieces } from "./types";
+import { MovesTreeNode } from "./_components/chessboard/utils/MovesTree";
+import { Pieces } from "./types/types";
 import type {
     AlgebraicPosition,
     Chessboard,
@@ -8,7 +9,7 @@ import type {
     File,
     AlgebraicPiece,
     MoveType,
-} from "./types";
+} from "./types/types";
 
 export const initialBoard: Chessboard = [
     [
@@ -211,6 +212,17 @@ export const positionToAlgebraicNotation = ([
     x,
 ]: PiecePosition): AlgebraicPosition => `${xToFile(x)}${yToRank(y)}`;
 
+export const fileAndRankToPosition = (algebraicMove: string): PiecePosition => {
+    if (algebraicMove.length !== 2) {
+        throw new Error("File and rank should be 2 chars.");
+    }
+    const [file, rank] = [...algebraicMove];
+
+    const files = "abcdefgh";
+
+    return [8 - Number(rank), files.indexOf(file)];
+};
+
 export const pieceToAlgebraicPiece = (piece: Pieces): AlgebraicPiece => {
     if ([Pieces.EMPTY, Pieces.BLACK_PAWN, Pieces.WHITE_PAWN].includes(piece)) {
         return "";
@@ -310,4 +322,17 @@ export const chessboardToFEN = (board: Chessboard): string => {
     });
 
     return fenRows.join("/");
+};
+
+export const moveToMoveHistory = (move: MovesTreeNode): string => {
+    const moves = [];
+
+    while (move.piece !== Pieces.EMPTY) {
+        moves.push(
+            `${positionToAlgebraicNotation(move.from)}${positionToAlgebraicNotation(move.to)}`
+        );
+        move = move.parent;
+    }
+
+    return moves.toReversed().join(" ");
 };

@@ -1,5 +1,5 @@
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
-import { Chessboard, Pieces } from "@/app/types";
+import { Chessboard, Pieces } from "@/app/types/types";
 import { FENToChessboard } from "@/app/utils";
 
 export const create_e4_e5_Nf3 = () => {

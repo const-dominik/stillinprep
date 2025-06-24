@@ -11,14 +11,15 @@ import {
     whitePromotionPieces,
     blackPromotionPieces,
 } from "@/app/utils";
-import type { Chessboard, PiecePosition, MoveType } from "@/app/types";
-import { Pieces } from "@/app/types";
+import type { Chessboard, PiecePosition, MoveType } from "@/app/types/types";
+import { Pieces } from "@/app/types/types";
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
 
 import {
     getLegalMoves,
     isMoveLegal,
     getBoardAfterMove,
+    isMoveOnPath,
 } from "./utils/chessLogic";
 
 import Square from "./Square";
@@ -85,7 +86,7 @@ const Chessboard = ({
     );
 
     const addMoveToDb = (node: MovesTreeNode) => {
-        const parentId = node.parent.createMoveHash();
+        const parentId = node.parent.getMoveHash();
         const promotion = node.promotedTo();
 
         const currentMoveData = {
@@ -93,7 +94,7 @@ const Chessboard = ({
             from: node.from,
             to: node.to,
             promotion: promotion ? promotion[1] : null,
-            id: node.createMoveHash(),
+            id: node.getMoveHash(),
         };
 
         const moveData = {
@@ -121,13 +122,18 @@ const Chessboard = ({
         setCurrentNode(node);
 
         let finalNode = node;
+
         if (!isNew) {
-            while (finalNode.children.length === 1) {
-                finalNode = finalNode.children[0];
+            if (!isMoveOnPath(lastNode, node)) {
+                while (finalNode.children.length === 1) {
+                    finalNode = finalNode.children[0];
+                }
+                setLastNode(finalNode);
             }
+        } else {
+            setLastNode(node);
         }
 
-        setLastNode(finalNode.moveId > lastNode.moveId ? finalNode : node);
         handleChangeSelectedPiece(null);
 
         if (isNew) {

@@ -5,7 +5,7 @@ import {
     PiecePosition,
     Pieces,
     Rank,
-} from "@/app/types";
+} from "@/app/types/types";
 import { MovesTreeNode } from "./MovesTree";
 
 export const xToFile = (x: number): File => {

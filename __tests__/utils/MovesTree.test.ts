@@ -3,7 +3,7 @@
  */
 
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
-import { Pieces } from "@/app/types";
+import { Pieces } from "@/app/types/types";
 import { copyBoard, FENToChessboard, initialBoard } from "@/app/utils";
 import { create_e4_e5_Nf3 } from "../testing_utils";
 

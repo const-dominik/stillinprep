@@ -5,7 +5,7 @@
 import { create_e4_e5_Nf3 } from "@/__tests__/testing_utils";
 import MoveHistory from "@/app/_components/chessboard/MoveHistory";
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
-import { Pieces } from "@/app/types";
+import { Pieces } from "@/app/types/types";
 import { FENToChessboard } from "@/app/utils";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
@@ -180,7 +180,7 @@ describe("Move history", () => {
 
         render(<MoveHistory {...baseProps} currentNode={e5} lastNode={Nf3} />);
 
-        const saved = screen.getByText("Other lines:");
+        const saved = screen.getByText("Saved lines:");
         const Nc3Element = screen.getByText(Nc3.getAlgebraicNotation());
 
         expect(saved).toBeDefined();

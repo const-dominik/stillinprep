@@ -62,9 +62,13 @@ const MoveHistory = ({
 
     const getOtherSavedLines = (node: MovesTreeNode) => {
         let currentNextMove = lastNode;
-        while (currentNextMove.parent !== node) {
-            currentNextMove = currentNextMove.parent;
+
+        if (currentNextMove !== node) {
+            while (currentNextMove.parent !== node) {
+                currentNextMove = currentNextMove.parent;
+            }
         }
+
         return node.children.filter((child) => child !== currentNextMove);
     };
 
@@ -131,7 +135,7 @@ const MoveHistory = ({
                 {currentNode.children.length > 1 && (
                     <>
                         <p className={styles["saved-lines-header"]}>
-                            Other lines:
+                            Saved lines:
                         </p>
                         {getOtherSavedLines(currentNode).map((node, index) => (
                             <div

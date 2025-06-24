@@ -42,3 +42,39 @@ export type Repertoire = {
     id: string;
     name: string;
 };
+
+export type StockfishAPI = {
+    isReady: boolean;
+    multiPV: Analysis;
+    depth: number;
+    sendCommand: (cmd: string) => void;
+    setPositionAndGo: (moves: string) => void;
+    setDepth: (depth: number) => void;
+    terminate: () => void;
+};
+
+export type StockfishEval = {
+    type: "cp" | "mate";
+    value: number;
+};
+
+export type ParsedLine = {
+    depth?: number;
+    seldepth?: number;
+    multipv?: number;
+    score?: StockfishEval;
+    pv?: string[];
+};
+
+export type Analysis = {
+    line: ParsedLine;
+    nodeId: string;
+}[];
+
+export type StockfishPromotionPiece = "r" | "q" | "n" | "b";
+
+export type Stockfish = Promise<{
+    postMessage: (command: string) => void;
+    addMessageListener: (cb: (line: string) => void) => void;
+    terminate: () => void;
+}>;

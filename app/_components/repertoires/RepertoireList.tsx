@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import type { Repertoire } from "../../types";
+import type { Repertoire } from "../../types/types";
 import styles from "./styles.module.scss";
 import AddRepertoire from "./AddRepertoire";
 import { useState } from "react";

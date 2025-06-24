@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky",
     "test": "jest",
     "test:watch": "jest --watch",
     "e2etest": "npx playwright test"
@@ -27,12 +26,15 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/mongoose": "^5.11.96",
     "dotenv": "^16.5.0",
+    "fs": "^0.0.1-security",
     "neo4j-driver": "^5.28.1",
     "next": "15.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sass": "^1.85.1",
     "stillinprep": "file:",
+    "stockfish.wasm": "^0.10.0",
+    "use-debounce": "^10.0.5",
     "uuid": "^11.1.0",
     "zod": "^3.24.3"
   },

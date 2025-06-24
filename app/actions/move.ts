@@ -1,7 +1,7 @@
 "use server";
 
 import { getSession } from "@/lib/neo4j";
-import { AlgebraicPromotionPieces, PiecePosition } from "../types";
+import { AlgebraicPromotionPieces, PiecePosition } from "../types/types";
 import { Session } from "neo4j-driver";
 
 type MoveData = {

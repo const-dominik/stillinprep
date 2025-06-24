@@ -8,7 +8,11 @@ import { useState } from "react";
 import { z } from "zod";
 import { MoveSchema } from "@/app/actions/schemas";
 import { getBoardAfterMove } from "@/app/_components/chessboard/utils/chessLogic";
-import { Pieces } from "@/app/types";
+import { Pieces } from "@/app/types/types";
+import StockfishAnalysis from "@/app/_components/chessboard/StockfishAnalysis";
+import { useDebounce } from "use-debounce";
+import { useStockfish } from "@/app/_components/chessboard/utils/hooks/useStockfish";
+import ScoreMeter from "@/app/_components/chessboard/ScoreMeter";
 
 type MoveNode = z.infer<typeof MoveSchema>;
 type PathNodes = MoveNode["properties"][];
@@ -60,8 +64,18 @@ const ChildComponent = ({
     const [currentNode, setCurrentNode] = useState(root);
     const [lastNode, setLastNode] = useState(last);
 
+    const [debouncedNode] = useDebounce(currentNode, 300);
+    const stockfish = useStockfish(debouncedNode);
+
+    const score = stockfish.multiPV[0]?.line.score;
+
     return (
         <div className={styles.container}>
+            <StockfishAnalysis
+                stockfish={stockfish}
+                currentNode={currentNode}
+            />
+            <ScoreMeter score={score} />
             <Chessboard
                 currentNode={currentNode}
                 lastNode={lastNode}
@@ -71,8 +85,8 @@ const ChildComponent = ({
             />
             <MoveHistory
                 currentNode={currentNode}
-                setCurrentNode={setCurrentNode}
                 lastNode={lastNode}
+                setCurrentNode={setCurrentNode}
                 setLastNode={setLastNode}
             />
         </div>

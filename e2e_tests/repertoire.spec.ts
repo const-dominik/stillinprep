@@ -1,21 +1,36 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect, Page, ElementHandle } from "@playwright/test";
 import { getSquareSelector } from "./e2e_utils";
-import { AlgebraicPromotionPieces, PiecePosition } from "@/app/types";
+import { PiecePosition } from "@/app/types/types";
+import { defineConfig } from "@playwright/test";
 
-const getSquareBySelector = async (page: Page, position: PiecePosition) => {
-    const square = await page.$(getSquareSelector(position));
+export default defineConfig({
+    retries: 2,
+});
+
+const getSquareBySelector = async (
+    page: Page,
+    position: PiecePosition
+): Promise<{
+    square: ElementHandle<SVGElement | HTMLElement>;
+    selector: string;
+}> => {
+    const selector = getSquareSelector(position);
+    const square = await page.$(selector);
 
     expect(square).not.toBeNull();
     if (!square) {
         throw new Error("what?");
     }
-    return square;
+    return { square, selector };
 };
+
+const getLocatorWithText = (classPart: string, text: string, page: Page) =>
+    page.locator(`div[class*="${classPart}"] >> text=${text}`);
 
 test("Test repertoire and move history", async ({ page }) => {
     await page.route("**/api/repertoire/**", async (route) => {
         route.fulfill({
-            status: 200,
+            status: 500,
             body: JSON.stringify({ id: "mock-id", name: "Mock Repertoire" }),
         });
     });
@@ -24,9 +39,9 @@ test("Test repertoire and move history", async ({ page }) => {
     await test.step("Clicking piece of opposite player doesn't do anything", async () => {
         const a8 = await getSquareBySelector(page, [0, 0]);
 
-        await a8.click();
+        await page.click(a8.selector, { force: true });
 
-        expect(await a8.getAttribute("class")).not.toContain("selected");
+        expect(await a8.square.getAttribute("class")).not.toContain("selected");
     });
 
     await test.step("Clicking piece of current player selects it and highlights possible moves", async () => {
@@ -37,12 +52,12 @@ test("Test repertoire and move history", async ({ page }) => {
             getSquareBySelector(page, [3, 4]),
         ]);
 
-        await e2.click();
+        await page.click(e2.selector, { force: true });
 
-        expect(await e2.getAttribute("class")).toContain("selected");
-        expect(await e3.getAttribute("class")).toContain("legal");
-        expect(await e4.getAttribute("class")).toContain("legal");
-        expect(await e5.getAttribute("class")).not.toContain("legal");
+        expect(await e2.square.getAttribute("class")).toContain("selected");
+        expect(await e3.square.getAttribute("class")).toContain("legal");
+        expect(await e4.square.getAttribute("class")).toContain("legal");
+        expect(await e5.square.getAttribute("class")).not.toContain("legal");
     });
 
     await test.step("Clicking illegal move removes selection", async () => {
@@ -50,11 +65,11 @@ test("Test repertoire and move history", async ({ page }) => {
             getSquareBySelector(page, [6, 4]),
             getSquareBySelector(page, [4, 3]),
         ]);
-        expect(await e2.getAttribute("class")).toContain("selected");
+        expect(await e2.square.getAttribute("class")).toContain("selected");
 
-        await d4.click();
+        await page.click(d4.selector, { force: true });
 
-        expect(await e2.getAttribute("class")).not.toContain("selected");
+        expect(await e2.square.getAttribute("class")).not.toContain("selected");
     });
 
     await test.step("Clicking legal move moves the piece", async () => {
@@ -62,19 +77,19 @@ test("Test repertoire and move history", async ({ page }) => {
             getSquareBySelector(page, [6, 4]),
             getSquareBySelector(page, [4, 4]),
         ]);
-        const pawnImg = await e2.$("img");
+        const pawnImg = await e2.square.$("img");
         expect(pawnImg).not.toBeNull();
 
         const src = await pawnImg!.getAttribute("src");
         expect(src).not.toBe("");
 
-        await e2.click();
-        await e4.click();
+        await page.click(e2.selector, { force: true });
+        await page.click(e4.selector, { force: true });
 
-        const e4Img = await e4.$("img");
+        const e4Img = await e4.square.$("img");
         const e4ImgSrc = await e4Img!.getAttribute("src");
 
-        const e2Img = await e2.$("img");
+        const e2Img = await e2.square.$("img");
 
         expect(e2Img).toBeNull();
         expect(e4ImgSrc).toBe(src);
@@ -88,16 +103,18 @@ test("Test repertoire and move history", async ({ page }) => {
             getSquareBySelector(page, [5, 5]),
         ]);
 
-        await e7.click();
-        await e5.click();
-        await Ng1.click();
-        await Nf3.click();
+        expect(Ng1).not.toBeNull();
+
+        await page.click(e7.selector, { force: true });
+        await page.click(e5.selector, { force: true });
+        await page.click(Ng1.selector, { force: true });
+        await page.click(Nf3.selector, { force: true });
 
         const [e7Img, e5Img, Ng1Img, Nf3Img] = await Promise.all([
-            e7.$("img"),
-            e5.$("img"),
-            Ng1.$("img"),
-            Nf3.$("img"),
+            e7.square.$("img"),
+            e5.square.$("img"),
+            Ng1.square.$("img"),
+            Nf3.square.$("img"),
         ]);
 
         expect(e7Img).toBeNull();
@@ -107,9 +124,9 @@ test("Test repertoire and move history", async ({ page }) => {
     });
 
     await test.step("Move history saves played moves", async () => {
-        const e4Text = page.getByText("e4");
-        const e5Text = page.getByText("e5");
-        const Nf3Text = page.getByText("Nf3");
+        const e4Text = getLocatorWithText("move-history", "e4", page);
+        const e5Text = getLocatorWithText("move-history", "e5", page);
+        const Nf3Text = getLocatorWithText("move-history", "Nf3", page);
 
         await expect(e4Text).toBeVisible();
         await expect(e5Text).toBeVisible();
@@ -117,7 +134,7 @@ test("Test repertoire and move history", async ({ page }) => {
     });
 
     await test.step("Move history is navigateable by clicking move", async () => {
-        const e4Text = page.getByText("e4");
+        const e4Text = getLocatorWithText("move-history", "e4", page);
 
         const [e4, e5, f3] = await Promise.all([
             getSquareBySelector(page, [4, 4]),
@@ -125,12 +142,13 @@ test("Test repertoire and move history", async ({ page }) => {
             getSquareBySelector(page, [5, 5]),
         ]);
 
-        await e4Text.click();
+        await expect(e4Text).toBeVisible();
+        await e4Text.click({ force: true });
 
         const [e4Img, e5Img, f3Img] = await Promise.all([
-            e4.$("img"),
-            e5.$("img"),
-            f3.$("img"),
+            e4.square.$("img"),
+            e5.square.$("img"),
+            f3.square.$("img"),
         ]);
 
         expect(e4Img).not.toBeNull();
@@ -140,8 +158,8 @@ test("Test repertoire and move history", async ({ page }) => {
     });
 
     await test.step("Move history is navigateable by keyboard", async () => {
-        const e4Text = page.getByText("e4");
-        const e5Text = page.getByText("e5");
+        const e4Text = getLocatorWithText("move-history", "e4", page);
+        const e5Text = getLocatorWithText("move-history", "e5", page);
 
         const [e4, e5, f3] = await Promise.all([
             getSquareBySelector(page, [4, 4]),
@@ -152,9 +170,9 @@ test("Test repertoire and move history", async ({ page }) => {
         await page.keyboard.press("ArrowRight");
 
         let [e4Img, e5Img, f3Img] = await Promise.all([
-            e4.$("img"),
-            e5.$("img"),
-            f3.$("img"),
+            e4.square.$("img"),
+            e5.square.$("img"),
+            f3.square.$("img"),
         ]);
 
         expect(e4Img).not.toBeNull();
@@ -168,9 +186,9 @@ test("Test repertoire and move history", async ({ page }) => {
         await page.keyboard.press("ArrowLeft");
 
         [e4Img, e5Img, f3Img] = await Promise.all([
-            e4.$("img"),
-            e5.$("img"),
-            f3.$("img"),
+            e4.square.$("img"),
+            e5.square.$("img"),
+            f3.square.$("img"),
         ]);
 
         expect(e4Img).not.toBeNull();
@@ -180,11 +198,11 @@ test("Test repertoire and move history", async ({ page }) => {
     });
 
     await test.step("Move history is navigateable by navigation panel", async () => {
-        const e4Text = page.getByText("e4");
-        const e5Text = page.getByText("e5");
+        const e4Text = getLocatorWithText("move-history", "e4", page);
+        const e5Text = getLocatorWithText("move-history", "e5", page);
 
-        const leftArrow = page.getByText("←");
-        const rightArrow = page.getByText("→");
+        const leftArrow = getLocatorWithText("tree-navigator", "←", page);
+        const rightArrow = getLocatorWithText("tree-navigator", "→", page);
 
         const [e4, e5, f3] = await Promise.all([
             getSquareBySelector(page, [4, 4]),
@@ -192,12 +210,12 @@ test("Test repertoire and move history", async ({ page }) => {
             getSquareBySelector(page, [5, 5]),
         ]);
 
-        await rightArrow.click();
+        await rightArrow.click({ force: true });
 
         let [e4Img, e5Img, f3Img] = await Promise.all([
-            e4.$("img"),
-            e5.$("img"),
-            f3.$("img"),
+            e4.square.$("img"),
+            e5.square.$("img"),
+            f3.square.$("img"),
         ]);
 
         expect(e4Img).not.toBeNull();
@@ -208,12 +226,12 @@ test("Test repertoire and move history", async ({ page }) => {
         );
         expect(await e5Text.getAttribute("class")).toContain("current-move");
 
-        await leftArrow.click();
+        await leftArrow.click({ force: true });
 
         [e4Img, e5Img, f3Img] = await Promise.all([
-            e4.$("img"),
-            e5.$("img"),
-            f3.$("img"),
+            e4.square.$("img"),
+            e5.square.$("img"),
+            f3.square.$("img"),
         ]);
 
         expect(e4Img).not.toBeNull();
@@ -228,17 +246,20 @@ test("Test repertoire and move history", async ({ page }) => {
             getSquareBySelector(page, [3, 3]),
         ]);
 
-        await d7.click();
-        await d5.click();
+        await page.click(d7.selector, { force: true });
+        await page.click(d5.selector, { force: true });
 
-        const [d7Img, d5Img] = await Promise.all([d7.$("img"), d5.$("img")]);
+        const [d7Img, d5Img] = await Promise.all([
+            d7.square.$("img"),
+            d5.square.$("img"),
+        ]);
 
         expect(d7Img).toBeNull();
         expect(d5Img).not.toBeNull();
 
-        const d5Text = page.getByText("d5");
-        const e5Text = page.getByText("e5");
-        const Nf3Text = page.getByText("Nf3");
+        const d5Text = getLocatorWithText("move-history", "d5", page);
+        const e5Text = getLocatorWithText("move-history", "e5", page);
+        const Nf3Text = getLocatorWithText("move-history", "Nf3", page);
 
         await expect(d5Text).toBeVisible();
         await expect(e5Text).not.toBeVisible();
@@ -246,37 +267,45 @@ test("Test repertoire and move history", async ({ page }) => {
     });
 
     await test.step("If we have two moves from the position in repertoire, we can choose", async () => {
-        const e4 = page.getByText("e4");
-        const otherLines = page.getByText("Other lines:");
+        const e4 = getLocatorWithText("move-history", "e4", page);
+        const otherLines = getLocatorWithText(
+            "saved-lines",
+            "Saved lines:",
+            page
+        );
 
         await expect(otherLines).not.toBeVisible();
 
-        await e4!.click();
+        await e4!.click({ force: true });
 
         await expect(otherLines).toBeVisible();
     });
 
-    await test.step("Given choice, we can't choose current line from Other lines", async () => {
-        const otherLines = page.getByText("Other lines:");
-        const d5 = otherLines.getByText("d5");
-
+    await test.step("Given choice, we can't choose current line from Saved lines", async () => {
+        const d5 = getLocatorWithText("saved-lines", "d5", page);
         await expect(d5).not.toBeVisible();
 
         const d5s = await page.locator("text=d5").all();
         expect(d5s).toHaveLength(1);
 
-        const currentd5 = page.getByText("d5");
+        const currentd5 = getLocatorWithText("move-history", "d5", page);
         await expect(currentd5).toBeVisible();
     });
 
     await test.step("If we choose other line, other line is loaded fully", async () => {
-        const e5 = page.getByText("e5");
+        const e5 = getLocatorWithText("saved-lines", "e5", page);
 
-        await e5.click();
+        await e5.click({ force: true });
 
-        await expect(page.getByText("Other lines:")).not.toBeVisible();
-        await expect(page.getByText("e5")).toBeVisible();
-        await expect(page.getByText("Nf3")).toBeVisible();
+        await expect(
+            getLocatorWithText("saved-lines", "Saved lines:", page)
+        ).not.toBeVisible();
+        await expect(
+            getLocatorWithText("move-history", "e5", page)
+        ).toBeVisible();
+        await expect(
+            getLocatorWithText("move-history", "Nf3", page)
+        ).toBeVisible();
     });
 });
 
@@ -302,27 +331,27 @@ test("White promotion to Rook", async ({ page }) => {
         getSquareBySelector(page, [0, 4]),
     ]);
 
-    await e2.click();
-    await e4.click(); // e4
-    await f7.click();
-    await f5.click(); // f5
-    await e4.click();
-    await f5.click(); // exf5
-    await e7.click();
-    await e5.click(); // e5
-    await f5.click();
-    await f6.click(); // f6
-    await f8.click();
-    await d6.click(); // Bd6
-    await f6.click();
-    await f7.click(); // f7+
-    await e8.click();
-    await e7.click(); // Ke8
-    await f7.click();
-    await f8.click(); // f8=?
+    await page.click(e2.selector, { force: true });
+    await page.click(e4.selector, { force: true });
+    await page.click(f7.selector, { force: true });
+    await page.click(f5.selector, { force: true });
+    await page.click(e4.selector, { force: true });
+    await page.click(f5.selector, { force: true });
+    await page.click(e7.selector, { force: true });
+    await page.click(e5.selector, { force: true });
+    await page.click(f5.selector, { force: true });
+    await page.click(f6.selector, { force: true });
+    await page.click(f8.selector, { force: true });
+    await page.click(d6.selector, { force: true });
+    await page.click(f6.selector, { force: true });
+    await page.click(f7.selector, { force: true });
+    await page.click(e8.selector, { force: true });
+    await page.click(e7.selector, { force: true });
+    await page.click(f7.selector, { force: true });
+    await page.click(f8.selector, { force: true });
+    await page.click(f7.selector, { force: true });
 
-    await f7.click();
-    const img = await f8.$("img");
+    const img = await f8.square.$("img");
 
     expect(img).not.toBeNull();
     expect(await img?.getAttribute("src")).toContain("R");

@@ -8,8 +8,8 @@ import type {
     PiecePosition,
     Player,
     Rank,
-} from "@/app/types";
-import { Pieces } from "@/app/types";
+} from "@/app/types/types";
+import { Pieces } from "@/app/types/types";
 import {
     initialBoard,
     copyBoard,
@@ -38,6 +38,7 @@ export class MovesTreeNode {
     public player: Player;
     public board: Chessboard;
     private algebraicNotation: string;
+    private hash: string;
 
     constructor(
         piece: Pieces = Pieces.EMPTY,
@@ -54,6 +55,7 @@ export class MovesTreeNode {
         this.to = to;
         this.board = copyBoard(board);
         this.algebraicNotation = "";
+        this.hash = "";
     }
 
     private addChild(child: MovesTreeNode) {
@@ -67,13 +69,15 @@ export class MovesTreeNode {
         to: PiecePosition,
         board: Chessboard
     ): { node: MovesTreeNode; isNew: boolean } {
+        const childId = this.player === "black" ? this.moveId + 1 : this.moveId;
         const existingMove = this.children.find((move) => {
             return (
                 move.piece === piece &&
                 from[0] === move.from[0] &&
                 from[1] === move.from[1] &&
                 to[0] === move.to[0] &&
-                to[1] === move.to[1]
+                to[1] === move.to[1] &&
+                move.moveId === childId
             );
         });
 
@@ -271,11 +275,12 @@ export class MovesTreeNode {
         return this.algebraicNotation;
     }
 
-    public createMoveHash(): string {
-        const compositeKey = `${this.moveId}${this.from[0]}${this.from[1]}${this.to[0]}${this.to[1]}${chessboardToFEN(this.board)}`;
+    public getMoveHash(): string {
+        if (this.hash === "") {
+            const compositeKey = `${this.moveId}${this.from[0]}${this.from[1]}${this.to[0]}${this.to[1]}${chessboardToFEN(this.board)}`;
+            this.hash = createHash("sha256").update(compositeKey).digest("hex");
+        }
 
-        const hash = createHash("sha256").update(compositeKey).digest("hex");
-
-        return hash;
+        return this.hash;
     }
 }
