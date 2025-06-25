@@ -76,3 +76,37 @@ export async function addMove(moveData: MoveData) {
         await session.close();
     }
 }
+
+export async function manageLeaves(
+    repertoireId: string,
+    remove: string[],
+    add: string | undefined
+) {
+    const session = getSession();
+
+    try {
+        if (remove.length > 0) {
+            const removeQuery = `
+                MATCH (r:Repertoire {id: $repertoireId})
+                UNWIND $remove AS nodeId
+                MATCH (r)-[rel:LEAF]->(m:Move {id: nodeId})
+                DELETE rel
+            `;
+            await session.run(removeQuery, { repertoireId, remove });
+        }
+
+        if (add) {
+            const addQuery = `
+            MATCH (r:Repertoire {id: $repertoireId})
+            MATCH (m:Move {id: $add})
+            MERGE (r)-[:LEAF]->(m)
+        `;
+            await session.run(addQuery, { repertoireId, add });
+        }
+    } catch (err) {
+        console.error("Error managing leaves:", err);
+        throw err;
+    } finally {
+        await session.close();
+    }
+}

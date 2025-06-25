@@ -45,6 +45,10 @@ const pieceToAlgebraicPiece = (piece: Pieces): AlgebraicPiece => {
 };
 
 export const getAlgebraicMove = (fullMove: MovesTreeNode) => {
+    if (fullMove.piece === Pieces.EMPTY) {
+        return "root";
+    }
+
     const prevBoard = fullMove.parent.board;
     const [y, x] = fullMove.to;
     const piece = prevBoard[y][x];

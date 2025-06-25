@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { create_e4_e5_Nf3 } from "@/__tests__/testing_utils";
+import { create_e4_e5_Nf3, TestProviders } from "@/__tests__/testing_utils";
 import MoveHistory from "@/app/_components/chessboard/MoveHistory";
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
 import { Pieces } from "@/app/types/types";
@@ -22,7 +22,15 @@ describe("Move history", () => {
     it("displays all played moves", () => {
         const [e4, e5, Nf3] = create_e4_e5_Nf3();
 
-        render(<MoveHistory {...baseProps} currentNode={Nf3} lastNode={Nf3} />);
+        render(
+            <MoveHistory
+                {...baseProps}
+                currentNode={Nf3}
+                lastNode={Nf3}
+                repertoireId=""
+            />,
+            { wrapper: TestProviders }
+        );
 
         const e4_text = screen.queryByText(e4.getAlgebraicNotation());
         const e5_text = screen.queryByText(e5.getAlgebraicNotation());
@@ -37,14 +45,27 @@ describe("Move history", () => {
         const [, e5, Nf3] = create_e4_e5_Nf3();
 
         const { container, rerender } = render(
-            <MoveHistory {...baseProps} currentNode={Nf3} lastNode={Nf3} />
+            <MoveHistory
+                {...baseProps}
+                currentNode={Nf3}
+                lastNode={Nf3}
+                repertoireId=""
+            />,
+            { wrapper: TestProviders }
         );
         let pairs = Array.from(container.querySelectorAll(".move-pair"));
 
         expect(pairs).toBeDefined();
         expect(pairs.length).toEqual(2);
 
-        rerender(<MoveHistory {...baseProps} currentNode={e5} lastNode={e5} />);
+        rerender(
+            <MoveHistory
+                {...baseProps}
+                currentNode={e5}
+                lastNode={e5}
+                repertoireId=""
+            />
+        );
         pairs = Array.from(container.querySelectorAll(".move-pair"));
 
         expect(pairs.length).toEqual(1);
@@ -61,7 +82,9 @@ describe("Move history", () => {
                 setLastNode={setLastNode}
                 currentNode={Nf3}
                 lastNode={Nf3}
-            />
+                repertoireId=""
+            />,
+            { wrapper: TestProviders }
         );
 
         const e5Element = screen.getByText(e5.getAlgebraicNotation());
@@ -88,7 +111,9 @@ describe("Move history", () => {
                 setLastNode={setLastNode}
                 currentNode={e5}
                 lastNode={Nf3}
-            />
+                repertoireId=""
+            />,
+            { wrapper: TestProviders }
         );
 
         const rightArrow = screen.getByText("→");
@@ -113,7 +138,9 @@ describe("Move history", () => {
                 setLastNode={setLastNode}
                 currentNode={e4}
                 lastNode={e4}
-            />
+                repertoireId=""
+            />,
+            { wrapper: TestProviders }
         );
 
         const rightArrow = screen.getByText("→");
@@ -128,6 +155,7 @@ describe("Move history", () => {
                 setLastNode={setLastNode}
                 currentNode={e4.parent}
                 lastNode={e4}
+                repertoireId=""
             />
         );
 
@@ -149,7 +177,9 @@ describe("Move history", () => {
                 setLastNode={setLastNode}
                 currentNode={e5}
                 lastNode={Nf3}
-            />
+                repertoireId=""
+            />,
+            { wrapper: TestProviders }
         );
 
         fireEvent.keyDown(document, { key: "ArrowLeft" });
@@ -163,7 +193,15 @@ describe("Move history", () => {
     it("doesn't show saved lines when there is none", () => {
         const [, , Nf3] = create_e4_e5_Nf3();
 
-        render(<MoveHistory {...baseProps} currentNode={Nf3} lastNode={Nf3} />);
+        render(
+            <MoveHistory
+                {...baseProps}
+                currentNode={Nf3}
+                lastNode={Nf3}
+                repertoireId=""
+            />,
+            { wrapper: TestProviders }
+        );
         const saved = screen.queryByText("Other lines:");
 
         expect(saved).not.toBeInTheDocument();
@@ -178,7 +216,15 @@ describe("Move history", () => {
             FENToChessboard("rnbqkbnr/pppp1ppp/8/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR")
         );
 
-        render(<MoveHistory {...baseProps} currentNode={e5} lastNode={Nf3} />);
+        render(
+            <MoveHistory
+                {...baseProps}
+                currentNode={e5}
+                lastNode={Nf3}
+                repertoireId=""
+            />,
+            { wrapper: TestProviders }
+        );
 
         const saved = screen.getByText("Saved lines:");
         const Nc3Element = screen.getByText(Nc3.getAlgebraicNotation());
@@ -214,7 +260,9 @@ describe("Move history", () => {
                 setLastNode={setLastNode}
                 currentNode={e5}
                 lastNode={Nf3}
-            />
+                repertoireId=""
+            />,
+            { wrapper: TestProviders }
         );
 
         const Nc3Element = screen.getByText(Nc3.getAlgebraicNotation());

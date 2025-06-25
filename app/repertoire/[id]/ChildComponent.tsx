@@ -13,6 +13,7 @@ import StockfishAnalysis from "@/app/_components/chessboard/StockfishAnalysis";
 import { useDebounce } from "use-debounce";
 import { useStockfish } from "@/app/_components/chessboard/utils/hooks/useStockfish";
 import ScoreMeter from "@/app/_components/chessboard/ScoreMeter";
+import { ConfirmProvider } from "@/app/context/ConfirmContext";
 
 type MoveNode = z.infer<typeof MoveSchema>;
 type PathNodes = MoveNode["properties"][];
@@ -64,32 +65,35 @@ const ChildComponent = ({
     const [currentNode, setCurrentNode] = useState(root);
     const [lastNode, setLastNode] = useState(last);
 
-    const [debouncedNode] = useDebounce(currentNode, 300);
+    const [debouncedNode] = useDebounce(currentNode, 350);
     const stockfish = useStockfish(debouncedNode);
 
     const score = stockfish.multiPV[0]?.line.score;
 
     return (
-        <div className={styles.container}>
-            <StockfishAnalysis
-                stockfish={stockfish}
-                currentNode={currentNode}
-            />
-            <ScoreMeter score={score} />
-            <Chessboard
-                currentNode={currentNode}
-                lastNode={lastNode}
-                setCurrentNode={setCurrentNode}
-                setLastNode={setLastNode}
-                repertoireId={repertoireId}
-            />
-            <MoveHistory
-                currentNode={currentNode}
-                lastNode={lastNode}
-                setCurrentNode={setCurrentNode}
-                setLastNode={setLastNode}
-            />
-        </div>
+        <ConfirmProvider>
+            <div className={styles.container}>
+                <StockfishAnalysis
+                    stockfish={stockfish}
+                    currentNode={currentNode}
+                />
+                <ScoreMeter score={score} />
+                <Chessboard
+                    currentNode={currentNode}
+                    lastNode={lastNode}
+                    setCurrentNode={setCurrentNode}
+                    setLastNode={setLastNode}
+                    repertoireId={repertoireId}
+                />
+                <MoveHistory
+                    currentNode={currentNode}
+                    lastNode={lastNode}
+                    setCurrentNode={setCurrentNode}
+                    setLastNode={setLastNode}
+                    repertoireId={repertoireId}
+                />
+            </div>
+        </ConfirmProvider>
     );
 };
 

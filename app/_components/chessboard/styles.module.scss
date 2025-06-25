@@ -191,6 +191,7 @@
   text-align: center;
   cursor: pointer;
   padding: 1rem;
+  position: relative;
 
   @extend %centered-flex;
   color: v.$palette-4;
@@ -199,6 +200,12 @@
 
   &:hover {
     background: v.$palette-6;
+  }
+
+  .cross {
+    color: rgb(212, 78, 78);
+    position: absolute;
+    left: 10px;
   }
 }
 
@@ -330,7 +337,7 @@
   font-size: 0.7rem;
   color: v.$palette-4;
   text-align: center;
-  margin-bottom: 0.1rem;
+  margin-bottom: 0.2rem;
 }
 
 // SCOREMETER

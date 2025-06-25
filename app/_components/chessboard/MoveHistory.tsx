@@ -8,14 +8,16 @@ import Move from "./Move";
 
 const MoveHistory = ({
     currentNode,
-    setCurrentNode,
     lastNode,
+    setCurrentNode,
     setLastNode,
+    repertoireId,
 }: {
     currentNode: MovesTreeNode;
-    setCurrentNode: Dispatch<SetStateAction<MovesTreeNode>>;
     lastNode: MovesTreeNode;
+    setCurrentNode: Dispatch<SetStateAction<MovesTreeNode>>;
     setLastNode: Dispatch<SetStateAction<MovesTreeNode>>;
+    repertoireId: string;
 }) => {
     const allMoves = lastNode.getAllMoves();
 
@@ -106,12 +108,18 @@ const MoveHistory = ({
                                         move={whiteMove}
                                         currentNode={currentNode}
                                         setCurrentNode={setCurrentNode}
+                                        setLine={setLine}
+                                        setLastNode={setLastNode}
+                                        repertoireId={repertoireId}
                                     />
                                     {blackMove && (
                                         <Move
                                             move={blackMove}
                                             currentNode={currentNode}
                                             setCurrentNode={setCurrentNode}
+                                            setLine={setLine}
+                                            setLastNode={setLastNode}
+                                            repertoireId={repertoireId}
                                         />
                                     )}
                                 </div>

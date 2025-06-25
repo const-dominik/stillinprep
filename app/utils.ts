@@ -336,3 +336,11 @@ export const moveToMoveHistory = (move: MovesTreeNode): string => {
 
     return moves.toReversed().join(" ");
 };
+
+export const getTreeLeaves = (root: MovesTreeNode): string[] => {
+    if (root.children.length === 0) return [root.getMoveHash()];
+
+    const leaves = root.children.map(getTreeLeaves);
+
+    return leaves.flat();
+};

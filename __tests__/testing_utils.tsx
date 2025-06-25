@@ -1,6 +1,7 @@
 import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
-import { Chessboard, Pieces } from "@/app/types/types";
+import { Pieces } from "@/app/types/types";
 import { FENToChessboard } from "@/app/utils";
+import { ConfirmProvider } from "@/app/context/ConfirmContext";
 
 export const create_e4_e5_Nf3 = () => {
     const root = new MovesTreeNode();
@@ -52,4 +53,8 @@ export const create_e4_d5_exd5 = () => {
     );
 
     return [e4, d5, exd5];
+};
+
+export const TestProviders = ({ children }: { children: React.ReactNode }) => {
+    return <ConfirmProvider>{children}</ConfirmProvider>;
 };
