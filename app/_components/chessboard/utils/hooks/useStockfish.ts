@@ -5,17 +5,14 @@ import { Analysis, Stockfish, StockfishAPI } from "@/app/types/types";
 import { parseStockfishLine } from "../stockfish";
 
 export const useStockfish = (currentNode: MovesTreeNode): StockfishAPI => {
-    const [depth, setDepth] = useState(12);
+    const [depth, setDepth] = useState(15);
     const [multiPV, setMultiPV] = useState<Analysis>([]);
     const [isReady, setIsReady] = useState(false);
 
     const engineRef = useRef<Awaited<Stockfish>>(null);
     const currentNodeRef = useRef(currentNode);
     const depthRef = useRef(depth);
-
-    useEffect(() => {
-        depthRef.current = depth;
-    }, [depth]);
+    const updateBuffer = useRef<Analysis>([]);
 
     const sendCommand = useCallback((cmd: string) => {
         engineRef.current?.postMessage(cmd);
@@ -36,13 +33,25 @@ export const useStockfish = (currentNode: MovesTreeNode): StockfishAPI => {
         [sendCommand, depth]
     );
 
+    // keep depth up to date
+    useEffect(() => {
+        depthRef.current = depth;
+    }, [depth]);
+
+    // keep current node up to date
     useEffect(() => {
         currentNodeRef.current = currentNode;
     }, [currentNode]);
 
+    // run new analysis on ready/node/depth change
     useEffect(() => {
         setPositionAndGo(moveToMoveHistory(currentNode));
-    }, [isReady, setPositionAndGo, currentNode, depth]);
+    }, [isReady, currentNode, depth, setPositionAndGo]);
+
+    const flushBufferedUpdates = () => {
+        setMultiPV(updateBuffer.current);
+        updateBuffer.current = [];
+    };
 
     useEffect(() => {
         const loadEngine = async () => {
@@ -70,21 +79,21 @@ export const useStockfish = (currentNode: MovesTreeNode): StockfishAPI => {
                             line,
                             getOppositePlayer(currentNodeRef.current.player)
                         );
+
                         if (
                             parsed?.multipv &&
                             parsed?.pv &&
                             parsed?.depth === depthRef.current
                         ) {
-                            setMultiPV((prev) => {
-                                const updated = [...prev];
-                                updated[parsed.multipv! - 1] = {
-                                    nodeId: currentNodeRef.current.getMoveHash(),
-                                    line: parsed,
-                                };
-
-                                return updated;
+                            updateBuffer.current.push({
+                                line: parsed,
+                                nodeId: currentNodeRef.current.getMoveHash(),
                             });
                         }
+                    }
+
+                    if (line.startsWith("bestmove")) {
+                        flushBufferedUpdates();
                     }
                 });
 
@@ -103,11 +112,9 @@ export const useStockfish = (currentNode: MovesTreeNode): StockfishAPI => {
     }, [sendCommand]);
 
     return {
-        isReady,
         multiPV,
         depth,
         setDepth,
-        sendCommand,
         setPositionAndGo,
         terminate: () => engineRef.current?.terminate(),
     };

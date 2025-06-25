@@ -19,8 +19,6 @@ const ScoreMeter = ({ score }: { score?: StockfishEval }) => {
         const raw =
             maxUnits * (Math.log2(1 + Math.abs(s)) / Math.log2(1 + maxScore));
 
-        console.log(s, raw);
-
         const scoreUnits = 4 + Math.sign(s) * raw;
 
         setWhiteHeight(scoreUnits);

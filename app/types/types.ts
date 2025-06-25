@@ -44,10 +44,8 @@ export type Repertoire = {
 };
 
 export type StockfishAPI = {
-    isReady: boolean;
     multiPV: Analysis;
     depth: number;
-    sendCommand: (cmd: string) => void;
     setPositionAndGo: (moves: string) => void;
     setDepth: (depth: number) => void;
     terminate: () => void;
