@@ -81,3 +81,46 @@ export async function createRepertoire(name: string) {
         await session.close();
     }
 }
+
+export async function updateRepertoire(id: string, name: string) {
+    const session = getSession();
+
+    try {
+        const result = await session.run(
+            `
+            MATCH (r:Repertoire {id: $id})
+            SET r.name = $name
+            RETURN r { .id, .name } AS repertoire
+        `,
+            { id, name: name.trim() }
+        );
+
+        const repertoire = result.records[0].get("repertoire");
+        return RepertoireSchema.parse(repertoire);
+    } catch (err) {
+        console.error("Failed to update repertoire:", err);
+        throw new Error("Failed to update repertoire");
+    } finally {
+        await session.close();
+    }
+}
+
+export async function deleteRepertoire(id: string) {
+    const session = getSession();
+
+    try {
+        await session.run(
+            `
+            MATCH (r:Repertoire {id: $id})
+            DETACH DELETE r
+        `,
+            { id }
+        );
+        return { success: true };
+    } catch (err) {
+        console.error("Failed to delete repertoire:", err);
+        throw new Error("Failed to delete repertoire");
+    } finally {
+        await session.close();
+    }
+}
