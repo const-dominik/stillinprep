@@ -54,7 +54,7 @@ describe("RepertoireList", () => {
 
         const searchInput = screen.getByPlaceholderText("Find repertoire...");
 
-        expect(searchInput).toBeInTheDocument;
+        expect(searchInput).toBeInTheDocument();
 
         await userEvent.type(searchInput, "sicilian");
 

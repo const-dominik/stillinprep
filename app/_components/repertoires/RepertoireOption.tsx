@@ -57,13 +57,25 @@ const RepertoireOption = ({
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                     className={styles["repertoire-edit-input"]}
+                    data-testid="edit-input"
                 />
                 {newName !== name && (
-                    <FaCheck size={"1.2rem"} onClick={saveNewName} />
+                    <FaCheck
+                        size={"1.2rem"}
+                        onClick={saveNewName}
+                        data-testid="check"
+                    />
                 )}
                 <div className={styles["repertoire-settings"]}>
-                    <FaRegTrashCan size="1.3rem" onClick={removeRepertoire} />
-                    <CiSettings onClick={handleSettingsClick} />
+                    <FaRegTrashCan
+                        size="1.3rem"
+                        onClick={removeRepertoire}
+                        data-testid="trashcan"
+                    />
+                    <CiSettings
+                        onClick={handleSettingsClick}
+                        data-testid="settings"
+                    />
                 </div>
             </div>
         );
@@ -78,7 +90,10 @@ const RepertoireOption = ({
         >
             {newName}
             <div className={styles["repertoire-settings"]}>
-                <CiSettings onClick={handleSettingsClick} />
+                <CiSettings
+                    onClick={handleSettingsClick}
+                    data-testid="settings"
+                />
             </div>
         </div>
     );
