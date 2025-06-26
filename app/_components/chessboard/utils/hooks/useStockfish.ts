@@ -70,6 +70,7 @@ export const useStockfish = (currentNode: MovesTreeNode): StockfishAPI => {
                 engineRef.current = sf;
 
                 sf.addMessageListener((line: string) => {
+                    console.log(line);
                     if (line === "readyok") {
                         setIsReady(true);
                     }
@@ -85,10 +86,10 @@ export const useStockfish = (currentNode: MovesTreeNode): StockfishAPI => {
                             parsed?.pv &&
                             parsed?.depth === depthRef.current
                         ) {
-                            updateBuffer.current.push({
+                            updateBuffer.current[parsed.multipv] = {
                                 line: parsed,
                                 nodeId: currentNodeRef.current.getMoveHash(),
-                            });
+                            };
                         }
                     }
 
