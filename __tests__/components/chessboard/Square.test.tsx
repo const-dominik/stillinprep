@@ -5,7 +5,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { Pieces } from "@/app/types/types";
-import Square from "@/app/_components/chessboard/Square";
+import Square from "@/app/components/repertoire/Square";
 import { pieceAssets } from "@/app/utils";
 
 describe("Square component", () => {

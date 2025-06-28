@@ -4,7 +4,7 @@ import {
     Pieces,
     Player,
     StockfishEval,
-    StockfishPromotionPiece,
+    UCIPromotionPiece,
 } from "@/app/types/types";
 import { fileAndRankToPosition } from "@/app/utils";
 import { getBoardAfterMove } from "./chessLogic";
@@ -52,7 +52,7 @@ export const parseStockfishLine = (
 };
 
 const stockfishPromotionMap: Record<
-    StockfishPromotionPiece,
+    UCIPromotionPiece,
     [whitePiece: Pieces, blackPiece: Pieces]
 > = {
     r: [Pieces.WHITE_ROOK, Pieces.BLACK_ROOK],
@@ -61,7 +61,7 @@ const stockfishPromotionMap: Record<
     b: [Pieces.WHITE_BISHOP, Pieces.BLACK_BISHOP],
 };
 
-const pieceGuard = (piece: string): piece is StockfishPromotionPiece => {
+const pieceGuard = (piece: string): piece is UCIPromotionPiece => {
     return [..."rqbn"].includes(piece);
 };
 
@@ -109,9 +109,9 @@ export const parseStockfishScore = (evaluation: StockfishEval): string => {
         const score = evaluation.value / 100;
 
         if (score < 0) {
-            return String(score);
+            return String(score.toFixed(2));
         }
-        return `+${score}`;
+        return `+${score.toFixed(2)}`;
     }
     return `#${evaluation.value}`;
 };

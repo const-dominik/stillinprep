@@ -1,4 +1,5 @@
-import { MovesTreeNode } from "./_components/chessboard/utils/MovesTree";
+import { IconType } from "react-icons";
+import { MovesTreeNode } from "./components/repertoire/utils/MovesTree";
 import { Pieces } from "./types/types";
 import type {
     AlgebraicPosition,
@@ -9,7 +10,17 @@ import type {
     File,
     AlgebraicPiece,
     MoveType,
+    TimeControl,
+    LiDbAvgRating,
+    LiDbRating,
 } from "./types/types";
+
+import { GiSupersonicBullet } from "react-icons/gi";
+import { GiSilverBullet } from "react-icons/gi";
+import { GiTurtle } from "react-icons/gi";
+import { GiPaperPlane } from "react-icons/gi";
+import { ImFire } from "react-icons/im";
+import { LuRabbit } from "react-icons/lu";
 
 export const initialBoard: Chessboard = [
     [
@@ -324,17 +335,21 @@ export const chessboardToFEN = (board: Chessboard): string => {
     return fenRows.join("/");
 };
 
-export const moveToMoveHistory = (move: MovesTreeNode): string => {
+export const moveToMoveHistory = (
+    move: MovesTreeNode,
+    separator: string = " "
+): string => {
     const moves = [];
+    const promotedTo = move.promotedTo();
 
     while (move.piece !== Pieces.EMPTY) {
         moves.push(
-            `${positionToAlgebraicNotation(move.from)}${positionToAlgebraicNotation(move.to)}`
+            `${positionToAlgebraicNotation(move.from)}${positionToAlgebraicNotation(move.to)}${promotedTo ? promotedTo[1].toLowerCase() : ""}`
         );
         move = move.parent;
     }
 
-    return moves.toReversed().join(" ");
+    return moves.toReversed().join(separator);
 };
 
 export const getTreeLeaves = (root: MovesTreeNode): string[] => {
@@ -343,4 +358,48 @@ export const getTreeLeaves = (root: MovesTreeNode): string[] => {
     const leaves = root.children.map(getTreeLeaves);
 
     return leaves.flat();
+};
+
+export const timeControlToIcon: Record<TimeControl, IconType> = {
+    ultraBullet: GiSupersonicBullet,
+    bullet: GiSilverBullet,
+    blitz: ImFire,
+    rapid: LuRabbit,
+    classical: GiTurtle,
+    correspondence: GiPaperPlane,
+} as const;
+
+export const liRatingsAvgs: LiDbAvgRating[] = [
+    500, 1100, 1300, 1500, 1700, 1900, 2100, 2300,
+] as const;
+
+export const liRatings: LiDbRating[] = [
+    0, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2500,
+] as const;
+
+export const liTimeControls: TimeControl[] = [
+    "ultraBullet",
+    "bullet",
+    "blitz",
+    "rapid",
+    "classical",
+    "correspondence",
+] as const;
+
+export const avgRatingsToRatings: Record<LiDbAvgRating, LiDbRating[]> = {
+    500: [0],
+    1100: [1000],
+    1300: [1200],
+    1500: [1400],
+    1700: [1600],
+    1900: [1800],
+    2100: [2000],
+    2300: [2200, 2500],
+};
+
+export const toggleArrayItem = <T>(item: T, arr: T[]): T[] => {
+    if (arr.includes(item)) {
+        return arr.filter((i) => i !== item);
+    }
+    return [...arr, item];
 };

@@ -4,7 +4,7 @@
 
 import "@testing-library/jest-dom";
 import { create_e4_e5_Nf3 } from "@/__tests__/testing_utils";
-import Move from "@/app/_components/chessboard/Move";
+import Move from "@/app/components/repertoire/Move";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { TestProviders } from "../../testing_utils";
 

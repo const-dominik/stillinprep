@@ -1,4 +1,4 @@
-import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
+import { MovesTreeNode } from "@/app/components/repertoire/utils/MovesTree";
 import { Pieces } from "@/app/types/types";
 import { FENToChessboard } from "@/app/utils";
 import { ConfirmProvider } from "@/app/context/ConfirmContext";

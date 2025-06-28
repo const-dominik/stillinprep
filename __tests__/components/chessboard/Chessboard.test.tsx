@@ -4,8 +4,8 @@
 
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import Chessboard from "@/app/_components/chessboard/Chessboard";
-import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
+import Chessboard from "@/app/components/repertoire/Chessboard";
+import { MovesTreeNode } from "@/app/components/repertoire/utils/MovesTree";
 import { v4 as uuid } from "uuid";
 
 describe("Chessboard", () => {

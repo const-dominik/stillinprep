@@ -2,12 +2,22 @@ import { test, expect } from "@playwright/test";
 import { getLocatorWithText, getSquareBySelector } from "./e2e_utils";
 
 test("Test repertoire and move history", async ({ page }) => {
-    await page.route("**/api/repertoire/**", async (route) => {
-        route.fulfill({
-            status: 200,
-            body: JSON.stringify({ id: "mock-id", name: "Mock Repertoire" }),
-        });
+    process.env.TEST_MOCK_DATA = "true";
+
+    await page.route("**", async (route) => {
+        if (route.request().method() === "POST") {
+            route.fulfill({
+                status: 200,
+                body: JSON.stringify({
+                    id: "mock-id",
+                    name: "Mock Repertoire",
+                }),
+            });
+        } else {
+            route.continue();
+        }
     });
+
     await page.goto("http://localhost:3000/repertoire/mock-id");
 
     await test.step("Clicking piece of opposite player doesn't do anything", async () => {

@@ -6,7 +6,10 @@ import { CiSettings } from "react-icons/ci";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
 import { Dispatch, MouseEvent, SetStateAction, useState } from "react";
-import { deleteRepertoire, updateRepertoire } from "@/app/actions/repertoire";
+import {
+    deleteRepertoire,
+    updateRepertoireField,
+} from "@/app/actions/repertoire";
 import { useConfirm } from "@/app/context/ConfirmContext";
 
 const RepertoireOption = ({
@@ -31,7 +34,7 @@ const RepertoireOption = ({
     const saveNewName = (e: MouseEvent) => {
         e.stopPropagation();
 
-        updateRepertoire(id, newName);
+        updateRepertoireField(id, "name", newName);
 
         setIsEditing(false);
     };
