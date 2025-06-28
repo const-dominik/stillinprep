@@ -77,6 +77,7 @@ const MovePopularity = ({
                     {isPlayersDb && (
                         <CiSettings
                             className={styles["toggle-settings"]}
+                            data-testid="ci-settings-icon"
                             onClick={() => setToggleSettings((p) => !p)}
                         />
                     )}
