@@ -5,7 +5,7 @@ import {
 } from "@/app/types/types";
 import styles from "./styles.module.scss";
 import { liRatingsAvgs, timeControlToIcon, toggleArrayItem } from "@/app/utils";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { updateRepertoireField } from "@/app/actions/repertoire";
 import useChange from "@/app/hooks/useChange";
 

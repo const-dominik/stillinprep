@@ -30,6 +30,17 @@ export async function getRepertoires() {
 }
 
 export async function getRepertoire(id: string) {
+    if (process.env.TEST_ENV === "true") {
+        return {
+            id: "mock-id",
+            name: "mock-name",
+            timeControls: "rapid",
+            ratings: "1700",
+            depth: "15",
+            paths: [],
+        };
+    }
+
     const session = getSession();
 
     try {

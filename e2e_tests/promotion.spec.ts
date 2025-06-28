@@ -2,12 +2,6 @@ import { getSquareBySelector } from "./e2e_utils";
 import { test, expect } from "@playwright/test";
 
 test("White promotion to Rook", async ({ page }) => {
-    await page.route("**/api/repertoire/**", async (route) => {
-        route.fulfill({
-            status: 200,
-            body: JSON.stringify({ id: "mock-id", name: "Mock Repertoire" }),
-        });
-    });
     await page.goto("http://localhost:3000/repertoire/mock-id");
 
     const [e2, e4, f7, f5, e7, e5, f6, f8, d6, e8] = await Promise.all([

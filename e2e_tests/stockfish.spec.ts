@@ -3,13 +3,6 @@ import { test, expect } from "@playwright/test";
 
 test("Stockfish", async ({ page }) => {
     test.slow();
-
-    await page.route("**/api/repertoire/**", async (route) => {
-        route.fulfill({
-            status: 200,
-            body: JSON.stringify({ id: "mock-id", name: "Mock Repertoire" }),
-        });
-    });
     await page.goto("http://localhost:3000/repertoire/mock-id");
 
     await test.step("is loaded", async () => {

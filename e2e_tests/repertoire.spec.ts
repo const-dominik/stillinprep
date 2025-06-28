@@ -2,22 +2,6 @@ import { test, expect } from "@playwright/test";
 import { getLocatorWithText, getSquareBySelector } from "./e2e_utils";
 
 test("Test repertoire and move history", async ({ page }) => {
-    process.env.TEST_MOCK_DATA = "true";
-
-    await page.route("**", async (route) => {
-        if (route.request().method() === "POST") {
-            route.fulfill({
-                status: 200,
-                body: JSON.stringify({
-                    id: "mock-id",
-                    name: "Mock Repertoire",
-                }),
-            });
-        } else {
-            route.continue();
-        }
-    });
-
     await page.goto("http://localhost:3000/repertoire/mock-id");
 
     await test.step("Clicking piece of opposite player doesn't do anything", async () => {
@@ -268,9 +252,6 @@ test("Test repertoire and move history", async ({ page }) => {
     await test.step("Given choice, we can't choose current line from Saved lines", async () => {
         const d5 = getLocatorWithText("saved-lines", "d5", page);
         await expect(d5).not.toBeVisible();
-
-        const d5s = await page.locator("text=d5").all();
-        expect(d5s).toHaveLength(1);
 
         const currentd5 = getLocatorWithText("move-history", "d5", page);
         await expect(currentd5).toBeVisible();

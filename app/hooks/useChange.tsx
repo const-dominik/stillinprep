@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef } from "react";
 
-const useChange = (action: Function, dependencyArr: unknown[]) => {
+const useChange = (action: () => void, dependencyArr: unknown[]) => {
     const initialRenderRef = useRef(true);
 
     useEffect(() => {

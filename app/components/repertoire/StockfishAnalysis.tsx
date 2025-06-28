@@ -4,8 +4,6 @@ import { MovesTreeNode } from "./utils/MovesTree";
 import styles from "./styles.module.scss";
 import { parseStockfishResponse, parseStockfishScore } from "./utils/stockfish";
 import { StockfishAPI } from "@/app/types/types";
-import { useDebounce } from "use-debounce";
-import { useEffect } from "react";
 import { updateRepertoireField } from "@/app/actions/repertoire";
 import useChange from "@/app/hooks/useChange";
 
