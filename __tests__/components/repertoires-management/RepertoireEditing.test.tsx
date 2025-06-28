@@ -1,12 +1,15 @@
 import { TestProviders } from "@/__tests__/testing_utils";
-import RepertoireOption from "@/app/_components/repertoires/RepertoireOption";
+import RepertoireOption from "@/app/components/repertoires-management/RepertoireOption";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import { deleteRepertoire, updateRepertoire } from "@/app/actions/repertoire";
+import {
+    deleteRepertoire,
+    updateRepertoireField,
+} from "@/app/actions/repertoire";
 
 jest.mock("@/app/actions/repertoire", () => ({
-    updateRepertoire: jest.fn(),
+    updateRepertoireField: jest.fn(),
     deleteRepertoire: jest.fn(),
 }));
 
@@ -72,9 +75,9 @@ describe("Singular repertoire element", () => {
         expect(check).toBeVisible();
 
         fireEvent.click(check);
-        const mockUpdate = updateRepertoire as jest.Mock;
+        const mockUpdate = updateRepertoireField as jest.Mock;
 
-        expect(mockUpdate).toHaveBeenCalledWith("1", "testtest");
+        expect(mockUpdate).toHaveBeenCalledWith("1", "name", "testtest");
     });
 
     it("allows us to remove repertoire", async () => {

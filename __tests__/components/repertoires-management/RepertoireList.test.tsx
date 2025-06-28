@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 
-import RepertoireList from "@/app/_components/repertoires/RepertoireList";
+import RepertoireList from "@/app/components/repertoires-management/RepertoireList";
 import { render, screen } from "@testing-library/react";
 import { Repertoire } from "@/app/types/types";
 import userEvent from "@testing-library/user-event";

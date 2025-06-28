@@ -1,5 +1,5 @@
 import { Pieces } from "@/app/types/types";
-import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
+import { MovesTreeNode } from "@/app/components/repertoire/utils/MovesTree";
 import type { Chessboard, PiecePosition, MoveType } from "@/app/types/types";
 import {
     whitePieces,

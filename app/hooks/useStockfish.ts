@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { MovesTreeNode } from "../MovesTree";
+import { MovesTreeNode } from "../components/repertoire/utils/MovesTree";
 import { getOppositePlayer, moveToMoveHistory } from "@/app/utils";
 import { Analysis, Stockfish, StockfishAPI } from "@/app/types/types";
-import { parseStockfishLine } from "../stockfish";
+import { parseStockfishLine } from "../components/repertoire/utils/stockfish";
 
-export const useStockfish = (currentNode: MovesTreeNode): StockfishAPI => {
-    const [depth, setDepth] = useState(15);
+export const useStockfish = (
+    currentNode: MovesTreeNode,
+    baseDepth: number
+): StockfishAPI => {
+    const [depth, setDepth] = useState(baseDepth);
     const [multiPV, setMultiPV] = useState<Analysis>([]);
     const [isReady, setIsReady] = useState(false);
 

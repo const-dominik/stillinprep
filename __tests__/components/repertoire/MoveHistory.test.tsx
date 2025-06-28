@@ -3,8 +3,8 @@
  */
 
 import { create_e4_e5_Nf3, TestProviders } from "@/__tests__/testing_utils";
-import MoveHistory from "@/app/_components/chessboard/MoveHistory";
-import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
+import MoveHistory from "@/app/components/repertoire/MoveHistory";
+import { MovesTreeNode } from "@/app/components/repertoire/utils/MovesTree";
 import { Pieces } from "@/app/types/types";
 import { FENToChessboard } from "@/app/utils";
 import "@testing-library/jest-dom";

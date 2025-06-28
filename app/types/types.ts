@@ -69,10 +69,61 @@ export type Analysis = {
     nodeId: string;
 }[];
 
-export type StockfishPromotionPiece = "r" | "q" | "n" | "b";
+export type UCIPromotionPiece = "r" | "q" | "n" | "b";
 
 export type Stockfish = Promise<{
     postMessage: (command: string) => void;
     addMessageListener: (cb: (line: string) => void) => void;
     terminate: () => void;
 }>;
+
+export type DbType = "players" | "masters";
+export type TimeControl =
+    | "ultraBullet"
+    | "bullet"
+    | "blitz"
+    | "rapid"
+    | "classical"
+    | "correspondence";
+export type LiDbRating =
+    | 0
+    | 1000
+    | 1200
+    | 1400
+    | 1600
+    | 1800
+    | 2000
+    | 2200
+    | 2500;
+export type LiDbAvgRating =
+    | 500
+    | 1100
+    | 1300
+    | 1500
+    | 1700
+    | 1900
+    | 2100
+    | 2300;
+
+export type MovePopualritySettings = {
+    timeControls: TimeControl[];
+    ratings: LiDbAvgRating[];
+};
+
+type LiQueryCommonParams = {
+    play: string;
+    moves: number;
+};
+
+type LichessParams = LiQueryCommonParams & {
+    db: "lichess";
+    variant: "standard";
+    speeds: TimeControl[];
+    ratings: LiDbRating[];
+};
+
+type MastersParams = LiQueryCommonParams & {
+    db: "masters";
+};
+
+export type LiAPIQueryParameters = LichessParams | MastersParams;

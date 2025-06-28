@@ -1,4 +1,4 @@
-import RepertoireList from "../_components/repertoires/RepertoireList";
+import RepertoireList from "../components/repertoires-management/RepertoireList";
 import { getRepertoires } from "../actions/repertoire";
 
 const Content = async () => {

@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { MovesTreeNode } from "@/app/_components/chessboard/utils/MovesTree";
+import { MovesTreeNode } from "@/app/components/repertoire/utils/MovesTree";
 import { Pieces } from "@/app/types/types";
 import { create_e4_d5_exd5, create_e4_e5_Nf3 } from "../testing_utils";
 import { FENToChessboard } from "@/app/utils";

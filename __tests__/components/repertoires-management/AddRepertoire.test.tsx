@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import AddRepertoire from "@/app/_components/repertoires/AddRepertoire";
+import AddRepertoire from "@/app/components/repertoires-management/AddRepertoire";
 import { createRepertoire } from "@/app/actions/repertoire";
 
 const pushMock = jest.fn();

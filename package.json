@@ -9,7 +9,7 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "e2etest": "npx playwright test"
+    "e2etest": "cross-env TEST_ENV=true npx playwright test"
   },
   "husky": {
     "hooks": {
@@ -50,6 +50,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^7.0.3",
     "eslint": "^9.22.0",
     "eslint-config-next": "15.2.2",
     "eslint-config-prettier": "^10.1.1",

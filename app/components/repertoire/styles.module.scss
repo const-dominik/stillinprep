@@ -1,0 +1,562 @@
+@use "sass:color";
+
+:root {
+    --score-untis: 4;
+}
+
+// === PLACEHOLDERS & MIXINS ===
+%base-square {
+    width: 12.5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+%centered-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+
+@mixin custom-scrollbar($bg, $thumb) {
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background: $thumb;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: $thumb $bg;
+}
+
+// === SQUARE STYLES ===
+.square {
+    @extend %base-square;
+}
+
+.dark {
+    @extend %base-square;
+    background: v.$palette-6;
+    position: relative;
+}
+
+.light {
+    @extend %base-square;
+    background: v.$palette-2;
+    position: relative;
+}
+
+.selected {
+    background: v.$secondary-dark;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+    pointer-events: none;
+}
+
+// === MOVE HIGHLIGHTS ===
+.legal-light-move {
+    background: radial-gradient(v.$secondary-light 10%, v.$palette-2 33%);
+
+    &:hover {
+        background: v.$secondary-light;
+    }
+}
+
+.legal-dark-move {
+    background: radial-gradient(v.$secondary-light 10%, v.$palette-6 33%);
+
+    &:hover {
+        background: v.$secondary-light;
+    }
+}
+
+.under-attack-light {
+    background: radial-gradient(
+        v.$palette-2 0%,
+        v.$palette-2 79%,
+        v.$secondary-lighter 80%
+    );
+
+    &:hover {
+        background: v.$secondary-lighter;
+    }
+}
+
+.under-attack-dark {
+    background: radial-gradient(
+        v.$palette-6 0%,
+        v.$palette-6 79%,
+        v.$secondary-lighter 80%
+    );
+
+    &:hover {
+        background: v.$secondary-lighter;
+    }
+}
+
+.checked-light {
+    background: radial-gradient(circle at center, red 30%, v.$palette-2 90%);
+}
+
+.checked-dark {
+    background: radial-gradient(circle at center, red 30%, v.$palette-6 90%);
+}
+
+// === BOARD ===
+.board {
+    width: calc(#{v.$square-size} * 8);
+    height: calc(#{v.$square-size} * 8);
+}
+
+.row {
+    display: flex;
+    height: v.$square-size;
+    width: calc(#{v.$square-size} * 8);
+}
+
+// === MOVE HISTORY PANEL ===
+.move-history {
+    width: calc(#{v.$square-size} * 4);
+    height: calc(#{v.$square-size} * 8);
+    background: v.$palette-7;
+    margin-left: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.history-container {
+    display: flex;
+    align-items: flex-start;
+}
+
+// === SCROLLABLE SIDEBAR ===
+.sidebar-scroll-wrapper {
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    @include custom-scrollbar(
+        color.adjust(v.$palette-7, $lightness: 5%),
+        color.adjust(v.$palette-7, $lightness: -10%)
+    );
+}
+
+.sidebar {
+    width: calc(#{v.$square-size} * 4);
+}
+
+// === TREE NAVIGATION ===
+.tree-navigator {
+    height: 40px;
+    width: calc(#{v.$square-size} * 4);
+    border-top: 5px solid v.$palette-8;
+
+    display: flex;
+}
+
+.arrow {
+    @extend %centered-flex;
+    @extend .pointer;
+
+    width: 50%;
+    height: 40px;
+    background: v.$palette-6;
+
+    &:hover {
+        background: v.$palette-5;
+    }
+}
+
+// === MOVES DISPLAY ===
+.move-pair {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.move {
+    width: calc(#{v.$square-size} * 1.75);
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+    padding: 1rem;
+    position: relative;
+
+    @extend %centered-flex;
+    color: v.$palette-4;
+    border-bottom: 1px solid v.$palette-6;
+    border-right: 1px solid v.$palette-6;
+
+    &:hover {
+        background: v.$palette-6;
+    }
+
+    .cross {
+        color: rgb(212, 78, 78);
+        position: absolute;
+        left: 10px;
+    }
+}
+
+.saved-line-move {
+    @extend .move;
+    border-right: none;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.current-move {
+    background: color.adjust(v.$palette-7, $lightness: -10%);
+}
+
+.move-number {
+    width: calc(#{v.$square-size} / 2);
+    background: v.$palette-5;
+    border-right: 1px solid v.$palette-4;
+
+    @extend %centered-flex;
+    color: v.$palette-1;
+}
+
+// === SAVED LINES PANEL ===
+.saved-lines {
+    width: calc(#{v.$square-size} * 1.75);
+    background: v.$palette-7;
+    margin-left: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.saved-lines-header {
+    text-align: center;
+    border-bottom: 1px solid v.$palette-6;
+    padding: 0.5rem 0;
+    user-select: none;
+}
+
+// === STOCKFISH LINES ===
+.stockfish-lines {
+    @extend %centered-flex;
+
+    flex-direction: column;
+    background: v.$palette-7;
+    margin-right: 0.75rem;
+    width: calc(#{v.$square-size} * 3);
+}
+
+.stockfish-title {
+    text-align: center;
+    font-size: 1.2rem;
+    color: v.$palette-1;
+    padding: 0.5rem;
+    border-bottom: 2px solid v.$palette-6;
+    width: 100%;
+}
+
+.stockfish-lines-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 15vh;
+    width: 100%;
+    border-bottom: 2px solid v.$palette-6;
+}
+
+.stockfish-line {
+    display: flex;
+    justify-content: space-around;
+    padding: 0.5rem;
+    width: 100%;
+    border-bottom: 1px solid v.$palette-6;
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: v.$palette-6;
+    }
+}
+
+.stockfish-score {
+    font-weight: bold;
+    color: v.$palette-4;
+    font-size: 0.9rem;
+    width: 4rem;
+}
+
+.stockfish-move {
+    font-family: monospace;
+    color: v.$palette-3;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.depth-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    width: 100%;
+
+    button {
+        background: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid v.$palette-6;
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 1.25rem;
+        color: v.$palette-4;
+        cursor: pointer;
+
+        &:hover {
+            background: v.$palette-6;
+        }
+    }
+
+    .depth-display {
+        font-size: 0.9rem;
+        color: v.$palette-4;
+    }
+}
+
+.depth-info {
+    font-size: 0.7rem;
+    color: v.$palette-4;
+    text-align: center;
+    margin-bottom: 0.2rem;
+}
+
+// SCOREMETER
+
+.scoremeter {
+    height: v.$square-size * 8;
+    width: calc(v.$square-size * 0.125);
+    border: 1px solid v.$palette-7;
+    margin-right: 0.75rem;
+    display: flex;
+    flex-direction: column;
+
+    .whitescore {
+        height: calc(v.$square-size * var(--score-units));
+        background-color: v.$palette-1;
+        margin-top: auto;
+    }
+}
+
+// MOVE POPULARITY
+
+.move-popularity {
+    @extend %centered-flex;
+
+    flex-direction: column;
+    background: v.$palette-7;
+    margin-right: 0.75rem;
+    width: calc(#{v.$square-size} * 3);
+    margin-top: 1rem;
+
+    .db-options {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        border-bottom: 2px solid v.$palette-6;
+
+        .db-option {
+            text-align: center;
+            width: 100%;
+            padding: 0.2rem;
+            cursor: pointer;
+        }
+
+        .active-db-option {
+            background: v.$palette-6;
+            position: relative;
+
+            .toggle-settings {
+                position: absolute;
+                right: 5px;
+                font-size: 1.2rem;
+            }
+        }
+    }
+
+    .popularity-settings {
+        width: 100%;
+
+        .settings-line {
+            &-header {
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 0.3rem 0 0.1rem 0;
+            }
+        }
+
+        &-options {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding: 0.2rem 0.3rem;
+
+            .svg-container {
+                padding: 0.2rem;
+                border: 1px solid v.$palette-6;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+
+                svg {
+                    font-size: 1.5rem;
+                }
+            }
+
+            .rating-container {
+                padding: 0.2rem;
+                border: 1px solid v.$palette-6;
+                cursor: pointer;
+                width: 20%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                margin: 0.1rem;
+
+                .rating-option {
+                    font-size: 0.8rem;
+                }
+            }
+
+            .time-control-active {
+                background-color: v.$palette-6;
+            }
+        }
+    }
+
+    .popular-moves-title {
+        text-align: center;
+        font-size: 1.2rem;
+        color: v.$palette-1;
+        padding: 0.2rem 0 0 0;
+        width: 100%;
+    }
+
+    .opening-name {
+        padding: 0 0 1rem 0;
+        min-height: 1.2rem;
+        max-height: 2rem;
+        font-size: 0.7rem;
+        width: 100%;
+        border-bottom: 2px solid v.$palette-6;
+        text-align: center;
+    }
+
+    .popular-moves-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .no-move-info {
+            color: v.$palette-2;
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 0.5rem;
+        }
+
+        .popular-move {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.4rem;
+
+            .ratio {
+                width: 100%;
+
+                .bar {
+                    display: flex;
+                    overflow: hidden;
+                    border-radius: 15px;
+                    font-size: 0.7rem;
+
+                    .white {
+                        @extend %centered-flex;
+
+                        padding: 0.2rem;
+                        color: v.$palette-8;
+                        background-color: v.$palette-2;
+                    }
+
+                    .draw {
+                        @extend %centered-flex;
+
+                        padding: 0.2rem;
+                        color: v.$palette-8;
+                        background-color: v.$palette-4;
+                    }
+
+                    .black {
+                        @extend %centered-flex;
+
+                        padding: 0.2rem;
+                        color: v.$palette-2;
+                        background-color: v.$palette-8;
+                    }
+                }
+            }
+
+            .move-info {
+                display: flex;
+                justify-content: center;
+                text-align: center;
+                width: 100%;
+
+                .move-data {
+                    font-family: monospace;
+                    color: v.$palette-3;
+                    text-align: center;
+                    padding: 0.2rem;
+                }
+
+                .move-data-25 {
+                    @extend .move-data;
+                    width: 25%;
+                    text-align: left;
+                }
+
+                .move-data-50 {
+                    @extend .move-data;
+                    width: 50%;
+                    text-align: right;
+                }
+            }
+        }
+    }
+}
