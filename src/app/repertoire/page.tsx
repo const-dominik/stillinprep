@@ -1,0 +1,16 @@
+import RepertoireList from "@/components/repertoires-management/RepertoireList";
+import { getRepertoires } from "@/lib/actions/repertoire";
+
+const Content = async () => {
+    try {
+        const repertoires = await getRepertoires();
+
+        return <RepertoireList repertoires={repertoires} />;
+    } catch {
+        throw new Error(
+            "Something wrong with db - no repertoires returned, probably instance paused :("
+        );
+    }
+};
+
+export default Content;

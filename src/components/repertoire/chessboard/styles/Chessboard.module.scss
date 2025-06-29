@@ -1,0 +1,13 @@
+@use "sass:color";
+@use "@/styles/variables" as v;
+
+.board {
+    width: calc(#{v.$square-size} * 8);
+    height: calc(#{v.$square-size} * 8);
+}
+
+.row {
+    display: flex;
+    height: v.$square-size;
+    width: calc(#{v.$square-size} * 8);
+}

@@ -1,0 +1,20 @@
+@use "@/styles/variables" as v;
+
+:root {
+    --score-untis: 4;
+}
+
+.scoremeter {
+    height: v.$square-size * 8;
+    width: calc(v.$square-size * 0.125);
+    border: 1px solid v.$palette-7;
+    margin-right: 0.75rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.whitescore {
+    height: calc(v.$square-size * var(--score-units));
+    background-color: v.$palette-1;
+    margin-top: auto;
+}

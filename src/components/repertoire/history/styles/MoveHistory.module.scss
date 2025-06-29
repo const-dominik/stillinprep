@@ -1,0 +1,61 @@
+@use "sass:color";
+@use "src/styles/utils" as *;
+@use "@/styles/variables" as v;
+
+@mixin custom-scrollbar($bg, $thumb) {
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background: $thumb;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: $thumb $bg;
+}
+
+.history-container {
+    display: flex;
+    align-items: flex-start;
+}
+
+.move-history {
+    width: calc(#{v.$square-size} * 4);
+    height: calc(#{v.$square-size} * 8);
+    background: v.$palette-7;
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar-scroll-wrapper {
+    overflow: hidden auto;
+
+    @include custom-scrollbar(
+        color.adjust(v.$palette-7, $lightness: 5%),
+        color.adjust(v.$palette-7, $lightness: -10%)
+    );
+}
+
+.sidebar {
+    width: calc(#{v.$square-size} * 4);
+}
+
+.move-pair {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.move-number {
+    @extend %centered-flex;
+
+    width: calc(#{v.$square-size} / 2);
+    background: v.$palette-5;
+    border-right: 1px solid v.$palette-4;
+    color: v.$palette-1;
+}

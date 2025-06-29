@@ -1,0 +1,17 @@
+@use "sass:color";
+@use "src/styles/utils" as *;
+@use "@/styles/variables" as v;
+
+.move {
+    @extend %move;
+}
+
+.cross {
+    color: rgb(212 78 78);
+    position: absolute;
+    left: 10px;
+}
+
+.current-move {
+    background: color.adjust(v.$palette-7, $lightness: -10%);
+}

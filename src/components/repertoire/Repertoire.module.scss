@@ -1,0 +1,16 @@
+@use "@/styles/variables" as v;
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.moves-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: calc(v.$square-size * 8);
+}

@@ -1,7 +1,8 @@
-import { MovesTreeNode } from "@/app/components/repertoire/utils/MovesTree";
-import { Pieces } from "@/app/types/types";
-import { FENToChessboard } from "@/app/utils";
-import { ConfirmProvider } from "@/app/context/ConfirmContext";
+import { MovesTreeNode } from "@/components/utils/MovesTree";
+import { ConfirmProvider } from "@/lib/context/confirm/ConfirmContext";
+import { PiecePosition, Pieces } from "@/lib/types/types";
+import { FENToChessboard } from "@/lib/utils";
+import { ElementHandle, expect, Page } from "@playwright/test";
 
 export const create_e4_e5_Nf3 = () => {
     const root = new MovesTreeNode();
@@ -58,3 +59,29 @@ export const create_e4_d5_exd5 = () => {
 export const TestProviders = ({ children }: { children: React.ReactNode }) => {
     return <ConfirmProvider>{children}</ConfirmProvider>;
 };
+
+export const getSquareSelector = (position: PiecePosition) =>
+    `div[class*="board"] div:nth-child(${position[0] + 1}) > div:nth-child(${position[1] + 1})`;
+
+export const getSquareBySelector = async (
+    page: Page,
+    position: PiecePosition
+): Promise<{
+    square: ElementHandle<SVGElement | HTMLElement>;
+    selector: string;
+}> => {
+    const selector = getSquareSelector(position);
+    const square = await page.$(selector);
+
+    expect(square).not.toBeNull();
+    if (!square) {
+        throw new Error("what?");
+    }
+    return { square, selector };
+};
+
+export const getLocatorWithText = (
+    classPart: string,
+    text: string,
+    page: Page
+) => page.locator(`div[class*="${classPart}"] >> text=${text}`);

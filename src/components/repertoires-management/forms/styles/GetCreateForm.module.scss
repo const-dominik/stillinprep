@@ -1,0 +1,37 @@
+@use "@/styles/variables" as v;
+
+.container-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 1px solid v.$palette-5;
+}
+
+.input,
+.repertoire-edit-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: v.$palette-3;
+}
+
+.input {
+    flex: 1;
+    font-size: 14px;
+}
+
+.plus {
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    color: v.$palette-3;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: v.$palette-5;
+    }
+}

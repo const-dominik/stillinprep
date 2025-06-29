@@ -1,0 +1,23 @@
+@use "sass:color";
+@use "src/styles/utils" as *;
+@use "@/styles/variables" as v;
+
+.tree-navigator {
+    height: 40px;
+    width: calc(#{v.$square-size} * 4);
+    border-top: 5px solid v.$palette-8;
+    display: flex;
+}
+
+.arrow {
+    @extend %centered-flex;
+
+    cursor: pointer;
+    width: 50%;
+    height: 40px;
+    background: v.$palette-6;
+
+    &:hover {
+        background: v.$palette-5;
+    }
+}
