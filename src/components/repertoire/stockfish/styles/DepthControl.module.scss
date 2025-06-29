@@ -1,0 +1,39 @@
+@use "src/styles/utils" as *;
+@use "@/styles/variables" as v;
+
+.depth-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.depth-control-btn {
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid v.$palette-6;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.25rem;
+    color: v.$palette-4;
+    cursor: pointer;
+
+    &:hover {
+        background: v.$palette-6;
+    }
+}
+
+.depth-display {
+    font-size: 0.9rem;
+    color: v.$palette-4;
+}
+
+.depth-info {
+    font-size: 0.7rem;
+    color: v.$palette-4;
+    text-align: center;
+    margin-bottom: 0.2rem;
+}

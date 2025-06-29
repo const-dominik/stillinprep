@@ -1,0 +1,46 @@
+@use "@/styles/variables" as v;
+
+%centered-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+
+%move {
+    @extend %centered-flex;
+
+    width: calc(#{v.$square-size} * 1.75);
+    height: 20px;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    color: v.$palette-4;
+    border-bottom: 1px solid v.$palette-6;
+    border-right: 1px solid v.$palette-6;
+
+    &:hover {
+        background: v.$palette-6;
+    }
+}
+
+%repertoire-element-base {
+    display: flex;
+    align-items: center;
+    height: 10vh;
+    font-size: 2rem;
+    color: v.$palette-3;
+    background: v.$palette-6;
+    border-bottom: 1px solid v.$palette-5;
+    user-select: none;
+    position: relative;
+
+    &:hover {
+        background: v.$palette-5;
+    }
+
+    &:last-child {
+        border: none;
+    }
+}

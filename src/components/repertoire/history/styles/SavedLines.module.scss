@@ -1,0 +1,29 @@
+@use "sass:color";
+@use "src/styles/utils" as *;
+@use "@/styles/variables" as v;
+
+.saved-lines {
+    width: calc(#{v.$square-size} * 1.75);
+    background: v.$palette-7;
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.saved-lines-header {
+    text-align: center;
+    border-bottom: 1px solid v.$palette-6;
+    padding: 0.5rem 0;
+    user-select: none;
+}
+
+.saved-line-move {
+    @extend %move;
+
+    border-right: none;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}

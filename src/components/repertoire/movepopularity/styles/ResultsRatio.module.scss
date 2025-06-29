@@ -1,0 +1,35 @@
+@use "sass:color";
+@use "src/styles/utils" as *;
+@use "@/styles/variables" as v;
+
+.bar {
+    display: flex;
+    overflow: hidden;
+    border-radius: 15px;
+    font-size: 0.7rem;
+    width: 100%;
+
+    .white {
+        @extend %centered-flex;
+
+        padding: 0.2rem;
+        color: v.$palette-8;
+        background-color: v.$palette-2;
+    }
+
+    .draw {
+        @extend %centered-flex;
+
+        padding: 0.2rem;
+        color: v.$palette-8;
+        background-color: v.$palette-4;
+    }
+
+    .black {
+        @extend %centered-flex;
+
+        padding: 0.2rem;
+        color: v.$palette-2;
+        background-color: v.$palette-8;
+    }
+}

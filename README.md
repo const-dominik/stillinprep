@@ -12,10 +12,16 @@ App should be launched at [http://localhost:3000](http://localhost:3000).
 ## Testing
 
 ### Unit
-Run tests using `npm run test`, check test coverage with `npx jest --coverage` - obviously the higher test coverage the better, good thing to check if you're not sure if your code is tested well.
+Run tests using `npm run unit`.
+
+Check test coverage with `npx jest --coverage`.
 
 ### E2E
-Run tests using `npm run e2etest`.
+Run tests using `npm run e2e`.
+
+### All
+
+Run unit and e2e tests with `npm run test`.
 
 ## Docs on hand
 [Next.js Docs](https://nextjs.org/docs)

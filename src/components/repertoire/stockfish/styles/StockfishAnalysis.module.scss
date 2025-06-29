@@ -1,0 +1,60 @@
+@use "src/styles/utils" as *;
+@use "@/styles/variables" as v;
+
+.stockfish-lines {
+    @extend %centered-flex;
+
+    flex-direction: column;
+    background: v.$palette-7;
+    margin-right: 0.75rem;
+    width: calc(#{v.$square-size} * 3);
+}
+
+.stockfish-title {
+    text-align: center;
+    font-size: 1.2rem;
+    color: v.$palette-1;
+    padding: 0.5rem;
+    border-bottom: 2px solid v.$palette-6;
+    width: 100%;
+}
+
+.stockfish-lines-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 15vh;
+    width: 100%;
+    border-bottom: 2px solid v.$palette-6;
+}
+
+.stockfish-line {
+    display: flex;
+    justify-content: space-around;
+    padding: 0.5rem;
+    width: 100%;
+    border-bottom: 1px solid v.$palette-6;
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: v.$palette-6;
+    }
+}
+
+.stockfish-score {
+    font-weight: bold;
+    color: v.$palette-4;
+    font-size: 0.9rem;
+    width: 4rem;
+}
+
+.stockfish-move {
+    font-family: monospace;
+    color: v.$palette-3;
+    font-size: 1rem;
+    text-align: center;
+}

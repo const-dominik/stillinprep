@@ -1,0 +1,40 @@
+@use "sass:color";
+@use "@/styles/variables" as v;
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.repertoires-list {
+    width: 30vw;
+    height: 80vh;
+    border-radius: 5px;
+    background: v.$palette-7;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: color.adjust(v.$palette-7, $lightness: -10%)
+        color.adjust(v.$palette-7, $lightness: 5%);
+}
+
+svg:hover {
+    cursor: pointer;
+}
+
+.no-repertoires {
+    color: v.$palette-4;
+    padding: 1rem;
+    text-align: center;
+}
