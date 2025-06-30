@@ -16,15 +16,9 @@ describe("Move component", () => {
     it("renders the algebraic notation of the move", () => {
         const [e4] = create_e4_e5_Nf3();
         render(
-            <Move
-                move={e4}
-                currentNode={e4}
-                setCurrentNode={() => {}}
-                setLine={() => {}}
-                setLastNode={() => {}}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+            <TestProviders current={e4}>
+                <Move move={e4} setLine={jest.fn} />,
+            </TestProviders>
         );
 
         expect(screen.getByText("e4")).toBeInTheDocument();
@@ -33,15 +27,9 @@ describe("Move component", () => {
     it("highlights current move", () => {
         const [e4] = create_e4_e5_Nf3();
         render(
-            <Move
-                move={e4}
-                currentNode={e4}
-                setCurrentNode={() => {}}
-                setLine={() => {}}
-                setLastNode={() => {}}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+            <TestProviders current={e4}>
+                <Move move={e4} setLine={jest.fn} />,
+            </TestProviders>
         );
         const moveElement = screen.getByText(e4.getAlgebraicNotation());
 
@@ -52,15 +40,9 @@ describe("Move component", () => {
         const setCurrentNode = jest.fn();
         const [e4] = create_e4_e5_Nf3();
         render(
-            <Move
-                move={e4}
-                currentNode={e4}
-                setCurrentNode={setCurrentNode}
-                setLine={() => {}}
-                setLastNode={() => {}}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+            <TestProviders current={e4} mockSetRoot={setCurrentNode}>
+                <Move move={e4} setLine={jest.fn} />,
+            </TestProviders>
         );
 
         const moveElement = screen.getByText(e4.getAlgebraicNotation());
@@ -73,15 +55,9 @@ describe("Move component", () => {
         const [e4] = create_e4_e5_Nf3();
 
         render(
-            <Move
-                move={e4}
-                currentNode={e4}
-                setCurrentNode={() => {}}
-                setLine={() => {}}
-                setLastNode={() => {}}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+            <TestProviders current={e4}>
+                <Move move={e4} setLine={jest.fn} />,
+            </TestProviders>
         );
 
         const moveElement = screen.getByText("e4");
@@ -101,15 +77,13 @@ describe("Move component", () => {
         const setLine = jest.fn();
         const setCurrentNode = jest.fn();
         render(
-            <Move
-                move={e5}
-                currentNode={e5}
-                setCurrentNode={setCurrentNode}
-                setLastNode={setLastNode}
-                setLine={setLine}
-                repertoireId="rep123"
-            />,
-            { wrapper: TestProviders }
+            <TestProviders
+                current={e5}
+                mockSetLast={setLastNode}
+                mockSetRoot={setCurrentNode}
+            >
+                <Move move={e5} setLine={setLine} />,
+            </TestProviders>
         );
 
         const moveElement = screen.getByText("e5");

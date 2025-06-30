@@ -1,10 +1,13 @@
-import { StockfishEval } from "@/lib/types/types";
+import { useStockfishContext } from "@/lib/context/stockfish/StockfishContext";
 import { useEffect, useState } from "react";
 import { calculateScoreUnits } from "./logic";
 import styles from "./styles/ScoreMeter.module.scss";
 
-const ScoreMeter = ({ score }: { score?: StockfishEval }) => {
+const ScoreMeter = () => {
     const [whiteHeight, setWhiteHeight] = useState(4);
+    const { multiPV } = useStockfishContext();
+
+    const score = multiPV[0]?.line.score;
 
     useEffect(() => {
         if (!score) return;

@@ -1,16 +1,10 @@
-import { MovesTreeNode } from "@/components/utils/MovesTree";
+import { usePosition } from "@/lib/context/current-position/PositionContext";
 import { useCallback, useEffect } from "react";
 import styles from "./styles/TreeNavigator.module.scss";
 
-const TreeNavigator = ({
-    currentNode,
-    lastNode,
-    setCurrentNode,
-}: {
-    currentNode: MovesTreeNode;
-    lastNode: MovesTreeNode;
-    setCurrentNode: (node: MovesTreeNode) => void;
-}) => {
+const TreeNavigator = () => {
+    const { currentNode, setCurrentNode, lastNode } = usePosition();
+
     const moveLeft = useCallback(() => {
         if (currentNode !== currentNode.parent) {
             setCurrentNode(currentNode.parent);

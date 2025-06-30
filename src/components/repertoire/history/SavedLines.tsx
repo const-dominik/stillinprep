@@ -1,18 +1,17 @@
 import { getAlgebraicMove } from "@/components/utils/chessAlgebraicNotation";
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 
+import { usePosition } from "@/lib/context/current-position/PositionContext";
 import { getOtherSavedLines } from "./logic/index";
 import styles from "./styles/SavedLines.module.scss";
 
 const SavedLines = ({
-    currentNode,
-    lastNode,
     setLine,
 }: {
-    currentNode: MovesTreeNode;
-    lastNode: MovesTreeNode;
     setLine: (node: MovesTreeNode) => void;
 }) => {
+    const { currentNode, lastNode } = usePosition();
+
     return (
         <div className={styles["saved-lines"]}>
             {currentNode.children.length > 1 && (

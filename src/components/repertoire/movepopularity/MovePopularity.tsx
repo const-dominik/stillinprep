@@ -1,10 +1,9 @@
-import { MovesTreeNode } from "@/components/utils/MovesTree";
+import { usePosition } from "@/lib/context/current-position/PositionContext";
+import { useRepertoire } from "@/lib/context/repertoire/RepertoireContext";
 import {
     DbType,
     LichessResponse,
-    LiDbAvgRating,
     MovePopualritySettings,
-    TimeControl,
 } from "@/lib/types/types";
 import { moveToMoveHistory } from "@/lib/utils";
 import { useEffect, useState } from "react";
@@ -15,21 +14,14 @@ import { getPopularMoves } from "./logic";
 import MoveItem from "./MoveItem";
 import styles from "./styles/MovePopularity.module.scss";
 
-const MovePopularity = ({
-    currentNode,
-    timeControls,
-    ratings,
-    repertoireId,
-}: {
-    currentNode: MovesTreeNode;
-    timeControls: TimeControl[];
-    ratings: LiDbAvgRating[];
-    repertoireId: string;
-}) => {
+const MovePopularity = () => {
+    const { timeControls, ratings } = useRepertoire();
+    const { currentNode } = usePosition();
+
     const [db, setDb] = useState<DbType>("players");
     const [settings, setSettings] = useState<MovePopualritySettings>({
-        timeControls: timeControls,
-        ratings: ratings,
+        timeControls,
+        ratings,
     });
     const [toggleSettings, setToggleSettings] = useState(false);
     const [popularMoves, setPopularMoves] = useState<LichessResponse | null>(
@@ -91,7 +83,6 @@ const MovePopularity = ({
             </div>
             {db === "players" && toggleSettings && (
                 <LichessDbSettings
-                    repertoireId={repertoireId}
                     settings={settings}
                     setSettings={setSettings}
                 />

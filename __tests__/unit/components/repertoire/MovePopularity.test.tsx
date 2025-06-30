@@ -16,6 +16,7 @@ jest.mock("@/components/repertoire/movepopularity/logic", () => ({
     })),
 }));
 import { getPopularMoves } from "@/components/repertoire/movepopularity/logic";
+import { TestProviders } from "../../../testing_utils";
 
 const mockGetPopularMoves = getPopularMoves as jest.Mock;
 
@@ -43,12 +44,9 @@ describe("MovePopularity component", () => {
 
     it("renders title and loads popular moves", async () => {
         render(
-            <MovePopularity
-                currentNode={mockNode}
-                repertoireId="rep1"
-                ratings={[1900]}
-                timeControls={["rapid"]}
-            />
+            <TestProviders current={mockNode}>
+                <MovePopularity />
+            </TestProviders>
         );
 
         expect(screen.getByText("Popular moves")).toBeInTheDocument();
@@ -62,12 +60,9 @@ describe("MovePopularity component", () => {
 
     it("can toggle to Masters DB", async () => {
         render(
-            <MovePopularity
-                currentNode={mockNode}
-                repertoireId="rep1"
-                ratings={[1900]}
-                timeControls={["rapid"]}
-            />
+            <TestProviders current={mockNode}>
+                <MovePopularity />
+            </TestProviders>
         );
 
         const mastersButton = screen.getByText("Masters");
@@ -84,12 +79,9 @@ describe("MovePopularity component", () => {
 
     it("toggles settings when clicking gear icon", async () => {
         render(
-            <MovePopularity
-                currentNode={mockNode}
-                repertoireId="rep1"
-                ratings={[1900]}
-                timeControls={["rapid"]}
-            />
+            <TestProviders current={mockNode}>
+                <MovePopularity />
+            </TestProviders>
         );
 
         await waitFor(() => screen.getByText("Players"));
@@ -114,12 +106,9 @@ describe("MovePopularity component", () => {
         });
 
         render(
-            <MovePopularity
-                currentNode={mockNode}
-                repertoireId="rep1"
-                ratings={[1900]}
-                timeControls={["rapid"]}
-            />
+            <TestProviders current={mockNode}>
+                <MovePopularity />
+            </TestProviders>
         );
 
         await waitFor(() =>

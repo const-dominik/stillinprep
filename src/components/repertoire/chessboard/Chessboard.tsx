@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 import styles from "./styles/Chessboard.module.scss";
 
@@ -10,7 +10,8 @@ import {
     isMoveLegal,
     isMoveOnPath,
 } from "@/components/utils/chessLogic";
-import { MovesTreeNode } from "@/components/utils/MovesTree";
+import { usePosition } from "@/lib/context/current-position/PositionContext";
+import { useRepertoire } from "@/lib/context/repertoire/RepertoireContext";
 import { MoveType, PiecePosition, Pieces } from "@/lib/types/types";
 import {
     blackPromotionPieces,
@@ -22,19 +23,11 @@ import {
 import { addMoveToDb } from "./logic";
 import Square from "./Square";
 
-const Chessboard = ({
-    currentNode,
-    lastNode,
-    setCurrentNode,
-    setLastNode,
-    repertoireId,
-}: {
-    currentNode: MovesTreeNode;
-    lastNode: MovesTreeNode;
-    setCurrentNode: Dispatch<SetStateAction<MovesTreeNode>>;
-    setLastNode: Dispatch<SetStateAction<MovesTreeNode>>;
-    repertoireId: string;
-}) => {
+const Chessboard = () => {
+    const { currentNode, lastNode, setLastNode, setCurrentNode } =
+        usePosition();
+    const { id: repertoireId } = useRepertoire();
+
     const [selectedPieceData, setSelectedPieceData] = useState<{
         position: PiecePosition | null;
         legalMoves: [PiecePosition, MoveType][];

@@ -1,7 +1,7 @@
 import StockfishAnalysis from "@/components/repertoire/stockfish/StockfishAnalysis";
 import { useStockfish } from "@/lib/hooks/useStockfish";
 import { render, renderHook, screen } from "@testing-library/react";
-import { create_e4_d5_exd5 } from "../../../testing_utils";
+import { create_e4_d5_exd5, TestProviders } from "../../../testing_utils";
 
 describe("Stockfish component", () => {
     afterEach(() => {
@@ -11,12 +11,11 @@ describe("Stockfish component", () => {
         const [e4] = create_e4_d5_exd5();
         const { result, unmount } = renderHook(() => useStockfish(e4, 15));
         expect(result.current).toBeDefined();
+
         render(
-            <StockfishAnalysis
-                stockfish={result.current}
-                currentNode={e4}
-                repertoireId="test"
-            />
+            <TestProviders current={e4}>
+                <StockfishAnalysis />
+            </TestProviders>
         );
 
         expect(

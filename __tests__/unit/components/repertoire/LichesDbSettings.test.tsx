@@ -6,6 +6,7 @@ import { MovePopualritySettings } from "@/lib/types/types";
 import "@testing-library/jest-dom";
 
 import { fireEvent, render, screen } from "@testing-library/react";
+import { TestProviders } from "../../../testing_utils";
 
 jest.mock("@/lib/actions/repertoire", () => ({
     updateRepertoireField: jest.fn(),
@@ -27,11 +28,12 @@ const mockSetSettings = jest.fn();
 
 const renderComponent = (settings = initialSettings) => {
     const { container } = render(
-        <LichessDbSettings
-            settings={settings}
-            setSettings={mockSetSettings}
-            repertoireId="rep1"
-        />
+        <TestProviders>
+            <LichessDbSettings
+                settings={settings}
+                setSettings={mockSetSettings}
+            />
+        </TestProviders>
     );
     return container;
 };

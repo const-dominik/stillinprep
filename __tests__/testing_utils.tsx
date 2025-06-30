@@ -1,8 +1,20 @@
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { ConfirmProvider } from "@/lib/context/confirm/ConfirmContext";
-import { PiecePosition, Pieces } from "@/lib/types/types";
+import {
+    RepertoireProvider,
+    useRepertoire,
+} from "@/lib/context/repertoire/RepertoireContext";
+import { useStockfish } from "@/lib/hooks/useStockfish";
+import {
+    PiecePosition,
+    Pieces,
+    PositionContextValue,
+    StockfishAPI,
+} from "@/lib/types/types";
 import { FENToChessboard } from "@/lib/utils";
 import { ElementHandle, expect, Page } from "@playwright/test";
+import { createContext, ReactNode, useContext, useState } from "react";
+import { useDebounce } from "use-debounce";
 
 export const create_e4_e5_Nf3 = () => {
     const root = new MovesTreeNode();
@@ -56,8 +68,120 @@ export const create_e4_d5_exd5 = () => {
     return [e4, d5, exd5];
 };
 
-export const TestProviders = ({ children }: { children: React.ReactNode }) => {
-    return <ConfirmProvider>{children}</ConfirmProvider>;
+const MockPositionContext = createContext<PositionContextValue | null>(null);
+const MockStockfishContext = createContext<StockfishAPI | null>(null);
+
+export const MockPositionProvider = ({
+    children,
+    root,
+    last,
+    mockSetRoot,
+    mockSetLast,
+}: {
+    children: ReactNode;
+    root: MovesTreeNode;
+    last: MovesTreeNode;
+    mockSetRoot?: typeof jest.fn;
+    mockSetLast?: typeof jest.fn;
+}) => {
+    const [currentNode, setCurrentNode] = useState(root);
+    const [lastNode, setLastNode] = useState(last);
+
+    const setCurrent = mockSetRoot || setCurrentNode;
+    const setLast = mockSetLast || setLastNode;
+
+    return (
+        <MockPositionContext.Provider
+            value={{
+                currentNode,
+                setCurrentNode: setCurrent,
+                lastNode,
+                setLastNode: setLast,
+            }}
+        >
+            {children}
+        </MockPositionContext.Provider>
+    );
+};
+
+export const MockStockfishProvider = ({
+    children,
+    currentNode,
+}: {
+    children: ReactNode;
+    currentNode: MovesTreeNode;
+}) => {
+    const { depth } = useRepertoire();
+
+    const [debouncedNode] = useDebounce(currentNode, 350);
+    const stockfish = useStockfish(debouncedNode, depth);
+
+    return (
+        <MockStockfishContext value={stockfish}>
+            {children}
+        </MockStockfishContext>
+    );
+};
+
+export const useMockPosition = () => {
+    const ctx = useContext(MockPositionContext);
+    if (!ctx)
+        throw new Error(
+            "useMockPosition must be used within MockPositionProvider"
+        );
+    return ctx;
+};
+
+export const useMockStockfish = () => {
+    const ctx = useContext(MockStockfishContext);
+    if (!ctx)
+        throw new Error(
+            "useMockStockfish must be used within MockPositionProvider"
+        );
+    return ctx;
+};
+
+export const TestProviders = ({
+    children,
+    current,
+    last,
+    mockSetRoot,
+    mockSetLast,
+}: {
+    children: ReactNode;
+    current?: MovesTreeNode;
+    last?: MovesTreeNode;
+    mockSetRoot?: typeof jest.fn;
+    mockSetLast?: typeof jest.fn;
+}) => {
+    const mockRepertoireData = {
+        ratings: "1900",
+        timeControls: "rapid",
+        depth: "15",
+        paths: [],
+    };
+
+    const root = new MovesTreeNode();
+
+    return (
+        <ConfirmProvider>
+            <RepertoireProvider
+                repertoireData={mockRepertoireData}
+                repertoireId={"test-id"}
+            >
+                <MockPositionProvider
+                    root={current || root}
+                    last={last || root}
+                    mockSetRoot={mockSetRoot}
+                    mockSetLast={mockSetLast}
+                >
+                    <MockStockfishProvider currentNode={current || root}>
+                        {children}
+                    </MockStockfishProvider>
+                </MockPositionProvider>
+            </RepertoireProvider>
+        </ConfirmProvider>
+    );
 };
 
 export const getSquareSelector = (position: PiecePosition) =>
@@ -74,9 +198,11 @@ export const getSquareBySelector = async (
     const square = await page.$(selector);
 
     expect(square).not.toBeNull();
+
     if (!square) {
-        throw new Error("what?");
+        throw new Error("Square is null.");
     }
+
     return { square, selector };
 };
 

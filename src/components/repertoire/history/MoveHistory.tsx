@@ -1,26 +1,16 @@
 "use client";
 
 import { MovesTreeNode } from "@/components/utils/MovesTree";
-import { Dispatch, SetStateAction } from "react";
+import { usePosition } from "@/lib/context/current-position/PositionContext";
 import { getGroupedMoves } from "./logic";
 import Move from "./Move";
 import SavedLines from "./SavedLines";
 import styles from "./styles/MoveHistory.module.scss";
 import TreeNavigator from "./TreeNavigator";
 
-const MoveHistory = ({
-    currentNode,
-    lastNode,
-    setCurrentNode,
-    setLastNode,
-    repertoireId,
-}: {
-    currentNode: MovesTreeNode;
-    lastNode: MovesTreeNode;
-    setCurrentNode: Dispatch<SetStateAction<MovesTreeNode>>;
-    setLastNode: Dispatch<SetStateAction<MovesTreeNode>>;
-    repertoireId: string;
-}) => {
+const MoveHistory = () => {
+    const { lastNode, setLastNode, setCurrentNode } = usePosition();
+
     const groupedMoves = getGroupedMoves(lastNode);
 
     const setLine = (node: MovesTreeNode) => {
@@ -46,22 +36,11 @@ const MoveHistory = ({
                                     <span className={styles["move-number"]}>
                                         {moveNumber}
                                     </span>
-                                    <Move
-                                        move={whiteMove}
-                                        currentNode={currentNode}
-                                        setCurrentNode={setCurrentNode}
-                                        setLine={setLine}
-                                        setLastNode={setLastNode}
-                                        repertoireId={repertoireId}
-                                    />
+                                    <Move move={whiteMove} setLine={setLine} />
                                     {blackMove && (
                                         <Move
                                             move={blackMove}
-                                            currentNode={currentNode}
-                                            setCurrentNode={setCurrentNode}
                                             setLine={setLine}
-                                            setLastNode={setLastNode}
-                                            repertoireId={repertoireId}
                                         />
                                     )}
                                 </div>
@@ -69,17 +48,9 @@ const MoveHistory = ({
                         )}
                     </div>
                 </div>
-                <TreeNavigator
-                    currentNode={currentNode}
-                    lastNode={lastNode}
-                    setCurrentNode={setCurrentNode}
-                />
+                <TreeNavigator />
             </div>
-            <SavedLines
-                currentNode={currentNode}
-                lastNode={lastNode}
-                setLine={setLine}
-            />
+            <SavedLines setLine={setLine} />
         </div>
     );
 };

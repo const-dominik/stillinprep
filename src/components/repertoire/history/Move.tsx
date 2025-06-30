@@ -1,25 +1,21 @@
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { manageLeaves } from "@/lib/actions/move";
 import { useConfirm } from "@/lib/context/confirm/ConfirmContext";
+import { usePosition } from "@/lib/context/current-position/PositionContext";
+import { useRepertoire } from "@/lib/context/repertoire/RepertoireContext";
 import { getTreeLeaves } from "@/lib/utils";
-import { Dispatch, MouseEvent, SetStateAction, useState } from "react";
+import { MouseEvent, useState } from "react";
 import styles from "./styles/Move.module.scss";
 
 const Move = ({
     move,
-    currentNode,
-    setCurrentNode,
-    setLastNode,
     setLine,
-    repertoireId,
 }: {
     move: MovesTreeNode;
-    currentNode: MovesTreeNode;
-    setCurrentNode: Dispatch<SetStateAction<MovesTreeNode>>;
-    setLastNode: Dispatch<SetStateAction<MovesTreeNode>>;
     setLine: (node: MovesTreeNode) => void;
-    repertoireId: string;
 }) => {
+    const { currentNode, setLastNode, setCurrentNode } = usePosition();
+    const { id: repertoireId } = useRepertoire();
     const [isHovered, setIsHovered] = useState(false);
     const confirm = useConfirm();
 

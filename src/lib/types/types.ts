@@ -160,3 +160,18 @@ export type LichessPopularMove = z.infer<typeof PopularMove>;
 export type MoveNode = z.infer<typeof MoveSchema>;
 export type PathNodes = MoveNode["properties"][];
 export type Paths = z.infer<typeof PathSchema>[];
+
+export type RepertoireData = {
+    id: string;
+    timeControls: TimeControl[];
+    ratings: LiDbAvgRating[];
+    depth: number;
+    paths: PathNodes[];
+};
+
+export type PositionContextValue = {
+    currentNode: MovesTreeNode;
+    lastNode: MovesTreeNode;
+    setCurrentNode: (n: MovesTreeNode) => void;
+    setLastNode: (n: MovesTreeNode) => void;
+};

@@ -1,4 +1,5 @@
 import { updateRepertoireField } from "@/lib/actions/repertoire";
+import { useRepertoire } from "@/lib/context/repertoire/RepertoireContext";
 import useChange from "@/lib/hooks/useChange";
 import {
     LiDbAvgRating,
@@ -12,7 +13,6 @@ import styles from "./styles/LichessDbSettings.module.scss";
 type LichessDbSettingsProps = {
     settings: MovePopualritySettings;
     setSettings: Dispatch<SetStateAction<MovePopualritySettings>>;
-    repertoireId: string;
 };
 
 const isSingleItem = <T,>(item: T, arr: T[]) =>
@@ -21,8 +21,9 @@ const isSingleItem = <T,>(item: T, arr: T[]) =>
 const LichessDbSettings = ({
     settings,
     setSettings,
-    repertoireId,
 }: LichessDbSettingsProps) => {
+    const { id: repertoireId } = useRepertoire();
+
     useChange(() => {
         updateRepertoireField(
             repertoireId,

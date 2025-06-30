@@ -3,7 +3,6 @@
  */
 
 import MoveHistory from "@/components/repertoire/history/MoveHistory";
-import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { Pieces } from "@/lib/types/types";
 import { FENToChessboard } from "@/lib/utils";
 import "@testing-library/jest-dom";
@@ -11,25 +10,13 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { create_e4_e5_Nf3, TestProviders } from "../../../testing_utils";
 
 describe("Move history", () => {
-    const node = new MovesTreeNode();
-    const baseProps = {
-        currentNode: node,
-        lastNode: node,
-        setCurrentNode: jest.fn(),
-        setLastNode: jest.fn(),
-    };
-
     it("displays all played moves", () => {
         const [e4, e5, Nf3] = create_e4_e5_Nf3();
 
         render(
-            <MoveHistory
-                {...baseProps}
-                currentNode={Nf3}
-                lastNode={Nf3}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+            <TestProviders current={Nf3} last={Nf3}>
+                <MoveHistory />,
+            </TestProviders>
         );
 
         const e4_text = screen.queryByText(e4.getAlgebraicNotation());
@@ -44,29 +31,22 @@ describe("Move history", () => {
     it("groups moves", () => {
         const [, e5, Nf3] = create_e4_e5_Nf3();
 
-        const { container, rerender } = render(
-            <MoveHistory
-                {...baseProps}
-                currentNode={Nf3}
-                lastNode={Nf3}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+        const { container } = render(
+            <TestProviders current={Nf3} last={Nf3}>
+                <MoveHistory />,
+            </TestProviders>
         );
         let pairs = Array.from(container.querySelectorAll(".move-pair"));
 
         expect(pairs).toBeDefined();
         expect(pairs.length).toEqual(2);
 
-        rerender(
-            <MoveHistory
-                {...baseProps}
-                currentNode={e5}
-                lastNode={e5}
-                repertoireId=""
-            />
+        const { container: newContainer } = render(
+            <TestProviders current={e5} last={e5}>
+                <MoveHistory />,
+            </TestProviders>
         );
-        pairs = Array.from(container.querySelectorAll(".move-pair"));
+        pairs = Array.from(newContainer.querySelectorAll(".move-pair"));
 
         expect(pairs.length).toEqual(1);
     });
@@ -77,14 +57,14 @@ describe("Move history", () => {
         const setLastNode = jest.fn();
 
         render(
-            <MoveHistory
-                setCurrentNode={setCurrentNode}
-                setLastNode={setLastNode}
-                currentNode={Nf3}
-                lastNode={Nf3}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+            <TestProviders
+                current={Nf3}
+                last={Nf3}
+                mockSetLast={setLastNode}
+                mockSetRoot={setCurrentNode}
+            >
+                <MoveHistory />,
+            </TestProviders>
         );
 
         const e5Element = screen.getByText(e5.getAlgebraicNotation());
@@ -106,14 +86,14 @@ describe("Move history", () => {
         const setLastNode = jest.fn();
 
         render(
-            <MoveHistory
-                setCurrentNode={setCurrentNode}
-                setLastNode={setLastNode}
-                currentNode={e5}
-                lastNode={Nf3}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+            <TestProviders
+                current={e5}
+                last={Nf3}
+                mockSetLast={setLastNode}
+                mockSetRoot={setCurrentNode}
+            >
+                <MoveHistory />,
+            </TestProviders>
         );
 
         const rightArrow = screen.getByText("→");
@@ -127,20 +107,20 @@ describe("Move history", () => {
         expect(setCurrentNode).toHaveBeenCalledWith(e4);
     });
 
-    it("doesn't change line when we're on the tree edges", () => {
+    it("doesn't change line when we're on the tree edges (right)", () => {
         const [e4] = create_e4_e5_Nf3();
         const setCurrentNode = jest.fn();
         const setLastNode = jest.fn();
 
-        const { rerender } = render(
-            <MoveHistory
-                setCurrentNode={setCurrentNode}
-                setLastNode={setLastNode}
-                currentNode={e4}
-                lastNode={e4}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+        render(
+            <TestProviders
+                current={e4}
+                last={e4}
+                mockSetLast={setLastNode}
+                mockSetRoot={setCurrentNode}
+            >
+                <MoveHistory />,
+            </TestProviders>
         );
 
         const rightArrow = screen.getByText("→");
@@ -148,15 +128,22 @@ describe("Move history", () => {
 
         expect(setCurrentNode).not.toHaveBeenCalled();
         expect(setLastNode).not.toHaveBeenCalled();
+    });
 
-        rerender(
-            <MoveHistory
-                setCurrentNode={setCurrentNode}
-                setLastNode={setLastNode}
-                currentNode={e4.parent}
-                lastNode={e4}
-                repertoireId=""
-            />
+    it("doesn't change line when we're on the tree edges (left)", () => {
+        const [e4] = create_e4_e5_Nf3();
+        const setCurrentNode = jest.fn();
+        const setLastNode = jest.fn();
+
+        render(
+            <TestProviders
+                current={e4.parent}
+                last={e4}
+                mockSetLast={setLastNode}
+                mockSetRoot={setCurrentNode}
+            >
+                <MoveHistory />,
+            </TestProviders>
         );
 
         const leftArrow = screen.getByText("←");
@@ -172,14 +159,14 @@ describe("Move history", () => {
         const setLastNode = jest.fn();
 
         render(
-            <MoveHistory
-                setCurrentNode={setCurrentNode}
-                setLastNode={setLastNode}
-                currentNode={e5}
-                lastNode={Nf3}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+            <TestProviders
+                current={e5}
+                last={Nf3}
+                mockSetLast={setLastNode}
+                mockSetRoot={setCurrentNode}
+            >
+                <MoveHistory />,
+            </TestProviders>
         );
 
         fireEvent.keyDown(document, { key: "ArrowLeft" });
@@ -194,13 +181,9 @@ describe("Move history", () => {
         const [, , Nf3] = create_e4_e5_Nf3();
 
         render(
-            <MoveHistory
-                {...baseProps}
-                currentNode={Nf3}
-                lastNode={Nf3}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+            <TestProviders current={Nf3} last={Nf3}>
+                <MoveHistory />,
+            </TestProviders>
         );
         const saved = screen.queryByText("Other lines:");
 
@@ -217,13 +200,9 @@ describe("Move history", () => {
         );
 
         render(
-            <MoveHistory
-                {...baseProps}
-                currentNode={e5}
-                lastNode={Nf3}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+            <TestProviders current={e5} last={Nf3}>
+                <MoveHistory />,
+            </TestProviders>
         );
 
         const saved = screen.getByText("Saved lines:");
@@ -255,14 +234,14 @@ describe("Move history", () => {
         );
 
         render(
-            <MoveHistory
-                setCurrentNode={setCurrentNode}
-                setLastNode={setLastNode}
-                currentNode={e5}
-                lastNode={Nf3}
-                repertoireId=""
-            />,
-            { wrapper: TestProviders }
+            <TestProviders
+                current={e5}
+                last={Nf3}
+                mockSetLast={setLastNode}
+                mockSetRoot={setCurrentNode}
+            >
+                <MoveHistory />,
+            </TestProviders>
         );
 
         const Nc3Element = screen.getByText(Nc3.getAlgebraicNotation());

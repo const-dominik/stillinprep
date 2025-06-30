@@ -2,23 +2,18 @@
  * @jest-environment jsdom
  */
 import Chessboard from "@/components/repertoire/chessboard/Chessboard";
-import { MovesTreeNode } from "@/components/utils/MovesTree";
 import "@testing-library/jest-dom";
 
 import { render } from "@testing-library/react";
-import { v4 as uuid } from "uuid";
+import { TestProviders } from "../../../testing_utils";
 
 describe("Chessboard", () => {
-    const baseProps = {
-        currentNode: new MovesTreeNode(),
-        lastNode: new MovesTreeNode(),
-        setCurrentNode: jest.fn(),
-        setLastNode: jest.fn(),
-        repertoireId: uuid(),
-    };
-
     it("renders the chessboard with the correct number of rows and columns", () => {
-        const { container } = render(<Chessboard {...baseProps} />);
+        const { container } = render(
+            <TestProviders>
+                <Chessboard />
+            </TestProviders>
+        );
         const rows = container.querySelectorAll("div[class*='row']");
 
         expect(rows).toHaveLength(8);

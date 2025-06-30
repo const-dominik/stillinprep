@@ -1,11 +1,11 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import styles from "./styles.module.scss";
+import styles from "./ConfirmContext.module.scss";
 
-type ConfirmContextType = {
+type ConfirmContextValue = {
     confirm: (message: string) => Promise<boolean>;
 };
 
-const ConfirmContext = createContext<ConfirmContextType | null>(null);
+const ConfirmContext = createContext<ConfirmContextValue | null>(null);
 
 export const ConfirmProvider = ({ children }: { children: ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false);
