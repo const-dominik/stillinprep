@@ -21,7 +21,11 @@ const RepertoireList = ({ repertoires }: { repertoires: Repertoire[] }) => {
         <ConfirmProvider>
             <div className={styles["container"]}>
                 <div className={styles["repertoires-list"]}>
-                    <GetCreateForm search={search} setSearch={setSearch} />
+                    <GetCreateForm
+                        search={search}
+                        setSearch={setSearch}
+                        hasRepertoires={repertoires.length > 0}
+                    />
                     {!repertoires.length && (
                         <p className={styles["no-repertoires"]}>
                             You don&apos;t have any repertoires.

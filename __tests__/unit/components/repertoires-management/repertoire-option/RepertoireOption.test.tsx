@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 
+import { TestProviders } from "@/../__tests__/testing_utils";
 import RepertoireOption from "@/components/repertoires-management/repertoire-option/RepertoireOption";
 import {
     deleteRepertoire,
@@ -10,7 +11,6 @@ import {
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { TestProviders } from "../../../testing_utils";
 
 jest.mock("@/lib/actions/repertoire", () => ({
     updateRepertoireField: jest.fn(),

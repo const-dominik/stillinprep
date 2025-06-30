@@ -26,6 +26,7 @@ const ScoreMeter = () => {
         <div className={styles.scoremeter}>
             <div
                 className={styles.whitescore}
+                data-testid="whitescore"
                 style={{ "--score-units": whiteHeight } as React.CSSProperties}
             ></div>
         </div>

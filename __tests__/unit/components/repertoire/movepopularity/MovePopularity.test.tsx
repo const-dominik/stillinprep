@@ -15,8 +15,9 @@ jest.mock("@/components/repertoire/movepopularity/logic", () => ({
         percentage: 50,
     })),
 }));
+
 import { getPopularMoves } from "@/components/repertoire/movepopularity/logic";
-import { TestProviders } from "../../../testing_utils";
+import { TestProviders } from "@/../__tests__/testing_utils";
 
 const mockGetPopularMoves = getPopularMoves as jest.Mock;
 

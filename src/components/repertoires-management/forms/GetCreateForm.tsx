@@ -7,16 +7,20 @@ import styles from "./styles/GetCreateForm.module.scss";
 const GetCreateForm = ({
     search,
     setSearch,
+    hasRepertoires,
 }: {
     search: string;
     setSearch: Dispatch<SetStateAction<string>>;
+    hasRepertoires: boolean;
 }) => {
     const [name, setName] = useState("");
+    const [isCreating, setIsCreating] = useState(false);
     const router = useRouter();
 
     const addRepertoire = async () => {
-        if (name.length === 0) return;
+        if (name.trim().length === 0 || isCreating) return;
 
+        setIsCreating(true);
         const newRepertoire = await createRepertoire(name);
         router.push(`/repertoire/${newRepertoire.id}`);
     };
@@ -36,15 +40,17 @@ const GetCreateForm = ({
                     +
                 </div>
             </div>
-            <div className={styles["container-form"]}>
-                <input
-                    type="text"
-                    placeholder="Find repertoire..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className={styles["input"]}
-                />
-            </div>
+            {hasRepertoires && (
+                <div className={styles["container-form"]}>
+                    <input
+                        type="text"
+                        placeholder="Find repertoire..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className={styles["input"]}
+                    />
+                </div>
+            )}
         </>
     );
 };

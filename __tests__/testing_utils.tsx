@@ -1,20 +1,11 @@
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { ConfirmProvider } from "@/lib/context/confirm/ConfirmContext";
-import {
-    RepertoireProvider,
-    useRepertoire,
-} from "@/lib/context/repertoire/RepertoireContext";
-import { useStockfish } from "@/lib/hooks/useStockfish";
-import {
-    PiecePosition,
-    Pieces,
-    PositionContextValue,
-    StockfishAPI,
-} from "@/lib/types/types";
+import { RepertoireProvider } from "@/lib/context/repertoire/RepertoireContext";
+import { PiecePosition, Pieces, StockfishAPI } from "@/lib/types/types";
 import { FENToChessboard } from "@/lib/utils";
 import { ElementHandle, expect, Page } from "@playwright/test";
-import { createContext, ReactNode, useContext, useState } from "react";
-import { useDebounce } from "use-debounce";
+import { ReactNode } from "react";
+import { MockPositionProvider, MockStockfishProvider } from "./test_providers";
 
 export const create_e4_e5_Nf3 = () => {
     const root = new MovesTreeNode();
@@ -66,79 +57,6 @@ export const create_e4_d5_exd5 = () => {
     );
 
     return [e4, d5, exd5];
-};
-
-const MockPositionContext = createContext<PositionContextValue | null>(null);
-const MockStockfishContext = createContext<StockfishAPI | null>(null);
-
-export const MockPositionProvider = ({
-    children,
-    root,
-    last,
-    mockSetRoot,
-    mockSetLast,
-}: {
-    children: ReactNode;
-    root: MovesTreeNode;
-    last: MovesTreeNode;
-    mockSetRoot?: typeof jest.fn;
-    mockSetLast?: typeof jest.fn;
-}) => {
-    const [currentNode, setCurrentNode] = useState(root);
-    const [lastNode, setLastNode] = useState(last);
-
-    const setCurrent = mockSetRoot || setCurrentNode;
-    const setLast = mockSetLast || setLastNode;
-
-    return (
-        <MockPositionContext.Provider
-            value={{
-                currentNode,
-                setCurrentNode: setCurrent,
-                lastNode,
-                setLastNode: setLast,
-            }}
-        >
-            {children}
-        </MockPositionContext.Provider>
-    );
-};
-
-export const MockStockfishProvider = ({
-    children,
-    currentNode,
-}: {
-    children: ReactNode;
-    currentNode: MovesTreeNode;
-}) => {
-    const { depth } = useRepertoire();
-
-    const [debouncedNode] = useDebounce(currentNode, 350);
-    const stockfish = useStockfish(debouncedNode, depth);
-
-    return (
-        <MockStockfishContext value={stockfish}>
-            {children}
-        </MockStockfishContext>
-    );
-};
-
-export const useMockPosition = () => {
-    const ctx = useContext(MockPositionContext);
-    if (!ctx)
-        throw new Error(
-            "useMockPosition must be used within MockPositionProvider"
-        );
-    return ctx;
-};
-
-export const useMockStockfish = () => {
-    const ctx = useContext(MockStockfishContext);
-    if (!ctx)
-        throw new Error(
-            "useMockStockfish must be used within MockPositionProvider"
-        );
-    return ctx;
 };
 
 export const TestProviders = ({
@@ -211,3 +129,18 @@ export const getLocatorWithText = (
     text: string,
     page: Page
 ) => page.locator(`div[class*="${classPart}"] >> text=${text}`);
+
+export const getMockedStockfishAPI = (): StockfishAPI => ({
+    setPositionAndGo: jest.fn(),
+    setDepth: jest.fn(),
+    terminate: jest.fn(),
+    multiPV: [
+        {
+            line: {
+                score: { type: "cp", value: 150 },
+            },
+            nodeId: "123",
+        },
+    ],
+    depth: 15,
+});

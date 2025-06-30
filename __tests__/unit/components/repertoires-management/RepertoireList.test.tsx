@@ -29,7 +29,7 @@ describe("RepertoireList", () => {
     it("doesn't render search if no repertoires passed", () => {
         render(<RepertoireList repertoires={[]} />);
 
-        const search = screen.queryByPlaceholderText("Search repertoires...");
+        const search = screen.queryByPlaceholderText("Find repertoire...");
 
         expect(search).not.toBeInTheDocument();
     });

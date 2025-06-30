@@ -1,4 +1,4 @@
-import * as TestingUtils from "./__tests__/testing_utils";
+import * as TestingProviders from "./__tests__/test_providers";
 
 jest.mock("@/lib/context/current-position/PositionContext", () => {
     const originalModule = jest.requireActual(
@@ -7,7 +7,7 @@ jest.mock("@/lib/context/current-position/PositionContext", () => {
     return {
         __esModule: true,
         ...originalModule,
-        usePosition: () => TestingUtils.useMockPosition(),
+        usePosition: () => TestingProviders.useMockPosition(),
     };
 });
 
@@ -18,6 +18,6 @@ jest.mock("@/lib/context/stockfish/StockfishContext", () => {
     return {
         __esModule: true,
         ...originalModule,
-        useStockfishContext: () => TestingUtils.useMockStockfish(),
+        useStockfishContext: () => TestingProviders.useMockStockfish(),
     };
 });
