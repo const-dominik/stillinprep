@@ -175,3 +175,13 @@ export type PositionContextValue = {
     setCurrentNode: (n: MovesTreeNode) => void;
     setLastNode: (n: MovesTreeNode) => void;
 };
+
+export type PendingPromotion = {
+    from: PiecePosition;
+    to: PiecePosition;
+};
+
+export type SelectedPieceData = {
+    position: PiecePosition | null;
+    legalMoves: [PiecePosition, MoveType][];
+};

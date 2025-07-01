@@ -21,7 +21,7 @@
 }
 
 .selected {
-    background: v.$secondary-dark;
+    background: v.$secondary-dark !important;
 }
 
 .overlay {
@@ -69,6 +69,18 @@
     &:hover {
         background: v.$secondary-lighter;
     }
+}
+
+.hovered {
+    background: v.$secondary-light !important;
+}
+
+.hovered-attacked {
+    background: v.$secondary-lighter !important;
+}
+
+.grabbing {
+    cursor: grabbing;
 }
 
 .under-attack-light {

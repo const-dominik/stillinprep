@@ -3,7 +3,7 @@
  */
 
 import Square from "@/components/repertoire/chessboard/Square";
-import { Pieces } from "@/lib/types/types";
+import { Pieces, Player } from "@/lib/types/types";
 import { pieceAssets } from "@/lib/utils";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
@@ -13,12 +13,13 @@ describe("Square component", () => {
         x: 0,
         y: 0,
         piece: Pieces.EMPTY,
+        currentPlayer: "black" as Player,
         isSelected: false,
         isMoveLegal: false,
         isPieceOnSquare: false,
         isChecked: false,
         promotionData: [false, false] as [boolean, boolean],
-        onClick: jest.fn(),
+        onMouseDown: jest.fn(),
     };
 
     it("renders square with dark/light background depending on x+y", () => {
@@ -118,15 +119,15 @@ describe("Square component", () => {
         );
     });
 
-    it("calls onClick with correct coordinates when clicked", () => {
+    it("calls onMouseDown with correct coordinates when clicked", () => {
         const mockClick = jest.fn();
         const { container } = render(
-            <Square {...baseProps} onClick={mockClick} />
+            <Square {...baseProps} onMouseDown={mockClick} />
         );
 
         const square = container.querySelector("div")!;
         expect(square).toBeInTheDocument();
-        fireEvent.click(square);
+        fireEvent.mouseDown(square);
         expect(mockClick).toHaveBeenCalledWith(0, 0);
     });
 
