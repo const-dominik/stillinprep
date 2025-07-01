@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
     getBoardAfterMove,
@@ -36,6 +36,11 @@ export const useChessboard = () => {
         useState<SelectedPieceData>(baseSelectedPieceData);
     const [pendingPromotion, setPendingPromotion] =
         useState<PendingPromotion | null>(null);
+
+    useEffect(() => {
+        setSelectedPieceData(baseSelectedPieceData);
+        setPendingPromotion(null);
+    }, [currentNode]);
 
     const changeSelectedPiece = (pos: PiecePosition | null) => {
         if (!pos) return setSelectedPieceData(baseSelectedPieceData);
