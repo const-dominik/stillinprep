@@ -1,5 +1,6 @@
 import { useStockfishContext } from "@/lib/context/stockfish/StockfishContext";
 import { useEffect, useState } from "react";
+import { parseStockfishScore } from "../stockfish/logic";
 import { calculateScoreUnits } from "./logic";
 import styles from "./styles/ScoreMeter.module.scss";
 
@@ -8,6 +9,7 @@ const ScoreMeter = () => {
     const { multiPV } = useStockfishContext();
 
     const score = multiPV[0]?.line.score;
+    const parsedScore = score && parseStockfishScore(score);
 
     useEffect(() => {
         if (!score) return;
@@ -23,7 +25,7 @@ const ScoreMeter = () => {
     }, [score]);
 
     return (
-        <div className={styles.scoremeter}>
+        <div className={styles.scoremeter} title={parsedScore}>
             <div
                 className={styles.whitescore}
                 data-testid="whitescore"
