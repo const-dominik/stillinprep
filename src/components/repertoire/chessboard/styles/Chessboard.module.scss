@@ -4,6 +4,8 @@
 .board {
     width: calc(#{v.$square-size} * 8);
     height: calc(#{v.$square-size} * 8);
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 .row {

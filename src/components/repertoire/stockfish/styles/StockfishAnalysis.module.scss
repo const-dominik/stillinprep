@@ -8,6 +8,8 @@
     background: v.$palette-7;
     margin-right: 0.75rem;
     width: calc(#{v.$square-size} * 3);
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 .stockfish-title {

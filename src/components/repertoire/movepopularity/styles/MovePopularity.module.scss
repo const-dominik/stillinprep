@@ -11,6 +11,8 @@
     margin-right: 0.75rem;
     width: calc(#{v.$square-size} * 3);
     margin-top: 1rem;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 .db-options {

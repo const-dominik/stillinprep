@@ -20,6 +20,8 @@
     font-size: 1.25rem;
     color: v.$palette-4;
     cursor: pointer;
+    border-radius: 5px;
+    overflow: hidden;
 
     &:hover {
         background: v.$palette-6;
