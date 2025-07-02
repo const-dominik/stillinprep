@@ -3,7 +3,7 @@ import { getLocatorWithText, getSquareBySelector } from "../testing_utils";
 
 test("Stockfish", async ({ page }) => {
     test.slow();
-    await page.goto("http://localhost:3000/repertoire/mock-id");
+    await page.goto("/repertoire/mock-id");
 
     await test.step("is loaded", async () => {
         await page.evaluate(() => {

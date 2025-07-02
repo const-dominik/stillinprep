@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { getSquareBySelector } from "../testing_utils";
 
 test("White promotion to Rook", async ({ page }) => {
-    await page.goto("http://localhost:3000/repertoire/mock-id");
+    await page.goto("/repertoire/mock-id");
 
     const [e2, e4, f7, f5, e7, e5, f6, f8, d6, e8] = await Promise.all([
         getSquareBySelector(page, [6, 4]),

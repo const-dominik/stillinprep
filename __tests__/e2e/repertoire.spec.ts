@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { getLocatorWithText, getSquareBySelector } from "../testing_utils";
 
 test("Test repertoire and move history", async ({ page }) => {
-    await page.goto("http://localhost:3000/repertoire/mock-id");
+    await page.goto("/repertoire/mock-id");
 
     await test.step("Clicking piece of opposite player doesn't do anything", async () => {
         const a8 = await getSquareBySelector(page, [0, 0]);
