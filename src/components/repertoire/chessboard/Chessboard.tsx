@@ -41,7 +41,7 @@ const Chessboard = () => {
     };
 
     const sensors = useSensor(PointerSensor, {
-        activationConstraint: { distance: 2 },
+        activationConstraint: { distance: 0 },
     });
 
     return (
