@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "@/styles/variables" as v;
 
 %centered-flex {
@@ -43,4 +44,40 @@
     &:last-child {
         border: none;
     }
+}
+
+%single-window-page {
+    width: 30vw;
+    height: 80vh;
+    border-radius: 5px;
+    background: v.$palette-7;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: color.adjust(v.$palette-7, $lightness: -10%)
+        color.adjust(v.$palette-7, $lightness: 5%);
+}
+
+%page-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+%title {
+    text-align: center;
+    padding: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+    color: v.$palette-2;
 }

@@ -1,0 +1,72 @@
+@use "@/styles/variables" as v;
+@use "src/styles/utils" as *;
+
+.form {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+}
+
+.title {
+    @extend %title;
+}
+
+.submit {
+    width: 80%;
+    margin: 0.5rem auto;
+    padding: 1rem;
+    outline: none;
+    border: none;
+    background: v.$palette-6;
+    color: v.$palette-4;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+
+    &:hover {
+        background: v.$palette-5;
+        color: v.$palette-3;
+    }
+}
+
+.window-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.links {
+    display: flex;
+    flex-direction: column;
+}
+
+.link {
+    color: v.$palette-5;
+    text-decoration: none;
+    margin-bottom: 2rem;
+
+    &:visited {
+        color: v.$palette-5;
+    }
+}
+
+.error {
+    color: v.$error-red !important;
+    text-align: center;
+    margin: 1rem 2rem;
+}
+
+.success {
+    color: v.$secondary-lighter;
+    text-align: center;
+    margin: 1rem 2rem;
+}
+
+.awaiting {
+    text-align: center;
+    margin: 1rem 2rem;
+}

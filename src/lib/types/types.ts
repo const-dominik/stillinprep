@@ -185,3 +185,10 @@ export type SelectedPieceData = {
     position: PiecePosition | null;
     legalMoves: [PiecePosition, MoveType][];
 };
+
+export type RegistrationData = {
+    nickname: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+};

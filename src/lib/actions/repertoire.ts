@@ -1,6 +1,6 @@
 "use server";
 
-import { getSession } from "@/lib/neo4j";
+import { getNeoSession } from "@/lib/neo4j";
 import { Path } from "neo4j-driver";
 import { v4 as uuid } from "uuid";
 import { PathSchema, RepertoireSchema } from "../schema";
@@ -10,7 +10,7 @@ import {
 } from "../types/backend-types";
 
 export async function getRepertoires(): DbRepertoiresResponse {
-    const session = getSession();
+    const session = getNeoSession();
 
     try {
         const result = await session.run(`
@@ -43,7 +43,7 @@ export async function getRepertoire(id: string): DbRepertoireResponse {
         };
     }
 
-    const session = getSession();
+    const session = getNeoSession();
 
     try {
         const query = `
@@ -94,7 +94,7 @@ export async function getRepertoire(id: string): DbRepertoireResponse {
 }
 
 export async function createRepertoire(name: string) {
-    const session = getSession();
+    const session = getNeoSession();
 
     const id = uuid();
 
@@ -117,7 +117,7 @@ export async function createRepertoire(name: string) {
 }
 
 export async function deleteRepertoire(id: string) {
-    const session = getSession();
+    const session = getNeoSession();
 
     try {
         await session.run(
@@ -141,7 +141,7 @@ export async function updateRepertoireField(
     field: "timeControls" | "ratings" | "depth" | "name",
     value: string
 ) {
-    const session = getSession();
+    const session = getNeoSession();
 
     try {
         const result = await session.run(

@@ -144,3 +144,5 @@ export const getMockedStockfishAPI = (): StockfishAPI => ({
     ],
     depth: 15,
 });
+
+export const authenticate = () => {};

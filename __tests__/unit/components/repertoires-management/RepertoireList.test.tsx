@@ -1,7 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
 import RepertoireList from "@/components/repertoires-management/RepertoireList";
 import { Repertoire } from "@/lib/types/types";
 import "@testing-library/jest-dom";

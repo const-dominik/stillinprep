@@ -19,4 +19,8 @@ const config: Config = {
     setupFiles: ["<rootDir>/jest.setup.ts"],
 };
 
-export default createJestConfig(config);
+export default async () => ({
+    ...(await createJestConfig(config)()),
+    transformIgnorePatterns: ["<rootDir>/node_modules/(?!next-auth)/"],
+    testEnvironment: "jest-fixed-jsdom",
+});

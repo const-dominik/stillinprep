@@ -1,3 +1,4 @@
+import { Record as NeoRecord } from "neo4j-driver";
 import type {
     AlgebraicPiece,
     AlgebraicPosition,
@@ -405,3 +406,15 @@ export const toggleArrayItem = <T>(item: T, arr: T[]): T[] => {
     }
     return [...arr, item];
 };
+
+export const emailRegex =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+export const isEmail = (s: string) => emailRegex.test(s);
+
+export const nicknameRegex = /^[\p{L}\d_]+$/u;
+
+export const capitalize = (str: string) => str[0].toUpperCase() + str.slice(1);
+
+export const neoRecordToObj = (record: NeoRecord) =>
+    Object.fromEntries(record.keys.map((key) => [key, record.get(key)]));

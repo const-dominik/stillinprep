@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 // organize-imports-ignore
 import "@testing-library/jest-dom";
 

@@ -11,4 +11,4 @@ if (!URI || !LOGIN || !PASSWORD) {
 
 const neoDriver = driver(URI!, auth.basic(LOGIN!, PASSWORD!));
 
-export const getSession = () => neoDriver.session();
+export const getNeoSession = () => neoDriver.session();

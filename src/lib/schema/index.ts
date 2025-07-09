@@ -1,4 +1,6 @@
+import { validatePassword } from "@/components/auth-forms/utils";
 import { z } from "zod/v4";
+import { nicknameRegex } from "../utils";
 
 export const RepertoireSchema = z.object({
     id: z.string(),
@@ -70,3 +72,67 @@ export const LichessMovePopularityResponse = z.looseObject({
     draws: z.number().nonnegative(),
     moves: z.array(PopularMove),
 });
+
+export const nicknameSchema = z.string().min(3).max(20).regex(nicknameRegex);
+
+export const passwordSchema = z
+    .string()
+    .min(8, "Password must be at least 8 characters long.")
+    .refine(validatePassword, "Password does not meet requirements.");
+
+export const identifierSchema = nicknameSchema.or(z.email());
+
+export const RegisterSchema = z
+    .object({
+        nickname: nicknameSchema,
+        email: z.email(),
+        password: passwordSchema,
+        confirmPassword: passwordSchema,
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        path: ["confirmPassword"],
+        message: "Passwords don't match.",
+    });
+
+export const RegisterUserResponse = z.object({
+    id: z.uuidv4(),
+    email: z.email(),
+    nickname: z.string(),
+});
+
+export const VerificationTokenResponse = z.object({
+    expires: z.number(),
+});
+
+// completeProfile
+export const CompleteProfileArgs = z.object({
+    id: z.uuidv4(),
+    nickname: nicknameSchema,
+});
+
+// login
+export const LoginArgs = z.object({
+    identifier: identifierSchema,
+    password: passwordSchema,
+});
+
+export const DbUserSchema = z.object({
+    email: z.email(),
+    id: z.string(),
+    nickname: z.optional(nicknameSchema).nullable(),
+    emailVerified: z.optional(z.looseObject({})).nullable(),
+    password: z.optional(z.string()),
+});
+
+// passwordRecovery
+export const NewTokenSchema = z.object({
+    email: z.email(),
+    token: z.string(),
+});
+
+export const ChangePasswordSArgs = z.object({
+    token: z.string(),
+    newPassword: passwordSchema,
+});
+
+// register

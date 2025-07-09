@@ -1,15 +1,15 @@
 "use server";
 
-import { getSession } from "@/lib/neo4j";
+import { getNeoSession } from "@/lib/neo4j";
 import { MoveData } from "@/lib/types/types";
-import { Session } from "neo4j-driver";
 
-async function createLeafRelation(
+const createLeafRelation = async (
     repertoire: string,
     parentId: string,
-    nodeId: string,
-    session: Session
-) {
+    nodeId: string
+) => {
+    const session = getNeoSession();
+
     const query = `
         MATCH (r: Repertoire {id: $repertoireId})
         MATCH (n: Move {id: $nodeId})
@@ -19,15 +19,21 @@ async function createLeafRelation(
         CREATE (r)-[:LEAF]->(n)
     `;
 
-    await session.run(query, {
-        repertoireId: repertoire,
-        parentId,
-        nodeId,
-    });
-}
+    try {
+        await session.run(query, {
+            repertoireId: repertoire,
+            parentId,
+            nodeId,
+        });
+    } catch (e) {
+        console.log(e);
+    } finally {
+        await session.close();
+    }
+};
 
-export async function addMove(moveData: MoveData) {
-    const session = getSession();
+export const addMove = async (moveData: MoveData) => {
+    const session = getNeoSession();
     const move = moveData.move;
     const query = `
         OPTIONAL MATCH (p:Move {id: $parentId})
@@ -52,25 +58,20 @@ export async function addMove(moveData: MoveData) {
             to: move.to,
             promotion: move.promotion ?? "x",
         });
-        await createLeafRelation(
-            moveData.repertoire,
-            moveData.parent,
-            move.id,
-            session
-        );
+        await createLeafRelation(moveData.repertoire, moveData.parent, move.id);
     } catch (err) {
         console.log(err);
     } finally {
         await session.close();
     }
-}
+};
 
-export async function manageLeaves(
+export const manageLeaves = async (
     repertoireId: string,
     remove: string[],
     add: string | undefined
-) {
-    const session = getSession();
+) => {
+    const session = getNeoSession();
 
     try {
         if (remove.length > 0) {
@@ -85,10 +86,10 @@ export async function manageLeaves(
 
         if (add) {
             const addQuery = `
-            MATCH (r:Repertoire {id: $repertoireId})
-            MATCH (m:Move {id: $add})
-            MERGE (r)-[:LEAF]->(m)
-        `;
+                MATCH (r:Repertoire {id: $repertoireId})
+                MATCH (m:Move {id: $add})
+                MERGE (r)-[:LEAF]->(m)
+            `;
             await session.run(addQuery, { repertoireId, add });
         }
     } catch (err) {
@@ -97,4 +98,4 @@ export async function manageLeaves(
     } finally {
         await session.close();
     }
-}
+};
