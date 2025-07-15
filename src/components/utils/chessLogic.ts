@@ -47,8 +47,7 @@ const isSquareAttack = (
     }
 
     // === KINGS ===
-    const king =
-        attackedBy === "white" ? Pieces.WHITE_KNIGHT : Pieces.BLACK_KNIGHT;
+    const king = attackedBy === "white" ? Pieces.WHITE_KING : Pieces.BLACK_KING;
 
     for (const [dy, dx] of kingMoves) {
         const ny = y + dy;
