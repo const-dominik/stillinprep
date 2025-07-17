@@ -8,38 +8,50 @@ const GetCreateForm = ({
     search,
     setSearch,
     hasRepertoires,
+    noAdd,
 }: {
     search: string;
     setSearch: Dispatch<SetStateAction<string>>;
     hasRepertoires: boolean;
+    noAdd?: boolean;
 }) => {
     const [name, setName] = useState("");
     const [isCreating, setIsCreating] = useState(false);
     const router = useRouter();
 
     const addRepertoire = async () => {
-        if (name.trim().length === 0 || isCreating) return;
+        if (name.trim().length === 0) return;
 
         setIsCreating(true);
-        const newRepertoire = await createRepertoire(name);
-        router.push(`/repertoire/${newRepertoire.id}`);
+        const response = await createRepertoire(name);
+
+        if (response.success && response.value) {
+            router.push(`/repertoire/${response.value.id}`);
+        }
+
+        setIsCreating(false);
     };
 
     return (
         <>
-            <div className={styles["container-form"]}>
-                <input
-                    type="text"
-                    placeholder="New repertoire..."
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && addRepertoire()}
-                    className={styles["input"]}
-                />
-                <div className={styles["plus"]} onClick={() => addRepertoire()}>
-                    +
+            {!noAdd && (
+                <div className={styles["container-form"]}>
+                    <input
+                        type="text"
+                        placeholder="New repertoire..."
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && addRepertoire()}
+                        className={styles["input"]}
+                    />
+                    <div
+                        className={styles["plus"]}
+                        onClick={() => !isCreating && addRepertoire()}
+                    >
+                        +
+                    </div>
                 </div>
-            </div>
+            )}
             {hasRepertoires && (
                 <div className={styles["container-form"]}>
                     <input

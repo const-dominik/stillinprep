@@ -14,8 +14,6 @@ export const completeProfile = async (
     id: string,
     nickname: string
 ): ServerActionResponse<never> => {
-    const session = getNeoSession();
-
     const parsed = CompleteProfileArgs.safeParse({ id, nickname });
 
     if (!parsed.success) {
@@ -35,6 +33,7 @@ export const completeProfile = async (
         SET u.nickname = $nickname
         RETURN u
     `;
+    const session = getNeoSession();
 
     try {
         const result = await session.run(query, {

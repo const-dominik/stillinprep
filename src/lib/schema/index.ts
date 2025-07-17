@@ -2,11 +2,6 @@ import { validatePassword } from "@/components/auth-forms/utils";
 import { z } from "zod/v4";
 import { nicknameRegex } from "../utils";
 
-export const RepertoireSchema = z.object({
-    id: z.string(),
-    name: z.string().min(1),
-});
-
 export const BaseNodeSchema = z.object({
     elementId: z.string(),
     identity: z.object({
@@ -135,4 +130,67 @@ export const ChangePasswordSArgs = z.object({
     newPassword: passwordSchema,
 });
 
-// register
+// edit repertoire
+export const RepertoireEditDataSchema = z.object({
+    name: z.string().min(1),
+    visibility: z.enum(["public", "private"]),
+    hasAccess: z.array(
+        z.object({
+            nickname: z.string().min(3),
+            mode: z.enum(["edit", "readonly"]),
+        })
+    ),
+});
+
+export const RepertoireSchema = z.object({
+    id: z.string(),
+    name: z.string().min(1),
+    visibility: z.enum(["public", "private"]),
+    hasAccess: z.array(
+        z.object({
+            nickname: z.string().min(3),
+            mode: z.enum(["edit", "readonly"]),
+        })
+    ),
+});
+
+export const RepertoireCreatedSchema = z.object({
+    id: z.string(),
+    name: z.string().min(1),
+});
+
+export const OwnedRepertoireData = z.object({
+    id: z.string(),
+    name: z.string().min(1),
+    visibility: z.enum(["public", "private"]),
+    hasAccess: z.array(
+        z.object({
+            nickname: z.string().min(3),
+            mode: z.enum(["edit", "readonly"]),
+        })
+    ),
+    source: z.literal("owned"),
+});
+
+export const PublicRepertoireData = z.object({
+    id: z.string(),
+    name: z.string().min(1),
+    visibility: z.literal("public"),
+    source: z.literal("public"),
+    owner: z.object({
+        id: z.string(),
+        nickname: z.string().min(3),
+    }),
+});
+
+export const SharedRepertoireData = z.object({
+    id: z.string(),
+    name: z.string().min(1),
+    visibility: z.enum(["public", "private"]),
+    source: "shared",
+    accessMode: z.enum(["edit", "readonly"]),
+    owner: z.object({
+        id: z.string(),
+        nickname: z.string().min(3),
+    }),
+});

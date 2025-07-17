@@ -1,0 +1,119 @@
+@use "src/styles/utils" as *;
+@use "@/styles/variables" as v;
+@use "sass:color";
+
+.accessContainer {
+    width: 100%;
+    height: 100%;
+    border: 1px solid v.$palette-4;
+    border-radius: 5px;
+    padding: 0.4rem;
+}
+
+.line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.accesses {
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid v.$palette-5;
+    overflow: auto;
+    max-height: 10vh;
+    width: 100%;
+}
+
+.nick-and-icon {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    color: v.$palette-2;
+    width: 90%;
+}
+
+.nickname {
+    font-size: 0.8rem;
+    margin: 0 0.2rem;
+}
+
+.user-access-row {
+    display: flex;
+    margin: auto;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid v.$palette-6;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+    width: 45%;
+
+    &:last-of-type {
+        margin-bottom: 1rem;
+    }
+}
+
+.small-input {
+    background: transparent;
+    margin: 1rem;
+    width: 70%;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    color: v.$palette-2;
+    padding: 0.2rem;
+    border-bottom: 1px solid v.$palette-4;
+
+    &:-webkit-autofill {
+        /* stylelint-disable-next-line property-no-vendor-prefix */
+        -webkit-background-clip: text;
+        /* stylelint-disable-next-line property-no-vendor-prefix */
+        -webkit-text-fill-color: v.$palette-2 !important;
+    }
+}
+
+.icons {
+    border-left: 1px solid v.$palette-4;
+    border-right: 1px solid v.$palette-4;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 30%;
+    margin-right: 0.5rem;
+    padding: 0.3rem;
+}
+
+.icon {
+    border-radius: 50%;
+    padding: 0.3rem;
+    overflow: hidden;
+    aspect-ratio: 1;
+}
+
+.chosenIcon {
+    border-radius: 50%;
+    padding: 0.3rem;
+    overflow: hidden;
+    aspect-ratio: 1;
+    background: v.$secondary-dark;
+}
+
+.delete {
+    border: 1px solid v.$error-red;
+    color: v.$error-red;
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    font-size: 1.2rem;
+
+    &:hover {
+        background: v.$error-red;
+        color: v.$palette-7;
+    }
+}

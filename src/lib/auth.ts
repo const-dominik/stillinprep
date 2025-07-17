@@ -62,7 +62,7 @@ const providers: Provider[] = [
     }),
 ];
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const authOptions = NextAuth({
     providers: providers,
     adapter: Neo4jAdapter(getNeoSession()),
     session: {
@@ -106,6 +106,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
     },
 });
+
+export const { handlers, signIn, signOut, auth } = authOptions;
 
 export const protectRoute = async () => {
     if (process.env.TEST_ENV) return;

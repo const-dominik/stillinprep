@@ -2,11 +2,11 @@
 
 import { completeProfile } from "@/lib/actions/completeProfile";
 import { nicknameRegex } from "@/lib/utils";
+import styles from "@/styles/formStyling.module.scss";
 import { redirect } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SmallWindowPage, UseFormInput } from "../utils/Utils";
-import styles from "./styles.module.scss";
 
 type CompleteProfileData = {
     nickname: string;

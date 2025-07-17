@@ -1,14 +1,20 @@
+"use client";
+
 import { capitalize } from "@/lib/utils";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { ReactNode } from "react";
-import type { FieldError, UseFormRegisterReturn } from "react-hook-form";
+import { type FieldError, type UseFormRegisterReturn } from "react-hook-form";
 import styles from "./Utils.module.scss";
+
+export const WindowElement = ({ children }: { children: ReactNode }) => {
+    return <div className={styles.window}>{children}</div>;
+};
 
 export const SingleWindowPage = ({ children }: { children: ReactNode }) => {
     return (
         <div className={styles.container}>
-            <div className={styles.window}>{children}</div>
+            <WindowElement>{children}</WindowElement>
         </div>
     );
 };
@@ -21,7 +27,15 @@ export const SmallWindowPage = ({ children }: { children: ReactNode }) => {
     );
 };
 
-const getInputClasses = (error: boolean) => {
+export const SmallInfoPage = ({ children }: { children: ReactNode }) => {
+    return (
+        <SmallWindowPage>
+            <div className={styles.info}>{children}</div>
+        </SmallWindowPage>
+    );
+};
+
+export const getInputClasses = (error: boolean) => {
     const classes = [styles.input, styles["no-autofill-bg"]];
 
     if (error) {
@@ -31,7 +45,7 @@ const getInputClasses = (error: boolean) => {
     return classes.join(" ");
 };
 
-const getLabelClasses = (error: boolean) => {
+export const getLabelClasses = (error: boolean) => {
     const classes = [styles["label-on-border"]];
 
     if (error) {
@@ -41,7 +55,8 @@ const getLabelClasses = (error: boolean) => {
     return classes.join(" ");
 };
 
-const labelToId = (label: string) => label.toLowerCase().replaceAll(" ", "-");
+export const labelToId = (label: string) =>
+    label.toLowerCase().replaceAll(" ", "-");
 
 export const UseFormInput = ({
     settings,

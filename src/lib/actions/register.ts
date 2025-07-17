@@ -170,7 +170,6 @@ export const registerUser = async (
 
     const { nickname, password, email } = parsed.data;
 
-    const session = getNeoSession();
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const query = `
@@ -191,7 +190,8 @@ export const registerUser = async (
             image: null
         })
         RETURN u { .id, .nickname, .email } AS user
-  `;
+    `;
+    const session = getNeoSession();
 
     try {
         await session.run(query, {

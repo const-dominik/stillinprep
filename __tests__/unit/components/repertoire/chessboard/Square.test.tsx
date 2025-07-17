@@ -1,7 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
 import Square from "@/components/repertoire/chessboard/Square";
 import { Pieces, Player } from "@/lib/types/types";
 import { pieceAssets } from "@/lib/utils";

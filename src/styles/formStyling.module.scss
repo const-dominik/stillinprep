@@ -70,3 +70,28 @@
     text-align: center;
     margin: 1rem 2rem;
 }
+
+.formConfirmation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+    margin-top: 1rem;
+}
+
+.save {
+    border: 1px solid v.$palette-4;
+    width: 45%;
+    border-radius: 5px;
+    text-align: center;
+    color: v.$palette-2;
+    cursor: pointer;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+
+    &:hover {
+        background: v.$palette-5;
+    }
+}

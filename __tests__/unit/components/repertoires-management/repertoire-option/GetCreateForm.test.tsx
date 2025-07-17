@@ -1,8 +1,4 @@
-/**
- * @jest-environment jsdom
- */
-
-import GetCreateForm from "@/components/repertoires-management/forms/GetCreateForm";
+import GetCreateForm from "@/components/repertoires-management/repertoire-option/GetCreateForm";
 import { createRepertoire } from "@/lib/actions/repertoire";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -45,8 +41,11 @@ describe("GetCreateForm", () => {
         "adds a repertoire $label",
         async ({ interact }) => {
             (createRepertoire as jest.Mock).mockResolvedValue({
-                id: "mock-id",
-                name: "test repertoire",
+                success: true,
+                value: {
+                    id: "mock-id",
+                    name: "test repertoire",
+                },
             });
 
             render(
@@ -114,10 +113,18 @@ describe("GetCreateForm", () => {
             />
         );
 
-        (createRepertoire as jest.Mock).mockResolvedValue({
-            id: "mock-id",
-            name: "test repertoire",
-        });
+        (createRepertoire as jest.Mock).mockResolvedValue(
+            new Promise((res) => {
+                const response = {
+                    success: true,
+                    value: {
+                        id: "mock-id",
+                        name: "test repertoire",
+                    },
+                };
+                setTimeout(() => res(response), 2000);
+            })
+        );
 
         const input = screen.getByPlaceholderText("New repertoire...");
 

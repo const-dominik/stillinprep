@@ -1,5 +1,10 @@
 import { z } from "zod/v4";
-import { DbUserSchema } from "../schema";
+import {
+    DbUserSchema,
+    OwnedRepertoireData,
+    PublicRepertoireData,
+    SharedRepertoireData,
+} from "../schema";
 import { Paths, Repertoire } from "./types";
 
 export type DbRepertoiresResponse = Promise<Repertoire[]>;
@@ -24,3 +29,9 @@ export type ServerActionResponse<T> = Promise<
           value?: T;
       }
 >;
+
+export type DbRepertoires = {
+    owned: z.infer<typeof OwnedRepertoireData>[];
+    public: z.infer<typeof PublicRepertoireData>[];
+    shared: z.infer<typeof SharedRepertoireData>[];
+};

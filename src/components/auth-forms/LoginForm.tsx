@@ -1,13 +1,13 @@
 "use client";
 
 import { emailRegex, nicknameRegex } from "@/lib/utils";
+import styles from "@/styles/formStyling.module.scss";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { redirect, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LoginWith, SingleWindowPage, UseFormInput } from "../utils/Utils";
-import styles from "./styles.module.scss";
 import { getErrorMessage } from "./utils";
 
 type LoginData = {

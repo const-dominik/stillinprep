@@ -26,8 +26,6 @@ export const loginUser = async (
         return doesntExistResponse;
     }
 
-    const session = getNeoSession();
-
     const isIdentifierEmail = isEmail(identifier);
     const loginProperty = isIdentifierEmail ? "email" : "nickname";
 
@@ -36,6 +34,7 @@ export const loginUser = async (
         WHERE u.${loginProperty} = $identifier
         RETURN u AS user
     `;
+    const session = getNeoSession();
 
     try {
         const res = await session.run(query, {

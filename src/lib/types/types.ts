@@ -5,6 +5,7 @@ import {
     MoveSchema,
     PathSchema,
     PopularMove,
+    RepertoireSchema,
 } from "../schema";
 
 export const enum Pieces {
@@ -47,10 +48,7 @@ export type AlgebraicPiece = "" | "K" | "Q" | "N" | "B" | "R";
 export type AlgebraicPromotionPieces = "Q" | "N" | "B" | "R";
 export type AlgebraicPosition = `${BoardFile}${BoardRank}`;
 
-export type Repertoire = {
-    id: string;
-    name: string;
-};
+export type Repertoire = z.infer<typeof RepertoireSchema>;
 
 export type StockfishAPI = {
     multiPV: Analysis;
@@ -191,4 +189,15 @@ export type RegistrationData = {
     email: string;
     password: string;
     confirmPassword: string;
+};
+
+export type GivenAccess = {
+    nickname: string;
+    mode: "readonly" | "edit";
+};
+
+export type RepertoireEditData = {
+    name: string;
+    visibility: "private" | "public";
+    hasAccess: GivenAccess[];
 };

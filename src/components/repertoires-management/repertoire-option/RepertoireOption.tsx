@@ -1,46 +1,42 @@
-import { Dispatch, SetStateAction } from "react";
-import RepertoireEditMode from "../forms/RepertoireEditMode";
-import RepertoireViewMode from "./RepertoireViewMode";
-import useRepertoireEdit from "./logic/useRepertoireEdit";
+import { useRouter } from "next/navigation";
+import { MouseEvent } from "react";
+import { CiSettings } from "react-icons/ci";
+
+import styles from "./styles/RepertoireViewMode.module.scss";
 
 const RepertoireOption = ({
-    id,
     name,
-    setRemovedRepertoires,
+    id,
+    setEditedSettingsId,
 }: {
-    id: string;
     name: string;
-    setRemovedRepertoires: Dispatch<SetStateAction<string[]>>;
+    id: string;
+    setEditedSettingsId: (id: string) => void;
 }) => {
-    const handleRemove = (removedId: string) => {
-        setRemovedRepertoires((prev) => [...prev, removedId]);
+    const router = useRouter();
+    const handleSettingsClick = (e: MouseEvent) => {
+        e.stopPropagation();
+        setEditedSettingsId(id);
     };
 
-    const {
-        isEditing,
-        newName,
-        currentName,
-        setCurrentName,
-        toggleEdit,
-        saveName,
-        remove,
-        hasChanges,
-    } = useRepertoireEdit(id, name, handleRemove);
+    const handleRepertoireClick = () => {
+        router.push(`repertoire/${id}`);
+    };
 
-    if (isEditing) {
-        return (
-            <RepertoireEditMode
-                currentName={currentName}
-                setCurrentName={setCurrentName}
-                onSave={saveName}
-                onRemove={remove}
-                onCancel={toggleEdit}
-                hasChanges={hasChanges}
-            />
-        );
-    }
-
-    return <RepertoireViewMode name={newName} id={id} onEdit={toggleEdit} />;
+    return (
+        <div
+            onClick={handleRepertoireClick}
+            className={styles["repertoire-element"]}
+        >
+            {name}
+            <div className={styles["repertoire-settings"]}>
+                <CiSettings
+                    onClick={handleSettingsClick}
+                    data-testid="settings"
+                />
+            </div>
+        </div>
+    );
 };
 
 export default RepertoireOption;
