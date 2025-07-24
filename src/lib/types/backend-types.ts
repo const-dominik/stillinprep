@@ -14,6 +14,7 @@ export type DbRepertoire = {
     timeControls: string | null;
     ratings: string | null;
     depth: string | null;
+    color: "white" | "black" | null;
 };
 
 export type DbUser = z.infer<typeof DbUserSchema>;

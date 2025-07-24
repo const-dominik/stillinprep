@@ -16,6 +16,7 @@ import {
 } from "react-hook-form";
 import { AiOutlinePlus } from "react-icons/ai";
 import { CiEdit, CiRead } from "react-icons/ci";
+import { GiPawn } from "react-icons/gi";
 import { IoMdRemove } from "react-icons/io";
 import Select, { type StylesConfig } from "react-select";
 import utilStyles from "../../utils/Utils.module.scss";
@@ -150,6 +151,41 @@ export const UserAccessFields = ({
                 )}
             </div>
         </div>
+    );
+};
+
+export const RepertoireColor = ({
+    color,
+    setValue,
+}: {
+    color: "white" | "black";
+    setValue: UseFormSetValue<RepertoireEditData>;
+}) => {
+    const [selectedColor, setSelectedColor] = useState<"white" | "black">(
+        color
+    );
+
+    const toggleColor = () =>
+        setSelectedColor((prevColor) => {
+            if (prevColor === "white") return "black";
+            return "white";
+        });
+
+    useEffect(() => {
+        setValue("color", selectedColor);
+    }, [selectedColor, setValue]);
+
+    const classes = [];
+    if (selectedColor === "black") {
+        classes.push(styles["black-icon"]);
+    }
+
+    return (
+        <GiPawn
+            fontSize="2rem"
+            onClick={() => toggleColor()}
+            className={classes.join(" ")}
+        />
     );
 };
 

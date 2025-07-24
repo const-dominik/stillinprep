@@ -165,6 +165,7 @@ export type RepertoireData = {
     ratings: LiDbAvgRating[];
     depth: number;
     paths: PathNodes[];
+    color: "white" | "black";
 };
 
 export type PositionContextValue = {
@@ -200,4 +201,5 @@ export type RepertoireEditData = {
     name: string;
     visibility: "private" | "public";
     hasAccess: GivenAccess[];
+    color: "white" | "black";
 };

@@ -8,9 +8,11 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import {
     RemoveButton,
+    RepertoireColor,
     UseFormSelect,
     UserAccessFields,
 } from "./RepertoireEditFields";
+import customStyles from "./styles/RepertoireEditMode.module.scss";
 
 const RepertoireEditMode = ({
     editedSettingsData,
@@ -19,7 +21,7 @@ const RepertoireEditMode = ({
     editedSettingsData: Repertoire;
     setEditedSettingsId: (id: string) => void;
 }) => {
-    const { id, name, visibility, hasAccess } = editedSettingsData;
+    const { id, name, visibility, hasAccess, color } = editedSettingsData;
     const router = useRouter();
 
     const {
@@ -33,6 +35,7 @@ const RepertoireEditMode = ({
         defaultValues: {
             name,
             visibility,
+            color,
         },
     });
 
@@ -51,13 +54,18 @@ const RepertoireEditMode = ({
             <p className={styles.title}>Repertoire Settings</p>
 
             <form className={styles.form}>
-                <UseFormInput
-                    label={"Name"}
-                    settings={register("name", {
-                        required: "Repertoire need to have a name.",
-                    })}
-                    error={errors["name"]}
-                />
+                <div className={customStyles["short-field"]}>
+                    <UseFormInput
+                        label={"Name"}
+                        settings={register("name", {
+                            required: "Repertoire need to have a name.",
+                        })}
+                        error={errors["name"]}
+                    />
+                    <div className={customStyles["icon-container"]}>
+                        <RepertoireColor color={color} setValue={setValue} />
+                    </div>
+                </div>
                 <UseFormSelect
                     options={[
                         { label: "private", value: "private" },

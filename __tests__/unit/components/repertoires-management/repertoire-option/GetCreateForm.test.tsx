@@ -55,10 +55,15 @@ describe("GetCreateForm", () => {
                     hasRepertoires={false}
                 />
             );
-            const input = screen.getByPlaceholderText("New repertoire...");
+            const input = screen.getByPlaceholderText(
+                "New repertoire for white..."
+            );
             await interact(input);
 
-            expect(createRepertoire).toHaveBeenCalledWith("test repertoire");
+            expect(createRepertoire).toHaveBeenCalledWith(
+                "test repertoire",
+                "white"
+            );
             expect(pushMock).toHaveBeenCalledWith("/repertoire/mock-id");
         }
     );
@@ -97,7 +102,9 @@ describe("GetCreateForm", () => {
 
         expect(createRepertoire).not.toHaveBeenCalled();
 
-        const input = screen.getByPlaceholderText("New repertoire...");
+        const input = screen.getByPlaceholderText(
+            "New repertoire for white..."
+        );
 
         await userEvent.type(input, "     ");
         await userEvent.click(button);
@@ -126,7 +133,9 @@ describe("GetCreateForm", () => {
             })
         );
 
-        const input = screen.getByPlaceholderText("New repertoire...");
+        const input = screen.getByPlaceholderText(
+            "New repertoire for white..."
+        );
 
         await userEvent.type(input, "test");
         const button = screen.getByText("+");

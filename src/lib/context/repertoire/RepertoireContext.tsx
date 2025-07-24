@@ -19,12 +19,13 @@ export const RepertoireProvider = ({
     repertoireData: DbRepertoire;
     repertoireId: string;
 }) => {
-    const { paths, timeControls, ratings, depth } = repertoireData;
+    const { paths, timeControls, ratings, depth, color } = repertoireData;
 
     const flattened = flattenResult(paths);
     const parsedTimeControls = getTimeControls(timeControls);
     const parsedRatings: LiDbAvgRating[] = getRatings(ratings);
     const parsedDepth = getDepth(depth);
+    const parsedColor = color || "white";
 
     return (
         <RepertoireContext.Provider
@@ -34,6 +35,7 @@ export const RepertoireProvider = ({
                 timeControls: parsedTimeControls,
                 ratings: parsedRatings,
                 depth: parsedDepth,
+                color: parsedColor,
             }}
         >
             {children}

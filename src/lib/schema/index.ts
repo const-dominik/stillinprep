@@ -134,6 +134,8 @@ export const ChangePasswordSArgs = z.object({
 export const RepertoireEditDataSchema = z.object({
     name: z.string().min(1),
     visibility: z.enum(["public", "private"]),
+    color: z.enum(["white", "black"]),
+
     hasAccess: z.array(
         z.object({
             nickname: z.string().min(3),
@@ -146,6 +148,8 @@ export const RepertoireSchema = z.object({
     id: z.string(),
     name: z.string().min(1),
     visibility: z.enum(["public", "private"]),
+    color: z.enum(["white", "black"]),
+
     hasAccess: z.array(
         z.object({
             nickname: z.string().min(3),
@@ -163,6 +167,7 @@ export const OwnedRepertoireData = z.object({
     id: z.string(),
     name: z.string().min(1),
     visibility: z.enum(["public", "private"]),
+    color: z.enum(["white", "black"]),
     hasAccess: z.array(
         z.object({
             nickname: z.string().min(3),
@@ -177,6 +182,8 @@ export const PublicRepertoireData = z.object({
     name: z.string().min(1),
     visibility: z.literal("public"),
     source: z.literal("public"),
+    color: z.enum(["white", "black"]),
+
     owner: z.object({
         id: z.string(),
         nickname: z.string().min(3),
@@ -189,6 +196,8 @@ export const SharedRepertoireData = z.object({
     visibility: z.enum(["public", "private"]),
     source: "shared",
     accessMode: z.enum(["edit", "readonly"]),
+    color: z.enum(["white", "black"]),
+
     owner: z.object({
         id: z.string(),
         nickname: z.string().min(3),

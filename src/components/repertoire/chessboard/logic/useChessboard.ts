@@ -26,7 +26,7 @@ const baseSelectedPieceData = { position: null, legalMoves: [] };
 export const useChessboard = () => {
     const { currentNode, lastNode, setCurrentNode, setLastNode } =
         usePosition();
-    const { id: repertoireId } = useRepertoire();
+    const { id: repertoireId, color } = useRepertoire();
 
     const board = currentNode.board;
     const currentPlayer = getOppositePlayer(currentNode.player);
@@ -148,6 +148,7 @@ export const useChessboard = () => {
 
     return {
         board,
+        color,
         changeSelectedPiece,
         handleSquareClick,
         renderSquare,

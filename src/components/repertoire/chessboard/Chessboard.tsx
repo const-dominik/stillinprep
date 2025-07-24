@@ -18,8 +18,13 @@ import { useId, useState } from "react";
 import { useChessboard } from "./logic/useChessboard";
 
 const Chessboard = () => {
-    const { board, renderSquare, changeSelectedPiece, handleSquareClick } =
-        useChessboard();
+    const {
+        board,
+        color,
+        renderSquare,
+        changeSelectedPiece,
+        handleSquareClick,
+    } = useChessboard();
     const [draggedPiece, setDraggedPiece] = useState<Pieces | null>(null);
 
     const handleDragStart = (e: DragStartEvent) => {
@@ -53,11 +58,18 @@ const Chessboard = () => {
             collisionDetection={closestCenter}
         >
             <div className={styles.board}>
-                {board.map((row, y) => (
-                    <div className={styles.row} key={y}>
-                        {row.map((_, x) => renderSquare(x, y))}
-                    </div>
-                ))}
+                {board.map((row, rowIndex) => {
+                    const y = color === "black" ? 7 - rowIndex : rowIndex;
+                    return (
+                        <div className={styles.row} key={rowIndex}>
+                            {row.map((_, colIndex) => {
+                                const x =
+                                    color === "black" ? 7 - colIndex : colIndex;
+                                return renderSquare(x, y);
+                            })}
+                        </div>
+                    );
+                })}
             </div>
 
             <DragOverlay

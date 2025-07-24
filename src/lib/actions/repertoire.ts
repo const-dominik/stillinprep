@@ -55,6 +55,7 @@ export const getRepertoires = async (): ServerActionResponse<DbRepertoires> => {
                 .id,
                 .name,
                 .visibility,
+                .color,
                 hasAccess: hasAccess,
                 source: "owned"
             }) AS owned
@@ -68,6 +69,7 @@ export const getRepertoires = async (): ServerActionResponse<DbRepertoires> => {
                 .id,
                 .name,
                 .visibility,
+                .color,
                 source: "public",
                 owner: owner { .id, .nickname }
             }) AS public
@@ -81,6 +83,7 @@ export const getRepertoires = async (): ServerActionResponse<DbRepertoires> => {
                 .id,
                 .name,
                 .visibility,
+                .color,
                 source: "shared",
                 accessMode: CASE
                     WHEN TYPE(rel) = "HAS_EDIT_ACCESS" THEN "edit"
@@ -183,8 +186,8 @@ export const getRepertoire = async (
                 collect(DISTINCT path) AS paths,
                 r.timeControls AS timeControls,
                 r.ratings AS ratings,
-                r.depth AS depth
-
+                r.depth AS depth,
+                r.color AS color
         `;
 
         const result = await session.run(query, {
@@ -202,6 +205,7 @@ export const getRepertoire = async (
         const timeControls = record.get("timeControls") as string | null;
         const ratings = record.get("ratings") as string | null;
         const depth = record.get("depth") as string | null;
+        const color = record.get("color") as "white" | "black" | null;
 
         const parsedPaths = paths.map((path) => {
             const parsedPath = PathSchema.parse(path);
@@ -213,6 +217,7 @@ export const getRepertoire = async (
             timeControls,
             ratings,
             depth,
+            color,
         };
 
         return {
@@ -231,7 +236,8 @@ export const getRepertoire = async (
 };
 
 export const createRepertoire = async (
-    name: string
+    name: string,
+    color: "white" | "black"
 ): ServerActionResponse<z.infer<typeof RepertoireCreatedSchema>> => {
     const authSession = await auth();
 
@@ -254,13 +260,14 @@ export const createRepertoire = async (
                 depth: "15", 
                 timeControls: "rapid,classical", 
                 ratings: "1700,1900,2100", 
-                visibility: "private" 
+                visibility: "private",
+                color: $color
             })
             WITH r
             MATCH (u:User { id: $userId })
             CREATE (u)-[:OWNS]->(r)
             RETURN r { .id, .name } AS repertoire`,
-            { id, name: name.trim(), userId }
+            { id, name: name.trim(), userId, color }
         );
 
         const repertoire = result.records[0].get("repertoire");
@@ -379,7 +386,7 @@ export const changeRepertoireSettings = async (
     }
 
     const userId = authSession.user.id;
-    const { name, visibility, hasAccess } = parsed.data;
+    const { name, visibility, hasAccess, color } = parsed.data;
 
     const session = getNeoSession();
 
@@ -389,10 +396,10 @@ export const changeRepertoireSettings = async (
             `
             MATCH (u: User {id: $userId })
             MATCH (u)-[:OWNS]->(r: Repertoire {id: $id})
-            SET r.name = $name, r.visibility = $visibility
+            SET r.name = $name, r.visibility = $visibility, r.color = $color
             RETURN r
         `,
-            { id, name, visibility, userId }
+            { id, name, visibility, userId, color }
         );
 
         if (!result.records.length) {
