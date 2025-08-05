@@ -12,10 +12,11 @@ import {
     PuzzleMode,
 } from "@/lib/types/types";
 import { shuffle } from "@/lib/utils";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Chessboard from "../repertoire/chessboard/Chessboard";
 import MoveHistory from "../repertoire/history/MoveHistory";
 import { createPuzzlesFromTree } from "./logic";
+import PuzzleInfo from "./PuzzleInfo";
 import PuzzleModeChoice from "./PuzzleModeChoice";
 import styles from "./PuzzlePage.module.scss";
 
@@ -42,6 +43,7 @@ const PuzzlePage = ({
     const [mode, setMode] = useState<PuzzleMode>("global");
     const [repertoire, setRepertoire] = useState<MyOption | null>(null);
     const [waiting, setWaiting] = useState(false);
+    const [autoSkip, setAutoSkip] = useState(false);
 
     const { white, black } = paths;
 
@@ -58,13 +60,11 @@ const PuzzlePage = ({
             setWaiting(true);
             try {
                 const data = await getRepertoire(repertoireId);
-                console.log(data);
                 if (data.success && data.value) {
                     const puzzles = createPuzzlesFromTree(
                         data.value.paths,
                         data.value.color
                     );
-                    console.log(puzzles);
                     const shuffledPuzzles = shuffle(puzzles);
 
                     setPuzzleQueue(shuffledPuzzles);
@@ -89,20 +89,24 @@ const PuzzlePage = ({
         }
     }, [mode, repertoire, globalPuzzles]);
 
-    const shuffleAndRestartPuzzles = useCallback((puzzles: Puzzle[]) => {
-        const shuffled = shuffle([...puzzles]);
-        setPuzzleQueue(shuffled);
-        setPuzzle(shuffled[0] || null);
-        setCurrentIndex(0);
-    }, []);
+    useEffect(() => {
+        if (feedback === "correct" && autoSkip) {
+            nextPuzzle();
+        }
+    }, [feedback, autoSkip]);
+
+    useEffect(() => {
+        setFeedback("go");
+    }, [puzzle]);
 
     const nextPuzzle = () => {
         const nextIndex = currentIndex + 1;
         if (nextIndex < puzzleQueue.length) {
             setCurrentIndex(nextIndex);
             setPuzzle(puzzleQueue[nextIndex]);
+            setFeedback("go");
         } else {
-            shuffleAndRestartPuzzles(puzzleQueue);
+            setFeedback("done");
         }
     };
 
@@ -121,7 +125,6 @@ const PuzzlePage = ({
                     passedLast={puzzle.startingNode}
                 >
                     <div className={styles.container}>
-                        {waiting}
                         <MoveHistory mode="puzzle" />
                         <Chessboard
                             mode="puzzle"
@@ -129,13 +132,22 @@ const PuzzlePage = ({
                             feedbackFunction={setFeedback}
                             feedback={feedback}
                         />
-                        <PuzzleModeChoice
-                            mode={mode}
-                            setMode={setMode}
-                            repertoires={repertoires}
-                            repertoire={repertoire}
-                            setRepertoires={setRepertoire}
-                        />
+                        <div>
+                            <PuzzleModeChoice
+                                mode={mode}
+                                setMode={setMode}
+                                repertoires={repertoires}
+                                repertoire={repertoire}
+                                setRepertoires={setRepertoire}
+                            />
+                            <PuzzleInfo
+                                puzzle={puzzle}
+                                feedback={feedback}
+                                autoSkip={autoSkip}
+                                setAutoSkip={setAutoSkip}
+                                nextPuzzle={nextPuzzle}
+                            />
+                        </div>
                     </div>
                 </PositionProvider>
             </RepertoireProvider>

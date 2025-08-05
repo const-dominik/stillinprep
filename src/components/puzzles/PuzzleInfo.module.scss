@@ -1,0 +1,48 @@
+@use "@/styles/variables" as v;
+
+.container {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background: v.$palette-7;
+    border-radius: 5px;
+    width: 20vw;
+    user-select: none;
+}
+
+.whose-turn {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: v.$palette-2;
+}
+
+.feedback {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.auto-puzzle {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.next {
+    border: 1px solid v.$palette-6;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+
+    &:hover {
+        background: v.$palette-5;
+    }
+}

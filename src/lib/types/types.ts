@@ -213,6 +213,6 @@ export type Puzzle = {
     newLeaf: MovesTreeNode | null;
 };
 
-export type PuzzleFeedback = "other" | "correct" | "wrong" | "go";
+export type PuzzleFeedback = "other" | "correct" | "wrong" | "go" | "done";
 export type PuzzleMode = "global" | "spaced" | "repertoire";
 export type MyOption = { label: string; value: string };

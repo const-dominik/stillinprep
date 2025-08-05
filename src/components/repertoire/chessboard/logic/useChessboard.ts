@@ -84,7 +84,7 @@ export const useChessboard = (
         from: PiecePosition,
         to: PiecePosition
     ) => {
-        // setSelectedPieceData(baseSelectedPieceData);
+        setSelectedPieceData(baseSelectedPieceData);
         const solutionStep = getSolutionStep(puzzleTree!, currentNode);
         const wantedNode =
             currentNode.children[puzzleTree!.solution[solutionStep]];
@@ -191,7 +191,12 @@ export const useChessboard = (
     };
 
     const handleSquareClick = (x: number, y: number) => {
-        if (feedback && (feedback === "correct" || currentNode !== lastNode))
+        if (
+            feedback &&
+            (feedback === "done" ||
+                feedback === "correct" ||
+                currentNode !== lastNode)
+        )
             return;
 
         const clickedPiece = board[y][x];

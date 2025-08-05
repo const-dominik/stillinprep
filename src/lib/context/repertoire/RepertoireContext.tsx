@@ -8,10 +8,15 @@ import {
 } from "@/components/utils/parseDbResponse";
 import { DbRepertoire } from "@/lib/types/backend-types";
 import { LiDbAvgRating, RepertoireData } from "@/lib/types/types";
-import { createContext, ReactNode, useContext } from "react";
+import {
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 
 const RepertoireContext = createContext<RepertoireData | null>(null);
-
 export const RepertoireProvider = ({
     children,
     repertoireData,
@@ -23,11 +28,16 @@ export const RepertoireProvider = ({
 }) => {
     const { paths, timeControls, ratings, depth, color } = repertoireData;
 
+    const [currentColor, setCurrentColor] = useState(color || "white");
+
+    useEffect(() => {
+        setCurrentColor(color || "white");
+    }, [color]);
+
     const flattened = flattenResult(paths);
     const parsedTimeControls = getTimeControls(timeControls);
     const parsedRatings: LiDbAvgRating[] = getRatings(ratings);
     const parsedDepth = getDepth(depth);
-    const parsedColor = color || "white";
 
     return (
         <RepertoireContext.Provider
@@ -37,14 +47,13 @@ export const RepertoireProvider = ({
                 timeControls: parsedTimeControls,
                 ratings: parsedRatings,
                 depth: parsedDepth,
-                color: parsedColor,
+                color: currentColor,
             }}
         >
             {children}
         </RepertoireContext.Provider>
     );
 };
-
 export const useRepertoire = () => {
     const context = useContext(RepertoireContext);
     if (!context) {
