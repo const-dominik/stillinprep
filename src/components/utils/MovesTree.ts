@@ -240,18 +240,18 @@ export class MovesTreeNode {
         | "" {
         const piece = this.board[this.to[0]][this.to[1]];
         // === Pawns ===
-        if (
-            [Pieces.BLACK_PAWN, Pieces.WHITE_PAWN].includes(piece) &&
-            this.from[1] !== this.to[1]
-        ) {
-            const dx = this.to[1] - this.from[0];
-            const otherside: PiecePosition = [this.to[0], this.from[1] - dx];
-            if (
-                isInBoard(otherside) &&
-                this.board[otherside[0]][otherside[1]] === piece
-            )
-                return xToFile(otherside[0]);
-        }
+        // if (
+        //     [Pieces.BLACK_PAWN, Pieces.WHITE_PAWN].includes(piece) &&
+        //     this.from[1] !== this.to[1]
+        // ) {
+        //     const dx = this.to[1] - this.from[0];
+        //     const otherside: PiecePosition = [this.to[0], this.from[1] - dx];
+        //     if (
+        //         isInBoard(otherside) &&
+        //         this.board[otherside[0]][otherside[1]] === piece
+        //     )
+        //         return xToFile(otherside[0]);
+        // }
 
         // === Kings ===
         if ([Pieces.BLACK_KING, Pieces.WHITE_KING].includes(piece)) return "";

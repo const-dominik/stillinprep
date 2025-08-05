@@ -22,7 +22,7 @@
         "dotenv": "^16.5.0",
         "fs": "^0.0.1-security",
         "neo4j-driver": "^5.28.1",
-        "next": "15.2.3",
+        "next": "^15.3.5",
         "next-auth": "^5.0.0-beta.29",
         "nodemailer": "^6.10.1",
         "react": "^19.0.0",
