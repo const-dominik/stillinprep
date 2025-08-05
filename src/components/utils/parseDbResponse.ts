@@ -1,13 +1,41 @@
 import {
     LiDbAvgRating,
+    MoveType,
     PathNodes,
     Paths,
     Pieces,
+    Player,
     TimeControl,
 } from "@/lib/types/types";
 import { liRatingsAvgs, liTimeControls } from "@/lib/utils";
 import { getBoardAfterMove } from "./chessLogic";
 import { MovesTreeNode } from "./MovesTree";
+
+export const getPromotionPiece = (letter: string, player: Player): Pieces => {
+    if (player === "white") {
+        if (letter === "B") {
+            return Pieces.WHITE_BISHOP;
+        } else if (letter === "N") {
+            return Pieces.WHITE_KNIGHT;
+        } else if (letter === "R") {
+            return Pieces.WHITE_ROOK;
+        } else if (letter === "Q") {
+            return Pieces.WHITE_QUEEN;
+        }
+    } else if (player === "black") {
+        if (letter === "B") {
+            return Pieces.BLACK_BISHOP;
+        } else if (letter === "N") {
+            return Pieces.BLACK_KNIGHT;
+        } else if (letter === "R") {
+            return Pieces.BLACK_ROOK;
+        } else if (letter === "Q") {
+            return Pieces.BLACK_QUEEN;
+        }
+    }
+
+    throw new Error("Shouldn't happend");
+};
 
 export const mergePathsIntoTree = (segments: PathNodes[]) => {
     const root = new MovesTreeNode();
@@ -18,12 +46,32 @@ export const mergePathsIntoTree = (segments: PathNodes[]) => {
 
         for (const move of path) {
             // TODO: proper move type and promotion piece
+
+            const piece = current.board[move.from[0]][move.from[1]];
+            const kings = [Pieces.BLACK_KING, Pieces.WHITE_KING];
+            const pawns = [Pieces.BLACK_PAWN, Pieces.WHITE_PAWN];
+            let moveType: MoveType = "normal";
+            let promotingTo = Pieces.EMPTY;
+
+            if (kings.includes(piece) && move.to[1] - move.from[1] === 2) {
+                moveType = "short castling";
+            }
+            if (kings.includes(piece) && move.to[1] - move.from[1] === -2) {
+                moveType = "long castling";
+            }
+            if (pawns.includes(piece) && [0, 7].includes(move.to[0])) {
+                moveType = "promotion";
+                promotingTo = getPromotionPiece(
+                    move.promotion,
+                    current.getCurrentPlayer()
+                );
+            }
             const board = getBoardAfterMove(
                 current.board,
                 move.from,
                 move.to,
-                "normal",
-                Pieces.EMPTY
+                moveType,
+                promotingTo
             );
             const { node } = current.addMove(
                 board[move.to[0]][move.to[1]],
