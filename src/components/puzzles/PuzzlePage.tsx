@@ -1,32 +1,33 @@
 "use client";
 
-import { getRepertoire } from "@/lib/actions/repertoire";
 import { ConfirmProvider } from "@/lib/context/confirm/ConfirmContext";
 import { PositionProvider } from "@/lib/context/current-position/PositionContext";
 import { RepertoireProvider } from "@/lib/context/repertoire/RepertoireContext";
 import { DbGlobalRepertoire, DbRepertoires } from "@/lib/types/backend-types";
-import {
-    MyOption,
-    Puzzle,
-    PuzzleFeedback,
-    PuzzleMode,
-} from "@/lib/types/types";
-import { shuffle } from "@/lib/utils";
+import { MyOption, Puzzle, PuzzleMode } from "@/lib/types/types";
 import { useEffect, useState } from "react";
 import Chessboard from "../repertoire/chessboard/Chessboard";
 import MoveHistory from "../repertoire/history/MoveHistory";
-import { createPuzzlesFromTree } from "./logic";
+import { MovesTreeNode } from "../utils/MovesTree";
 import PuzzleInfo from "./PuzzleInfo";
 import PuzzleModeChoice from "./PuzzleModeChoice";
 import styles from "./PuzzlePage.module.scss";
+import {
+    createRepertoire,
+    useAutoSkip,
+    useGlobalPuzzles,
+    usePuzzleQueue,
+    useRepertoirePuzzles,
+} from "./logic";
 
-const createRepertoire = (color: "white" | "black") => ({
-    color: color,
-    paths: [],
-    timeControls: null,
-    ratings: null,
-    depth: null,
-});
+const basePuzzle: Puzzle = {
+    color: "white",
+    root: new MovesTreeNode(),
+    startingNode: new MovesTreeNode(),
+    targetNode: new MovesTreeNode(),
+    solution: [],
+    newLeaf: null,
+};
 
 const PuzzlePage = ({
     paths,
@@ -35,84 +36,42 @@ const PuzzlePage = ({
     paths: DbGlobalRepertoire;
     repertoires: DbRepertoires["owned"];
 }) => {
-    const [globalPuzzles, setGlobalPuzzles] = useState<Puzzle[]>([]);
-    const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
-    const [puzzleQueue, setPuzzleQueue] = useState<Puzzle[]>([]);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [feedback, setFeedback] = useState<PuzzleFeedback>("go");
     const [mode, setMode] = useState<PuzzleMode>("global");
     const [repertoire, setRepertoire] = useState<MyOption | null>(null);
-    const [waiting, setWaiting] = useState(false);
-    const [autoSkip, setAutoSkip] = useState(false);
 
-    const { white, black } = paths;
+    const globalPuzzles = useGlobalPuzzles(paths);
+    const { fetchRepertoirePuzzles, loading: repertoireLoading } =
+        useRepertoirePuzzles();
+    const {
+        currentPuzzle,
+        feedback,
+        setFeedback,
+        nextPuzzle,
+        loadPuzzles,
+        resetFeedback,
+    } = usePuzzleQueue();
+    const { autoSkip, setAutoSkip } = useAutoSkip(feedback, nextPuzzle);
 
     useEffect(() => {
-        const whitePuzzles = createPuzzlesFromTree(white, "white");
-        const blackPuzzles = createPuzzlesFromTree(black, "black");
-        const allPuzzles = shuffle([...whitePuzzles, ...blackPuzzles]);
-
-        setGlobalPuzzles(allPuzzles);
-    }, [white, black]);
-
-    useEffect(() => {
-        const getRepertoireFromDb = async (repertoireId: string) => {
-            setWaiting(true);
-            try {
-                const data = await getRepertoire(repertoireId);
-                if (data.success && data.value) {
-                    const puzzles = createPuzzlesFromTree(
-                        data.value.paths,
-                        data.value.color
-                    );
-                    const shuffledPuzzles = shuffle(puzzles);
-
-                    setPuzzleQueue(shuffledPuzzles);
-                    setPuzzle(shuffledPuzzles[0] || null);
-                    setCurrentIndex(0);
+        const loadPuzzlesForMode = async () => {
+            if (mode === "global" && globalPuzzles.length > 0) {
+                loadPuzzles(globalPuzzles);
+            } else if (mode === "repertoire" && repertoire) {
+                const puzzles = await fetchRepertoirePuzzles(repertoire.value);
+                if (puzzles.length > 0) {
+                    loadPuzzles(puzzles);
                 }
-            } catch (error) {
-                console.error("Error fetching repertoire:", error);
-            } finally {
-                setWaiting(false);
             }
         };
 
-        if (mode === "global" && globalPuzzles.length > 0) {
-            const shuffledPuzzles = shuffle([...globalPuzzles]);
-            setPuzzleQueue(shuffledPuzzles);
-            setPuzzle(shuffledPuzzles[0] || null);
-            setCurrentIndex(0);
-            setWaiting(false);
-        } else if (mode === "repertoire" && repertoire) {
-            getRepertoireFromDb(repertoire.value);
-        }
-    }, [mode, repertoire, globalPuzzles]);
+        loadPuzzlesForMode();
+    }, [mode, repertoire, globalPuzzles, loadPuzzles, fetchRepertoirePuzzles]);
 
     useEffect(() => {
-        if (feedback === "correct" && autoSkip) {
-            nextPuzzle();
-        }
-    }, [feedback, autoSkip]);
+        resetFeedback();
+    }, [currentPuzzle, resetFeedback]);
 
-    useEffect(() => {
-        setFeedback("go");
-    }, [puzzle]);
-
-    const nextPuzzle = () => {
-        const nextIndex = currentIndex + 1;
-        if (nextIndex < puzzleQueue.length) {
-            setCurrentIndex(nextIndex);
-            setPuzzle(puzzleQueue[nextIndex]);
-            setFeedback("go");
-        } else {
-            setFeedback("done");
-        }
-    };
-
-    if (!puzzle) {
-        return <div>No more puzzles!</div>;
-    }
+    const puzzle = currentPuzzle || basePuzzle;
 
     return (
         <ConfirmProvider>
@@ -146,6 +105,9 @@ const PuzzlePage = ({
                                 autoSkip={autoSkip}
                                 setAutoSkip={setAutoSkip}
                                 nextPuzzle={nextPuzzle}
+                                waiting={repertoireLoading}
+                                puzzlesNotLoaded={!currentPuzzle}
+                                repertoireLoading={repertoireLoading}
                             />
                         </div>
                     </div>
@@ -154,5 +116,4 @@ const PuzzlePage = ({
         </ConfirmProvider>
     );
 };
-
 export default PuzzlePage;
