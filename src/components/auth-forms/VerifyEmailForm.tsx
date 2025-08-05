@@ -1,9 +1,9 @@
 "use client";
 
 import { createVerificationToken } from "@/lib/actions/register";
+import styles from "@/styles/formStyling.module.scss";
 import { useEffect, useState } from "react";
 import { SmallWindowPage } from "../utils/Utils";
-import styles from "./styles.module.scss";
 
 const VerifyEmail = ({ email }: { email: string }) => {
     const [resendCounter, setResendCounter] = useState(0);

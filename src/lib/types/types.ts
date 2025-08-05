@@ -5,6 +5,7 @@ import {
     MoveSchema,
     PathSchema,
     PopularMove,
+    RepertoireSchema,
 } from "../schema";
 
 export const enum Pieces {
@@ -47,10 +48,7 @@ export type AlgebraicPiece = "" | "K" | "Q" | "N" | "B" | "R";
 export type AlgebraicPromotionPieces = "Q" | "N" | "B" | "R";
 export type AlgebraicPosition = `${BoardFile}${BoardRank}`;
 
-export type Repertoire = {
-    id: string;
-    name: string;
-};
+export type Repertoire = z.infer<typeof RepertoireSchema>;
 
 export type StockfishAPI = {
     multiPV: Analysis;
@@ -167,6 +165,7 @@ export type RepertoireData = {
     ratings: LiDbAvgRating[];
     depth: number;
     paths: PathNodes[];
+    color: "white" | "black";
 };
 
 export type PositionContextValue = {
@@ -192,3 +191,28 @@ export type RegistrationData = {
     password: string;
     confirmPassword: string;
 };
+
+export type GivenAccess = {
+    nickname: string;
+    mode: "readonly" | "edit";
+};
+
+export type RepertoireEditData = {
+    name: string;
+    visibility: "private" | "public";
+    hasAccess: GivenAccess[];
+    color: "white" | "black";
+};
+
+export type Puzzle = {
+    color: "white" | "black";
+    root: MovesTreeNode;
+    startingNode: MovesTreeNode;
+    targetNode: MovesTreeNode;
+    solution: number[];
+    newLeaf: MovesTreeNode | null;
+};
+
+export type PuzzleFeedback = "other" | "correct" | "wrong" | "go" | "done";
+export type PuzzleMode = "global" | "spaced" | "repertoire";
+export type MyOption = { label: string; value: string };

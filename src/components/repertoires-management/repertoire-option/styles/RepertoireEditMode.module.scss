@@ -29,3 +29,16 @@
     padding: 0.5rem;
     margin: 0 1rem;
 }
+
+.short-field {
+    display: flex;
+    width: 80%;
+    margin: auto;
+}
+
+.icon-container {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

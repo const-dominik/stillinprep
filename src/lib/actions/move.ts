@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@/lib/auth";
 import { getNeoSession } from "@/lib/neo4j";
 import { MoveData } from "@/lib/types/types";
 
@@ -8,10 +9,18 @@ const createLeafRelation = async (
     parentId: string,
     nodeId: string
 ) => {
+    const authSession = await auth();
+
+    if (!authSession?.user) {
+        return;
+    }
+
+    const userId = authSession.user.id;
     const session = getNeoSession();
 
     const query = `
-        MATCH (r: Repertoire {id: $repertoireId})
+        MATCH (u: User {id: $userId })
+        MATCH (u)-[:OWNS|HAS_EDIT_ACCESS]->(r: Repertoire {id: $repertoireId})
         MATCH (n: Move {id: $nodeId})
         MATCH (p: Move {id: $parentId})
         OPTIONAL MATCH (r)-[rel:LEAF]->(p)
@@ -24,6 +33,7 @@ const createLeafRelation = async (
             repertoireId: repertoire,
             parentId,
             nodeId,
+            userId,
         });
     } catch (e) {
         console.log(e);
@@ -33,6 +43,12 @@ const createLeafRelation = async (
 };
 
 export const addMove = async (moveData: MoveData) => {
+    const authSession = await auth();
+
+    if (!authSession?.user) {
+        return;
+    }
+
     const session = getNeoSession();
     const move = moveData.move;
     const query = `
@@ -71,26 +87,35 @@ export const manageLeaves = async (
     remove: string[],
     add: string | undefined
 ) => {
+    const authSession = await auth();
+
+    if (!authSession?.user) {
+        return;
+    }
+
+    const userId = authSession.user.id;
     const session = getNeoSession();
 
     try {
         if (remove.length > 0) {
             const removeQuery = `
-                MATCH (r:Repertoire {id: $repertoireId})
+                MATCH (u: User {id: $userId })
+                MATCH (u)-[:OWNS|HAS_EDIT_ACCESS]->(r:Repertoire {id: $repertoireId})
                 UNWIND $remove AS nodeId
                 MATCH (r)-[rel:LEAF]->(m:Move {id: nodeId})
                 DELETE rel
             `;
-            await session.run(removeQuery, { repertoireId, remove });
+            await session.run(removeQuery, { repertoireId, remove, userId });
         }
 
         if (add) {
             const addQuery = `
-                MATCH (r:Repertoire {id: $repertoireId})
+                MATCH (u: User {id: $userId })
+                MATCH (u)-[:OWNS|HAS_EDIT_ACCESS]->(r:Repertoire {id: $repertoireId})
                 MATCH (m:Move {id: $add})
                 MERGE (r)-[:LEAF]->(m)
             `;
-            await session.run(addQuery, { repertoireId, add });
+            await session.run(addQuery, { repertoireId, add, userId });
         }
     } catch (err) {
         console.error("Error managing leaves:", err);

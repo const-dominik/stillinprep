@@ -1,0 +1,49 @@
+@use "sass:color";
+@use "@/styles/variables" as v;
+@use "src/styles/utils" as *;
+
+svg:hover {
+    cursor: pointer;
+}
+
+.no-repertoires {
+    color: v.$palette-4;
+    padding: 1rem;
+    text-align: center;
+}
+
+.public-repertoire {
+    display: flex;
+}
+
+.list-element {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    text-align: center;
+    width: 100%;
+    background: v.$palette-6;
+    cursor: pointer;
+    color: v.$palette-2;
+
+    &:hover {
+        background: v.$palette-5;
+    }
+}
+
+.list-name {
+    width: 50%;
+}
+
+.list-owner-50 {
+    width: 50%;
+}
+
+.list-owner-30 {
+    width: 30%;
+}
+
+.list-accessMode {
+    width: 20%;
+}

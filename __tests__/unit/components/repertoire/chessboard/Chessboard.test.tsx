@@ -1,14 +1,12 @@
-/**
- * @jest-environment jsdom
- */
-
 import Chessboard from "@/components/repertoire/chessboard/Chessboard";
 import "@testing-library/jest-dom";
 
+import { getSquareSelector, TestProviders } from "@/../__tests__/testing_utils";
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { getSquareSelector, TestProviders } from "../../../../testing_utils";
+
+jest.mock("@/lib/actions/move");
 
 describe("Chessboard", () => {
     it("renders the chessboard with the correct number of rows and columns", () => {
@@ -52,7 +50,7 @@ describe("Chessboard", () => {
         const root = new MovesTreeNode();
         const setCurrent = jest.fn();
         const setLast = jest.fn();
-
+        // todo mock
         const { container } = render(
             <TestProviders
                 current={root}

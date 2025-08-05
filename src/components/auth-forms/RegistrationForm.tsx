@@ -4,10 +4,10 @@ import { SingleWindowPage, UseFormInput } from "@/components/utils/Utils";
 import { registerUser } from "@/lib/actions/register";
 import { RegistrationData } from "@/lib/types/types";
 import { emailRegex, nicknameRegex } from "@/lib/utils";
+import styles from "@/styles/formStyling.module.scss";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import styles from "./styles.module.scss";
 import { validatePassword } from "./utils";
 
 const RegistrationForm = () => {

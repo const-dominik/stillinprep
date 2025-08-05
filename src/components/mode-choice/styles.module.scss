@@ -1,0 +1,40 @@
+@use "@/styles/variables" as v;
+
+.mode-choice {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.mode {
+    display: flex;
+    flex-direction: column;
+    width: 30vw;
+    height: 70vh;
+    padding: 1rem;
+
+    background: v.$palette-6;
+    color: v.$palette-2;
+
+    border: 1px solid v.$palette-7;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background: v.$palette-5;
+    }
+}
+
+.mode-title {
+    text-align: center;
+    width: 100%;
+    font-size: 1.7rem;
+    user-select: none;
+}
+
+.icon {
+    margin: auto;
+    width: 60%;
+}

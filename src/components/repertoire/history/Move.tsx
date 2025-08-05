@@ -3,16 +3,18 @@ import { manageLeaves } from "@/lib/actions/move";
 import { useConfirm } from "@/lib/context/confirm/ConfirmContext";
 import { usePosition } from "@/lib/context/current-position/PositionContext";
 import { useRepertoire } from "@/lib/context/repertoire/RepertoireContext";
-import { getTreeLeaves } from "@/lib/utils";
+import { getTreeLeavesHashes } from "@/lib/utils";
 import { MouseEvent, useState } from "react";
 import styles from "./styles/Move.module.scss";
 
 const Move = ({
     move,
     setLine,
+    mode,
 }: {
     move: MovesTreeNode;
     setLine: (node: MovesTreeNode) => void;
+    mode?: "regular" | "puzzle";
 }) => {
     const { currentNode, setLastNode, setCurrentNode } = usePosition();
     const { id: repertoireId } = useRepertoire();
@@ -39,7 +41,7 @@ const Move = ({
                     : node.parent.getMoveHash()
             );
         } else {
-            const leaves = getTreeLeaves(node);
+            const leaves = getTreeLeavesHashes(node);
 
             manageLeaves(repertoireId, leaves, node.parent.getMoveHash());
         }
@@ -75,7 +77,7 @@ const Move = ({
             onMouseLeave={() => setIsHovered(false)}
         >
             {move.getAlgebraicNotation()}
-            {isHovered && (
+            {isHovered && (!mode || mode === "regular") && (
                 <div className={styles["cross"]} onClick={handleLineCut}>
                     X
                 </div>

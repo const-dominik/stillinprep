@@ -1,0 +1,63 @@
+@use "@/styles/variables" as v;
+
+.container {
+    background: v.$palette-7;
+    border-radius: 5px;
+    width: 20vw;
+}
+
+.header {
+    border-bottom: 2px solid v.$palette-6;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    padding: 0.6rem;
+    color: v.$palette-2;
+}
+
+.option {
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.1rem;
+    border-bottom: 1px solid v.$palette-6;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: v.$palette-2;
+
+    &:last-of-type {
+        border-bottom: none;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    &:hover {
+        background: v.$palette-5;
+    }
+}
+
+.selected-option {
+    background: v.$palette-6 !important;
+    cursor: default;
+}
+
+.spaced-amount {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    width: 32px;
+    height: 32px;
+    border: 2px solid v.$secondary-dark;
+    background: v.$secondary-light;
+    color: v.$palette-1;
+    margin-left: 1rem;
+    font-size: 0.7rem;
+}
+
+.flex {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

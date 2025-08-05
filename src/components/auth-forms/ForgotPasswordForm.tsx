@@ -1,10 +1,10 @@
 "use client";
 
 import { resetPassword } from "@/lib/actions/passwordRecovery";
+import styles from "@/styles/formStyling.module.scss";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SmallWindowPage, UseFormInput } from "../utils/Utils";
-import styles from "./styles.module.scss";
 
 type ForgotData = {
     identifier: string;

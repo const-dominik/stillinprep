@@ -355,11 +355,18 @@ export const moveToMoveHistory = (
     return moves.toReversed().join(separator);
 };
 
-export const getTreeLeaves = (root: MovesTreeNode): string[] => {
+export const getTreeLeavesHashes = (root: MovesTreeNode): string[] => {
     if (root.children.length === 0) return [root.getMoveHash()];
 
-    const leaves = root.children.map(getTreeLeaves);
+    const leaves = root.children.map(getTreeLeavesHashes);
 
+    return leaves.flat();
+};
+
+export const getTreeLeaves = (root: MovesTreeNode): MovesTreeNode[] => {
+    if (root.children.length === 0) return [root];
+
+    const leaves = root.children.map(getTreeLeaves);
     return leaves.flat();
 };
 
@@ -418,3 +425,6 @@ export const capitalize = (str: string) => str[0].toUpperCase() + str.slice(1);
 
 export const neoRecordToObj = (record: NeoRecord) =>
     Object.fromEntries(record.keys.map((key) => [key, record.get(key)]));
+
+export const shuffle = <T>(arr: Array<T>) =>
+    arr.toSorted(() => Math.random() - 0.5);
