@@ -12,6 +12,7 @@ import { snapCenterToCursor } from "@dnd-kit/modifiers";
 import Image from "next/image";
 import styles from "./styles/Chessboard.module.scss";
 
+import { usePosition } from "@/lib/context/current-position/PositionContext";
 import { Pieces, Puzzle, PuzzleFeedback } from "@/lib/types/types";
 import { pieceAssets } from "@/lib/utils";
 import { Dispatch, SetStateAction, useId, useState } from "react";
@@ -37,8 +38,15 @@ const Chessboard = ({
     } = useChessboard(mode, feedbackFunction, puzzleTree, feedback);
 
     const [draggedPiece, setDraggedPiece] = useState<Pieces | null>(null);
-
+    const { currentNode, lastNode } = usePosition();
     const handleDragStart = (e: DragStartEvent) => {
+        if (
+            feedback &&
+            (feedback === "done" ||
+                feedback === "correct" ||
+                currentNode !== lastNode)
+        )
+            return;
         const data = e.active.data.current;
         if (!data) return;
 

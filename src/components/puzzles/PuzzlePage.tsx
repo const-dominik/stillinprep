@@ -40,6 +40,7 @@ const PuzzlePage = ({
     const [repertoire, setRepertoire] = useState<MyOption | null>(null);
 
     const globalPuzzles = useGlobalPuzzles(paths);
+
     const { fetchRepertoirePuzzles, loading: repertoireLoading } =
         useRepertoirePuzzles();
     const {
