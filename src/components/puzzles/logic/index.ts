@@ -41,14 +41,15 @@ export const createPuzzlesFromTree = (
                     current = current.parent;
                 }
 
-                if (puzzle.newLeaf) {
-                    newLeaves.push(puzzle.newLeaf);
+                if (startingNode.parent) {
+                    newLeaves.push(startingNode.parent);
                 }
             }
         }
 
         leaves = newLeaves;
     }
+
     return puzzles;
 };
 
