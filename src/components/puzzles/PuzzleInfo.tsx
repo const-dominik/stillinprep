@@ -11,25 +11,48 @@ const feedbacksMap: Record<PuzzleFeedback, string> = {
     done: "All puzzles for this mode solved.",
 };
 
+const getWaitMessage = (
+    waiting: boolean,
+    puzzlesNotLoaded: boolean,
+    repertoireLoading: boolean
+) => {
+    if (waiting || puzzlesNotLoaded) return "Generating puzzles...";
+    if (repertoireLoading) return "Loading repertoire..";
+    return "";
+};
+
 const PuzzleInfo = ({
     feedback,
     puzzle,
     autoSkip,
     setAutoSkip,
     nextPuzzle,
+    waiting,
+    puzzlesNotLoaded,
+    repertoireLoading,
 }: {
     feedback: PuzzleFeedback;
     puzzle: Puzzle;
     autoSkip: boolean;
     setAutoSkip: Dispatch<SetStateAction<boolean>>;
     nextPuzzle: () => void;
+    waiting: boolean;
+    puzzlesNotLoaded: boolean;
+    repertoireLoading: boolean;
 }) => {
+    const waitMessage = getWaitMessage(
+        waiting,
+        puzzlesNotLoaded,
+        repertoireLoading
+    );
     return (
         <div className={styles.container}>
             <div className={styles["whose-turn"]}>
                 {puzzle.color.toUpperCase()} TO MOVE
             </div>
-            <div className={styles["feedback"]}>{feedbacksMap[feedback]}</div>
+            <div className={styles["feedback"]}>
+                {waitMessage ? waitMessage : feedbacksMap[feedback]}
+            </div>
             <div className={styles["auto-puzzle"]}>
                 <input
                     type="checkbox"

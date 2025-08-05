@@ -35,7 +35,7 @@ const Repertoire = ({
                             </div>
                             <ScoreMeter />
                             <Chessboard />
-                            <MoveHistory />
+                            <MoveHistory mode="regular" />
                         </div>
                     </StockfishProvider>
                 </PositionProvider>

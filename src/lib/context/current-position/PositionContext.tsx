@@ -23,24 +23,20 @@ export const PositionProvider = ({
     passedRoot?: MovesTreeNode;
     passedLast?: MovesTreeNode;
 }) => {
-    let root: MovesTreeNode;
     let last: MovesTreeNode;
 
     const { paths } = useRepertoire();
 
-    if (passedRoot && passedLast) {
-        root = passedRoot;
+    if (passedLast) {
         last = passedLast;
     } else {
-        const [computedRoot, computedLast] = mergePathsIntoTree(paths);
-        root = computedRoot;
+        const [, computedLast] = mergePathsIntoTree(paths);
         last = computedLast;
     }
 
     const [currentNode, setCurrentNode] = useState(last);
     const [lastNode, setLastNode] = useState(last);
 
-    // Update state when passedLast changes
     useEffect(() => {
         if (passedLast) {
             setCurrentNode(passedLast);
@@ -48,10 +44,9 @@ export const PositionProvider = ({
         }
     }, [passedLast]);
 
-    // Update state when paths change (for computed case)
     useEffect(() => {
         if (!passedRoot && !passedLast) {
-            const [computedRoot, computedLast] = mergePathsIntoTree(paths);
+            const [, computedLast] = mergePathsIntoTree(paths);
             setCurrentNode(computedLast);
             setLastNode(computedLast);
         }
