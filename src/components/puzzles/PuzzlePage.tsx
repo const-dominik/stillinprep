@@ -58,13 +58,11 @@ const PuzzlePage = ({
             setWaiting(true);
             try {
                 const data = await getRepertoire(repertoireId);
-                console.log(data);
                 if (data.success && data.value) {
                     const puzzles = createPuzzlesFromTree(
                         data.value.paths,
                         data.value.color
                     );
-                    console.log(puzzles);
                     const shuffledPuzzles = shuffle(puzzles);
 
                     setPuzzleQueue(shuffledPuzzles);
@@ -122,6 +120,7 @@ const PuzzlePage = ({
                 >
                     <div className={styles.container}>
                         {waiting}
+                        {feedback}
                         <MoveHistory mode="puzzle" />
                         <Chessboard
                             mode="puzzle"

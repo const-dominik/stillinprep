@@ -367,7 +367,6 @@ export const getTreeLeaves = (root: MovesTreeNode): MovesTreeNode[] => {
     if (root.children.length === 0) return [root];
 
     const leaves = root.children.map(getTreeLeaves);
-
     return leaves.flat();
 };
 

@@ -6,7 +6,7 @@ import {
 import { Paths, Pieces, Puzzle } from "@/lib/types/types";
 import { getTreeLeaves } from "@/lib/utils";
 
-const getMovesUp = () => (Math.floor(Math.random() * 3) + 1) * 2 + 1;
+const getMovesUp = () => (Math.floor(Math.random() * 3) + 1) * 2 - 1;
 
 export const createPuzzlesFromTree = (
     paths: Paths,
@@ -46,7 +46,6 @@ export const createPuzzlesFromTree = (
 
         leaves = newLeaves;
     }
-
     return puzzles;
 };
 
