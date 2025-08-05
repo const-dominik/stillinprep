@@ -66,7 +66,7 @@ const PuzzlePage = ({
                         data.value.color
                     );
                     const shuffledPuzzles = shuffle(puzzles);
-
+                    console.log("puzzles: ", puzzles);
                     setPuzzleQueue(shuffledPuzzles);
                     setPuzzle(shuffledPuzzles[0] || null);
                     setCurrentIndex(0);
@@ -86,6 +86,7 @@ const PuzzlePage = ({
             setWaiting(false);
         } else if (mode === "repertoire" && repertoire) {
             getRepertoireFromDb(repertoire.value);
+            console.log(puzzleQueue);
         }
     }, [mode, repertoire, globalPuzzles]);
 
