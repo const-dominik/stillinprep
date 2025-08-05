@@ -5,7 +5,7 @@ import {
 } from "@/components/utils/Utils";
 import { deleteRepertoire } from "@/lib/actions/repertoire";
 import { useConfirm } from "@/lib/context/confirm/ConfirmContext";
-import { GivenAccess, RepertoireEditData } from "@/lib/types/types";
+import { GivenAccess, MyOption, RepertoireEditData } from "@/lib/types/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -188,8 +188,6 @@ export const RepertoireColor = ({
         />
     );
 };
-
-type MyOption = { label: string; value: string };
 
 const customSelectStyles: StylesConfig<MyOption> = {
     control: (base) => ({

@@ -12,19 +12,30 @@ import { snapCenterToCursor } from "@dnd-kit/modifiers";
 import Image from "next/image";
 import styles from "./styles/Chessboard.module.scss";
 
-import { Pieces } from "@/lib/types/types";
+import { Pieces, Puzzle, PuzzleFeedback } from "@/lib/types/types";
 import { pieceAssets } from "@/lib/utils";
-import { useId, useState } from "react";
+import { Dispatch, SetStateAction, useId, useState } from "react";
 import { useChessboard } from "./logic/useChessboard";
 
-const Chessboard = () => {
+const Chessboard = ({
+    mode,
+    feedbackFunction,
+    puzzleTree,
+    feedback,
+}: {
+    mode?: "puzzle" | "regular";
+    feedbackFunction?: Dispatch<SetStateAction<PuzzleFeedback>>;
+    puzzleTree?: Puzzle;
+    feedback?: PuzzleFeedback;
+}) => {
     const {
         board,
         color,
         renderSquare,
         changeSelectedPiece,
         handleSquareClick,
-    } = useChessboard();
+    } = useChessboard(mode, feedbackFunction, puzzleTree, feedback);
+
     const [draggedPiece, setDraggedPiece] = useState<Pieces | null>(null);
 
     const handleDragStart = (e: DragStartEvent) => {

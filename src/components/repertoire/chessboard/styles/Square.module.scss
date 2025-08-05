@@ -102,3 +102,8 @@
 .checked-dark {
     @include checked(v.$palette-6);
 }
+
+.no-outline {
+    outline: none !important;
+    border: none !important;
+}

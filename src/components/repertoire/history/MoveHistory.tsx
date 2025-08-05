@@ -8,7 +8,9 @@ import SavedLines from "./SavedLines";
 import styles from "./styles/MoveHistory.module.scss";
 import TreeNavigator from "./TreeNavigator";
 
-const MoveHistory = () => {
+const MoveHistory = (
+    { mode }: { mode?: "regular" | "puzzle" } = { mode: "regular" }
+) => {
     const { lastNode, setLastNode, setCurrentNode } = usePosition();
 
     const groupedMoves = getGroupedMoves(lastNode);
@@ -36,11 +38,16 @@ const MoveHistory = () => {
                                     <span className={styles["move-number"]}>
                                         {moveNumber}
                                     </span>
-                                    <Move move={whiteMove} setLine={setLine} />
+                                    <Move
+                                        move={whiteMove}
+                                        setLine={setLine}
+                                        mode={mode}
+                                    />
                                     {blackMove && (
                                         <Move
                                             move={blackMove}
                                             setLine={setLine}
+                                            mode={mode}
                                         />
                                     )}
                                 </div>
@@ -50,7 +57,7 @@ const MoveHistory = () => {
                 </div>
                 <TreeNavigator />
             </div>
-            <SavedLines setLine={setLine} />
+            {!mode || (mode === "regular" && <SavedLines setLine={setLine} />)}
         </div>
     );
 };

@@ -37,6 +37,7 @@ export class MovesTreeNode {
     public to: PiecePosition;
     public player: Player;
     public board: Chessboard;
+    private isPuzzleClaimed: boolean;
     private algebraicNotation: string;
     private hash: string;
 
@@ -56,6 +57,7 @@ export class MovesTreeNode {
         this.board = copyBoard(board);
         this.algebraicNotation = "";
         this.hash = "";
+        this.isPuzzleClaimed = false;
     }
 
     private addChild(child: MovesTreeNode) {
@@ -286,5 +288,13 @@ export class MovesTreeNode {
         }
 
         return this.hash;
+    }
+
+    public isClaimed(): boolean {
+        return this.isPuzzleClaimed;
+    }
+
+    public claim() {
+        this.isPuzzleClaimed = true;
     }
 }

@@ -3,7 +3,7 @@ import {
     FENToChessboard,
     chessboardToFEN,
     copyBoard,
-    getTreeLeaves,
+    getTreeLeavesHashes,
     initialBoard,
     moveToMoveHistory,
     positionToAlgebraicNotation,
@@ -49,9 +49,9 @@ describe("Utility functions:", () => {
 
     it("getTreeLeaves return the leaves ids", () => {
         const [e4, d5, exd5] = create_e4_d5_exd5();
-        expect(getTreeLeaves(e4)).toEqual([exd5.getMoveHash()]);
-        expect(getTreeLeaves(d5)).toEqual([exd5.getMoveHash()]);
-        expect(getTreeLeaves(exd5)).toEqual([exd5.getMoveHash()]);
+        expect(getTreeLeavesHashes(e4)).toEqual([exd5.getMoveHash()]);
+        expect(getTreeLeavesHashes(d5)).toEqual([exd5.getMoveHash()]);
+        expect(getTreeLeavesHashes(exd5)).toEqual([exd5.getMoveHash()]);
 
         const { node: d4 } = e4.addMove(
             Pieces.WHITE_PAWN,
@@ -60,11 +60,11 @@ describe("Utility functions:", () => {
             FENToChessboard("rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR")
         );
 
-        expect(getTreeLeaves(e4)).toEqual([
+        expect(getTreeLeavesHashes(e4)).toEqual([
             exd5.getMoveHash(),
             d4.getMoveHash(),
         ]);
-        expect(getTreeLeaves(d5)).toEqual([exd5.getMoveHash()]);
-        expect(getTreeLeaves(exd5)).toEqual([exd5.getMoveHash()]);
+        expect(getTreeLeavesHashes(d5)).toEqual([exd5.getMoveHash()]);
+        expect(getTreeLeavesHashes(exd5)).toEqual([exd5.getMoveHash()]);
     });
 });

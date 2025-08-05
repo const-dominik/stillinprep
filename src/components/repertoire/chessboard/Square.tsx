@@ -68,6 +68,7 @@ const Square = ({
             {piece !== Pieces.EMPTY && (
                 <div
                     ref={setNodeRef}
+                    className={styles["no-outline"]}
                     style={{ opacity: isDragging ? 0.5 : 1 }}
                     {...listeners}
                     {...attributes}

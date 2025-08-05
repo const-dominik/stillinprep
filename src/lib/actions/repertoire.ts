@@ -14,6 +14,7 @@ import {
     SharedRepertoireData,
 } from "../schema";
 import {
+    DbGlobalRepertoire,
     DbRepertoire,
     DbRepertoires,
     ServerActionResponse,
@@ -138,6 +139,85 @@ export const getRepertoires = async (): ServerActionResponse<DbRepertoires> => {
     }
 };
 
+export const getGlobalRepertoire =
+    async (): ServerActionResponse<DbGlobalRepertoire> => {
+        const authSession = await auth();
+
+        if (!authSession?.user) {
+            return {
+                success: false,
+                error: "Unauthorized",
+            };
+        }
+
+        const userId = authSession.user.id;
+        const session = getNeoSession();
+
+        try {
+            const query = `
+            MATCH (u:User {id: $userId})
+            OPTIONAL MATCH (u)-[rel:OWNS]->(r:Repertoire)
+            
+            WITH u, r
+            WHERE r IS NOT NULL
+            
+            OPTIONAL MATCH (r)-[:LEAF]->(leaf:Move)
+            MATCH (root:Move {name: "root"})
+            OPTIONAL MATCH path = (root)-[:IS_PARENT_OF*1..]->(leaf)
+            
+            WITH r.color as color, collect(DISTINCT path) as paths
+            WHERE color IN ['white', 'black'] AND size(paths) > 0
+            
+            WITH 
+                CASE WHEN color = 'white' THEN paths ELSE [] END as whitePaths,
+                CASE WHEN color = 'black' THEN paths ELSE [] END as blackPaths
+            
+            RETURN 
+                reduce(acc = [], p IN collect(whitePaths) | acc + p) as white,
+                reduce(acc = [], p IN collect(blackPaths) | acc + p) as black
+        `;
+
+            const result = await session.run(query, {
+                userId,
+            });
+
+            const record = result.records[0];
+
+            if (!record) {
+                return { success: false, error: "No record." };
+            }
+
+            const whitePaths = record.get("white") as Path[];
+            const blackPaths = record.get("black") as Path[];
+
+            const parsedWhitePaths = whitePaths.map((path) => {
+                const parsedPath = PathSchema.parse(path);
+                return parsedPath;
+            });
+
+            const parsedBlackPaths = blackPaths.map((path) => {
+                const parsedPath = PathSchema.parse(path);
+                return parsedPath;
+            });
+
+            return {
+                success: true,
+                value: {
+                    white: parsedWhitePaths,
+                    black: parsedBlackPaths,
+                },
+            };
+        } catch (err) {
+            console.error(err);
+            return {
+                success: false,
+                error: "Sorry. Something went wrong.",
+            };
+        } finally {
+            await session.close();
+        }
+    };
+
 export const getRepertoire = async (
     id: string
 ): ServerActionResponse<DbRepertoire | undefined> => {
@@ -149,6 +229,7 @@ export const getRepertoire = async (
                 ratings: "1700",
                 depth: "15",
                 paths: [],
+                color: "white",
             },
         };
     }
@@ -217,7 +298,7 @@ export const getRepertoire = async (
             timeControls,
             ratings,
             depth,
-            color,
+            color: color ? color : "white",
         };
 
         return {

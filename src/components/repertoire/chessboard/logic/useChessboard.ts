@@ -1,16 +1,19 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import {
     getBoardAfterMove,
     getLegalMoves,
     isMoveOnPath,
 } from "@/components/utils/chessLogic";
+import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { usePosition } from "@/lib/context/current-position/PositionContext";
 import { useRepertoire } from "@/lib/context/repertoire/RepertoireContext";
 import {
     PendingPromotion,
     PiecePosition,
     Pieces,
+    Puzzle,
+    PuzzleFeedback,
     SelectedPieceData,
 } from "@/lib/types/types";
 import {
@@ -23,7 +26,35 @@ import { SquareRenderer } from "../SquareRenderer";
 
 const baseSelectedPieceData = { position: null, legalMoves: [] };
 
-export const useChessboard = () => {
+const getSolutionStep = (puzzleTree: Puzzle, currentNode: MovesTreeNode) => {
+    let index = 0;
+    let node = currentNode;
+    while (node !== puzzleTree.startingNode) {
+        index++;
+        node = node.parent;
+    }
+
+    return index;
+};
+
+const isMoveSame = (
+    piece: Pieces,
+    from: PiecePosition,
+    to: PiecePosition,
+    node: MovesTreeNode
+): boolean =>
+    piece === node.piece &&
+    from[0] === node.from[0] &&
+    from[1] === node.from[1] &&
+    to[0] === node.to[0] &&
+    to[1] === node.to[1];
+
+export const useChessboard = (
+    mode: "regular" | "puzzle" = "regular",
+    feedbackFunction?: Dispatch<SetStateAction<PuzzleFeedback>>,
+    puzzleTree?: Puzzle,
+    feedback?: PuzzleFeedback
+) => {
     const { currentNode, lastNode, setCurrentNode, setLastNode } =
         usePosition();
     const { id: repertoireId, color } = useRepertoire();
@@ -48,12 +79,56 @@ export const useChessboard = () => {
         setSelectedPieceData({ position: pos, legalMoves });
     };
 
+    const finalizePuzzleMove = (
+        piece: Pieces,
+        from: PiecePosition,
+        to: PiecePosition
+    ) => {
+        // setSelectedPieceData(baseSelectedPieceData);
+        const solutionStep = getSolutionStep(puzzleTree!, currentNode);
+        const wantedNode =
+            currentNode.children[puzzleTree!.solution[solutionStep]];
+
+        const isCorrect = isMoveSame(piece, from, to, wantedNode);
+        const isLast = solutionStep === puzzleTree!.solution.length - 1;
+
+        if (isCorrect) {
+            setLastNode(wantedNode);
+            setCurrentNode(wantedNode);
+            if (isLast) {
+                feedbackFunction!("correct");
+            } else {
+                setTimeout(() => {
+                    const nextNode =
+                        wantedNode.children[
+                            puzzleTree!.solution[solutionStep + 1]
+                        ];
+                    setLastNode(nextNode);
+                    setCurrentNode(nextNode);
+                    feedbackFunction!("go");
+                }, 500);
+            }
+        } else if (
+            currentNode.children.some((child) =>
+                isMoveSame(piece, from, to, child)
+            )
+        ) {
+            feedbackFunction!("other");
+        } else {
+            feedbackFunction!("wrong");
+        }
+    };
+
     const finalizeMove = (
         piece: Pieces,
         from: PiecePosition,
         to: PiecePosition,
         newBoard: Pieces[][]
     ) => {
+        if (mode === "puzzle") {
+            return finalizePuzzleMove(piece, from, to);
+        }
+
         const { node, isNew } = currentNode.addMove(piece, from, to, newBoard);
         setCurrentNode(node);
 
@@ -116,6 +191,9 @@ export const useChessboard = () => {
     };
 
     const handleSquareClick = (x: number, y: number) => {
+        if (feedback && (feedback === "correct" || currentNode !== lastNode))
+            return;
+
         const clickedPiece = board[y][x];
         const selected = selectedPieceData.position;
         const isSame = selected?.[0] === y && selected?.[1] === x;

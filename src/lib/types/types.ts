@@ -203,3 +203,16 @@ export type RepertoireEditData = {
     hasAccess: GivenAccess[];
     color: "white" | "black";
 };
+
+export type Puzzle = {
+    color: "white" | "black";
+    root: MovesTreeNode;
+    startingNode: MovesTreeNode;
+    targetNode: MovesTreeNode;
+    solution: number[];
+    newLeaf: MovesTreeNode | null;
+};
+
+export type PuzzleFeedback = "other" | "correct" | "wrong" | "go";
+export type PuzzleMode = "global" | "spaced" | "repertoire";
+export type MyOption = { label: string; value: string };
