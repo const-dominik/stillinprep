@@ -1,8 +1,10 @@
 import {
+    Chessboard,
     LiDbAvgRating,
     MoveType,
     PathNodes,
     Paths,
+    PiecePosition,
     Pieces,
     Player,
     TimeControl,
@@ -11,7 +13,7 @@ import { liRatingsAvgs, liTimeControls } from "@/lib/utils";
 import { getBoardAfterMove } from "./chessLogic";
 import { MovesTreeNode } from "./MovesTree";
 
-export const getPromotionPiece = (letter: string, player: Player): Pieces => {
+const getPromotionPiece = (letter: string, player: Player): Pieces => {
     if (player === "white") {
         if (letter === "B") {
             return Pieces.WHITE_BISHOP;
@@ -33,8 +35,23 @@ export const getPromotionPiece = (letter: string, player: Player): Pieces => {
             return Pieces.BLACK_QUEEN;
         }
     }
-
     throw new Error("Shouldn't happend");
+};
+
+const enPassantDetection = (
+    board: Chessboard,
+    from: PiecePosition,
+    to: PiecePosition
+): Boolean => {
+    const piece = board[from[0]][from[1]];
+    if (
+        (piece === Pieces.WHITE_PAWN || piece === Pieces.BLACK_PAWN) &&
+        from[1] !== to[1] &&
+        board[to[0]][to[1]] === Pieces.EMPTY
+    )
+        return true;
+
+    return false;
 };
 
 export const mergePathsIntoTree = (segments: PathNodes[]) => {
@@ -45,8 +62,6 @@ export const mergePathsIntoTree = (segments: PathNodes[]) => {
         let current = root;
 
         for (const move of path) {
-            // TODO: proper move type and promotion piece
-
             const piece = current.board[move.from[0]][move.from[1]];
             const kings = [Pieces.BLACK_KING, Pieces.WHITE_KING];
             const pawns = [Pieces.BLACK_PAWN, Pieces.WHITE_PAWN];
@@ -66,6 +81,10 @@ export const mergePathsIntoTree = (segments: PathNodes[]) => {
                     current.getCurrentPlayer()
                 );
             }
+            if (enPassantDetection(current.board, move.from, move.to)) {
+                moveType = "en passant";
+            }
+
             const board = getBoardAfterMove(
                 current.board,
                 move.from,
