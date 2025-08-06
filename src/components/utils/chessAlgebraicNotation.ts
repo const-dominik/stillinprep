@@ -39,9 +39,18 @@ export const getAlgebraicMove = (fullMove: MovesTreeNode) => {
 
     const prevBoard = fullMove.parent.board;
     const [y, x] = fullMove.to;
-    const piece = prevBoard[y][x];
+    const takenPiece = prevBoard[y][x];
+    const piece = fullMove.board[y][x];
 
-    const take = piece === Pieces.EMPTY ? "" : "x";
+    let take = takenPiece === Pieces.EMPTY ? "" : "x";
+    if (
+        [Pieces.BLACK_PAWN, Pieces.WHITE_PAWN].includes(piece) &&
+        fullMove.from[1] !== fullMove.to[1] &&
+        takenPiece === Pieces.EMPTY
+    ) {
+        take = "x";
+    }
+
     const mate = fullMove.isMate() ? "#" : "";
     const check = fullMove.isCheck() && !mate ? "+" : "";
     const promotedTo = fullMove.promotedTo();
