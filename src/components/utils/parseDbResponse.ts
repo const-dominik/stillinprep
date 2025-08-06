@@ -42,7 +42,7 @@ const enPassantDetection = (
     board: Chessboard,
     from: PiecePosition,
     to: PiecePosition
-): Boolean => {
+): boolean => {
     const piece = board[from[0]][from[1]];
     if (
         (piece === Pieces.WHITE_PAWN || piece === Pieces.BLACK_PAWN) &&

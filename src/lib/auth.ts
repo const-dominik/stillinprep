@@ -13,7 +13,7 @@ import Google from "next-auth/providers/google";
 import { redirect } from "next/navigation";
 import { v4 } from "uuid";
 import { loginUser } from "./actions/login";
-import { getNeoSession } from "./neo4j";
+import { neoDriver } from "./neo4j";
 
 const sessionExpiry = 60 * 60 * 24 * 30;
 
@@ -64,7 +64,7 @@ const providers: Provider[] = [
 
 export const authOptions = NextAuth({
     providers: providers,
-    adapter: Neo4jAdapter(getNeoSession()),
+    adapter: Neo4jAdapter(neoDriver),
     session: {
         strategy: "database",
     },
@@ -78,18 +78,12 @@ export const authOptions = NextAuth({
             if (params.token?.credentials) {
                 const sessionToken = v4();
 
-                const neoSession = getNeoSession();
-
-                const adapter = Neo4jAdapter(neoSession);
-                try {
-                    await adapter.createSession!({
-                        sessionToken,
-                        userId: params.token.sub!,
-                        expires: new Date(Date.now() + sessionExpiry * 1000),
-                    });
-                } finally {
-                    await neoSession.close();
-                }
+                const adapter = Neo4jAdapter(neoDriver);
+                await adapter.createSession!({
+                    sessionToken,
+                    userId: params.token.sub!,
+                    expires: new Date(Date.now() + sessionExpiry * 1000),
+                });
 
                 return sessionToken;
             }
