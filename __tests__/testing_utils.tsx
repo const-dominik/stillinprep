@@ -5,6 +5,7 @@ import {
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { ConfirmProvider } from "@/lib/context/confirm/ConfirmContext";
 import { RepertoireProvider } from "@/lib/context/repertoire/RepertoireContext";
+import { DbRepertoire } from "@/lib/types/backend-types";
 import {
     AlgebraicPromotionPieces,
     MoveType,
@@ -270,10 +271,10 @@ export const notationToChessTree = (chess_game: string) => {
                 if (match === null) throw new Error("Shouldn't happend");
                 if (/^[a-h]$/.test(match[0])) {
                     const col = match[0].charCodeAt(0) - "a".charCodeAt(0);
-                    from = squaresToCheck.find(([_, x]) => x === col)!;
+                    from = squaresToCheck.find(([, x]) => x === col)!;
                 } else {
                     const row = 8 - parseInt(match[0]);
-                    from = squaresToCheck.find(([y, _]) => y === row)!;
+                    from = squaresToCheck.find(([y]) => y === row)!;
                 }
 
                 const newBoard = getBoardAfterMove(
@@ -305,11 +306,12 @@ export const TestProviders = ({
     mockSetRoot?: typeof jest.fn;
     mockSetLast?: typeof jest.fn;
 }) => {
-    const mockRepertoireData = {
+    const mockRepertoireData: DbRepertoire = {
         ratings: "1900",
         timeControls: "rapid",
         depth: "15",
         paths: [],
+        color: "white",
     };
 
     const root = new MovesTreeNode();
