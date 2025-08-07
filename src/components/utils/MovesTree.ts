@@ -297,4 +297,187 @@ export class MovesTreeNode {
     public claim() {
         this.isPuzzleClaimed = true;
     }
+
+    private getPath(): MovesTreeNode[] {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        let node: MovesTreeNode = this;
+        const nodeArr: MovesTreeNode[] = [];
+
+        while (node.moveId > 0) {
+            nodeArr.push(node);
+            node = node.parent;
+        }
+        return nodeArr.reverse();
+    }
+
+    private pieceToFEN(piece: Pieces): string {
+        switch (piece) {
+            case Pieces.WHITE_PAWN:
+                return "P";
+            case Pieces.WHITE_KNIGHT:
+                return "N";
+            case Pieces.WHITE_BISHOP:
+                return "B";
+            case Pieces.WHITE_ROOK:
+                return "R";
+            case Pieces.WHITE_QUEEN:
+                return "Q";
+            case Pieces.WHITE_KING:
+                return "K";
+
+            case Pieces.BLACK_PAWN:
+                return "p";
+            case Pieces.BLACK_KNIGHT:
+                return "n";
+            case Pieces.BLACK_BISHOP:
+                return "b";
+            case Pieces.BLACK_ROOK:
+                return "r";
+            case Pieces.BLACK_QUEEN:
+                return "q";
+            case Pieces.BLACK_KING:
+                return "k";
+
+            default:
+                return "0";
+        }
+    }
+
+    private isCapture(): boolean {
+        let pieceCount1 = 0;
+        for (const row of this.board)
+            for (const square of row)
+                if (square !== Pieces.EMPTY) pieceCount1 += 1;
+
+        let pieceCount2 = 0;
+        for (const row of this.board)
+            for (const square of row)
+                if (square !== Pieces.EMPTY) pieceCount2 += 1;
+
+        return pieceCount1 !== pieceCount2;
+    }
+
+    private getBoardFEN(): string {
+        let FENBoard = "";
+        let emptyCount = 0;
+        for (const row in this.board) {
+            emptyCount = 0;
+            for (const square in this.board) {
+                const letter = this.pieceToFEN(this.board[row][square]);
+                if (letter === "0") {
+                    emptyCount++;
+                } else {
+                    if (emptyCount > 0) {
+                        FENBoard += String(emptyCount);
+                    }
+                    emptyCount = 0;
+                    FENBoard += letter;
+                }
+            }
+            if (emptyCount > 0) {
+                FENBoard += String(emptyCount);
+            }
+            FENBoard += "/";
+        }
+        return FENBoard.slice(0, -1) + " ";
+    }
+
+    private getColorFEN(): string {
+        return "white" === this.getCurrentPlayer() ? "w " : "b ";
+    }
+
+    private getCastlingRightsFEN(): string {
+        const nodeArr = this.getPath();
+        const rights = [true, true, true, true];
+        const letters = ["K", "Q", "k", "q"];
+
+        for (const node of nodeArr) {
+            const piece = node.piece;
+
+            if (piece === Pieces.WHITE_KING) {
+                rights[0] = false;
+                rights[1] = false;
+            }
+            if (piece === Pieces.BLACK_KING) {
+                rights[2] = false;
+                rights[3] = false;
+            }
+
+            if (piece === Pieces.WHITE_ROOK && node.from[1] === 7)
+                rights[0] = false;
+            if (piece === Pieces.WHITE_ROOK && node.from[1] === 0)
+                rights[1] = false;
+            if (piece === Pieces.BLACK_ROOK && node.from[1] === 7)
+                rights[2] = false;
+            if (piece === Pieces.BLACK_ROOK && node.from[1] === 0)
+                rights[3] = false;
+        }
+
+        let castlingFEN = "";
+        for (let i = 0; i < 4; i++) {
+            if (rights[i]) castlingFEN += letters[i];
+        }
+        if (castlingFEN === "") castlingFEN = "-";
+
+        return castlingFEN + " ";
+    }
+
+    private enPassantFEN(): string {
+        let enpFEN = "- ";
+        if (
+            [Pieces.BLACK_PAWN, Pieces.WHITE_PAWN].includes(this.piece) &&
+            Math.abs(this.from[0] - this.to[0]) === 2
+        ) {
+            const [y, x] = this.to;
+            const otherPawn =
+                this.piece === Pieces.WHITE_PAWN
+                    ? Pieces.BLACK_PAWN
+                    : Pieces.WHITE_PAWN;
+
+            if (
+                (x > 0 && this.board[y][x - 1] === otherPawn) ||
+                (x < 7 && this.board[y][x + 1] === otherPawn)
+            ) {
+                enpFEN = String.fromCharCode(97 + x);
+                enpFEN += this.piece === Pieces.WHITE_PAWN ? "3 " : "6 ";
+            }
+        }
+        return enpFEN;
+    }
+
+    private rule50FEN(): string {
+        if (this.moveId === 0) return "0 ";
+
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        let node: MovesTreeNode = this;
+        let count = 0;
+
+        while (count < 50) {
+            if (
+                [Pieces.BLACK_PAWN, Pieces.WHITE_PAWN].includes(node.piece) ||
+                node.isCapture() ||
+                node.moveId === 0
+            )
+                return String(count) + " ";
+
+            count += 1;
+            node = node.parent;
+        }
+        return "50 ";
+    }
+
+    private getMoveFEN(): string {
+        if (this.getCurrentPlayer() === "white") return String(this.moveId + 1);
+        return String(this.moveId);
+    }
+
+    public getFEN() {
+        let FEN = this.getBoardFEN();
+        FEN += this.getColorFEN();
+        FEN += this.getCastlingRightsFEN();
+        FEN += this.enPassantFEN();
+        FEN += this.rule50FEN();
+        FEN += this.getMoveFEN();
+        return FEN;
+    }
 }
