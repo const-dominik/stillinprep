@@ -135,6 +135,8 @@ type MastersParams = LiQueryCommonParams & {
 
 export type LiAPIQueryParameters = LichessParams | MastersParams;
 
+export type FENAndMove = [string, string];
+
 export type MoveData = {
     parent: string;
     repertoire: string;

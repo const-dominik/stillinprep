@@ -63,7 +63,7 @@ const RepertoireAnalysis = () => {
 
     useEffect(() => {
         const fen =
-            "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"; // pozycja po 1.e4
+            "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"; // pozycja po 1.e4
 
         fetchOpeningExplorerStats(fen)
             .then((data) => {
@@ -71,6 +71,7 @@ const RepertoireAnalysis = () => {
                     setStatsText("Brak danych dla tej pozycji.");
                     return;
                 }
+                console.log(data);
                 // Tworzymy tekstowy raport
                 let text = `Statystyki dla pozycji (FEN): ${fen}\n`;
                 text += `Liczba gier: ${data.nbGames}\nRuchy:\n`;
@@ -83,6 +84,8 @@ const RepertoireAnalysis = () => {
                 text += movesTree[0].getFEN() + "\n";
                 text += movesTree[1].getFEN() + "\n";
                 text += movesTree[2].getFEN() + "\n";
+
+                console.log(movesTree[0].getAllFENs());
 
                 setStatsText(text);
             })

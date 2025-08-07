@@ -6,6 +6,7 @@ import {
     CastleType,
     CastlingRigths,
     Chessboard,
+    FENAndMove,
     PiecePosition,
     Pieces,
     Player,
@@ -298,6 +299,15 @@ export class MovesTreeNode {
         this.isPuzzleClaimed = true;
     }
 
+    private getRoot(): MovesTreeNode {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        let node: MovesTreeNode = this;
+        while (node.moveId > 0) {
+            node = node.parent;
+        }
+        return node;
+    }
+
     private getPath(): MovesTreeNode[] {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let node: MovesTreeNode = this;
@@ -471,7 +481,7 @@ export class MovesTreeNode {
         return String(this.moveId);
     }
 
-    public getFEN() {
+    public getFEN(): string {
         let FEN = this.getBoardFEN();
         FEN += this.getColorFEN();
         FEN += this.getCastlingRightsFEN();
@@ -479,5 +489,22 @@ export class MovesTreeNode {
         FEN += this.rule50FEN();
         FEN += this.getMoveFEN();
         return FEN;
+    }
+
+    public getAllFENs(): FENAndMove[] {
+        const buildFENList = (node: MovesTreeNode): FENAndMove[] => {
+            const FENs: FENAndMove[] = [];
+            const FEN = node.getFEN();
+
+            if (node.children.length === 0) return [[FEN, ""]];
+
+            for (const child of node.children) {
+                FENs.push([FEN, child.getAlgebraicNotation()]);
+                FENs.push(...buildFENList(child));
+            }
+            return FENs;
+        };
+
+        return buildFENList(this);
     }
 }
