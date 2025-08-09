@@ -109,6 +109,8 @@ const goUpMoves = (node: MovesTreeNode, moves: number) => {
     let current = node;
 
     for (let i = 0; i < moves; i++) {
+        if (current.parent === current.parent.parent && current !== node)
+            return current;
         current = current.parent;
     }
 
