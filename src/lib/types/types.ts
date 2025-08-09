@@ -215,6 +215,32 @@ export type Puzzle = {
     newLeaf: MovesTreeNode | null;
 };
 
+export type ExplorerMove = {
+    san: string;
+    white: number;
+    black: number;
+    draws: number;
+    avgRating: number;
+};
+
+export type ExplorerResponse = {
+    moves: ExplorerMove[];
+    nbGames: number;
+    white: number;
+    draws: number;
+    black: number;
+};
+
+export type ExplorerOptions = {
+    fen: string;
+    variant?: "standard" | "chess960";
+    speeds?: ("bullet" | "blitz" | "rapid" | "classical")[];
+    ratings?: number[]; //  [1600, 1800, 2000]
+    moves?: number;
+    topGames?: number;
+    recentGames?: number;
+};
+
 export type PuzzleFeedback = "other" | "correct" | "wrong" | "go" | "done";
 export type PuzzleMode = "global" | "spaced" | "repertoire";
 export type MyOption = { label: string; value: string };

@@ -1,25 +1,38 @@
 import { MovesTreeNode } from "@/components/utils/MovesTree";
+import { ExplorerOptions, ExplorerResponse } from "@/lib/types/types";
 
-type ExplorerMove = {
-    san: string;
-    white: number;
-    black: number;
-    draws: number;
-    avgRating: number;
+const buildExplorerUrl = (options: ExplorerOptions): string => {
+    const params = new URLSearchParams();
+
+    params.set("variant", options.variant ?? "standard");
+    params.set("fen", options.fen);
+
+    if (options.speeds?.length) {
+        params.set("speeds", options.speeds.join(","));
+    }
+
+    if (options.ratings?.length) {
+        params.set("ratings", options.ratings.join(","));
+    }
+
+    if (options.moves !== undefined) {
+        params.set("moves", options.moves.toString());
+    }
+
+    if (options.topGames !== undefined) {
+        params.set("topGames", options.topGames.toString());
+    }
+
+    if (options.recentGames !== undefined) {
+        params.set("recentGames", options.recentGames.toString());
+    }
+
+    return `https://explorer.lichess.ovh/lichess?${params.toString()}`;
 };
 
-type ExplorerResponse = {
-    moves: ExplorerMove[];
-    nbGames: number;
-    white: number;
-    draws: number;
-    black: number;
-};
-
-const fetchOpeningExplorerStats = async (
-    fen: string
+export const fetchOpeningExplorerStats = async (
+    url: string
 ): Promise<ExplorerResponse> => {
-    const url = `https://explorer.lichess.ovh/lichess?variant=standard&fen=${encodeURIComponent(fen)}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Błąd API: ${res.status}`);
     return await res.json();
@@ -41,14 +54,26 @@ const extractMoveCounts = (data: ExplorerResponse): [string, number][] => {
 export const getRepertoireFeedback = async (
     subTree: MovesTreeNode
 ): Promise<[string, number][]> => {
-    const allGamesData = await fetchOpeningExplorerStats(subTree.getFEN());
+    const explorerOptions: ExplorerOptions = {
+        variant: "standard",
+        fen: subTree.getFEN(),
+        speeds: ["rapid"],
+        ratings: [1600, 1800],
+    };
+
+    const allGamesData = await fetchOpeningExplorerStats(
+        buildExplorerUrl(explorerOptions)
+    );
     const allGames = sumGames(allGamesData);
 
     const getData = async (
         node: MovesTreeNode,
         moves: string
     ): Promise<[string, number][]> => {
-        const data = await fetchOpeningExplorerStats(node.getFEN());
+        explorerOptions.fen = node.getFEN();
+        const data = await fetchOpeningExplorerStats(
+            buildExplorerUrl(explorerOptions)
+        );
         const loadedMoves: [string, number][] = extractMoveCounts(data);
         const checkmoves: [string, number][] = [];
         const deeperMoves: [string, number][] = [];
@@ -96,7 +121,12 @@ export const getRepertoireFeedback = async (
         ([move, count]) => [move, (count / allGames) * 100]
     );
 
-    normalizedMoves.sort((a, b) => b[1] - a[1]);
+    const sortedMoves = normalizedMoves.toSorted((a, b) => b[1] - a[1]);
 
-    return normalizedMoves;
+    const readyMoves = sortedMoves.map<[string, number]>(([moves, val]) => {
+        const m = String(moves);
+        return m.startsWith("root ") ? [m.slice(5), val] : [m, val];
+    });
+
+    return readyMoves;
 };
