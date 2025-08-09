@@ -52,15 +52,9 @@ const extractMoveCounts = (data: ExplorerResponse): [string, number][] => {
 };
 
 export const getRepertoireFeedback = async (
-    subTree: MovesTreeNode
+    subTree: MovesTreeNode,
+    explorerOptions: ExplorerOptions
 ): Promise<[string, number][]> => {
-    const explorerOptions: ExplorerOptions = {
-        variant: "standard",
-        fen: subTree.getFEN(),
-        speeds: ["rapid"],
-        ratings: [1600, 1800],
-    };
-
     const allGamesData = await fetchOpeningExplorerStats(
         buildExplorerUrl(explorerOptions)
     );

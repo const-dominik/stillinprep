@@ -149,10 +149,12 @@ export const SelectRepertoire = ({
     repertoires,
     setRepertoire,
     chosenRepertoire,
+    instanceId,
 }: {
     repertoires: DbRepertoires["owned"];
     setRepertoire: Dispatch<SetStateAction<MyOption | null>>;
     chosenRepertoire: MyOption | null;
+    instanceId: string;
 }) => {
     const options: MyOption[] = repertoires.map((repertoire) => ({
         value: repertoire.id,
@@ -167,6 +169,7 @@ export const SelectRepertoire = ({
             onChange={(selected) => {
                 setRepertoire(selected);
             }}
+            instanceId={instanceId}
             isSearchable={false}
             value={
                 options.find((opt) => opt.value === chosenRepertoire?.value) ??
