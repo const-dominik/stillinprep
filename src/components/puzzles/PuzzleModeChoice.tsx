@@ -2,7 +2,7 @@ import { DbRepertoires } from "@/lib/types/backend-types";
 import { MyOption, PuzzleMode } from "@/lib/types/types";
 import { Dispatch, SetStateAction } from "react";
 import Select, { type StylesConfig } from "react-select";
-import styles from "./PuzzleModeChoice.module.scss";
+import styles from "./styles/PuzzleModeChoice.module.scss";
 
 const getClasses = (mode: PuzzleMode, element: PuzzleMode) => {
     const classes = [styles.option];
@@ -55,12 +55,14 @@ const PuzzleModeChoice = ({
     repertoires,
     repertoire,
     setRepertoires,
+    spacedPuzzlesAmount,
 }: {
     mode: PuzzleMode;
     setMode: Dispatch<SetStateAction<PuzzleMode>>;
     repertoires: DbRepertoires["owned"];
     repertoire: MyOption | null;
     setRepertoires: Dispatch<SetStateAction<MyOption | null>>;
+    spacedPuzzlesAmount: number;
 }) => {
     const options = repertoires.map((repertoire) => ({
         value: repertoire.id,
@@ -101,10 +103,12 @@ const PuzzleModeChoice = ({
                 </div>
                 <div
                     className={getClasses(mode, "spaced")}
-                    onClick={() => setMode("spaced")}
+                    onClick={() => spacedPuzzlesAmount > 0 && setMode("spaced")}
                 >
                     spaced repetition
-                    <div className={styles["spaced-amount"]}>7</div>
+                    <div className={styles["spaced-amount"]}>
+                        {spacedPuzzlesAmount}
+                    </div>
                 </div>
             </div>
         </div>

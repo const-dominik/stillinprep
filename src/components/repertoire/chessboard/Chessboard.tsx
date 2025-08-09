@@ -15,7 +15,7 @@ import styles from "./styles/Chessboard.module.scss";
 import { usePosition } from "@/lib/context/current-position/PositionContext";
 import { Pieces, Puzzle, PuzzleFeedback } from "@/lib/types/types";
 import { pieceAssets } from "@/lib/utils";
-import { Dispatch, SetStateAction, useId, useState } from "react";
+import { useId, useState } from "react";
 import { useChessboard } from "./logic/useChessboard";
 
 const Chessboard = ({
@@ -25,7 +25,7 @@ const Chessboard = ({
     feedback,
 }: {
     mode?: "puzzle" | "regular";
-    feedbackFunction?: Dispatch<SetStateAction<PuzzleFeedback>>;
+    feedbackFunction?: (feedback: PuzzleFeedback, nodeId?: string) => void;
     puzzleTree?: Puzzle;
     feedback?: PuzzleFeedback;
 }) => {

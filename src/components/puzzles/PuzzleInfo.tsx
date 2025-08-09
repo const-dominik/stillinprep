@@ -1,13 +1,13 @@
 import { Puzzle, PuzzleFeedback } from "@/lib/types/types";
 import { Dispatch, SetStateAction } from "react";
 import { FaPlay } from "react-icons/fa";
-import styles from "./PuzzleInfo.module.scss";
+import styles from "./styles/PuzzleInfo.module.scss";
 
 const feedbacksMap: Record<PuzzleFeedback, string> = {
     go: "What should you play here?",
     other: "This is one of correct moves, what else can you play?",
     correct: "Puzzle solved!",
-    wrong: "Wrong move",
+    wrong: "Wrong move!",
     done: "All puzzles for this mode solved.",
 };
 
