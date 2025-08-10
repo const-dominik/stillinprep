@@ -237,11 +237,12 @@ export type ExplorerResponse = {
 export type ExplorerOptions = {
     fen: string;
     variant?: "standard" | "chess960";
-    speeds?: ("bullet" | "blitz" | "rapid" | "classical")[];
+    speeds?: TimeControl[];
     ratings?: number[]; //  [1600, 1800, 2000]
     moves?: number;
     topGames?: number;
     recentGames?: number;
+    database?: "players" | "masters";
 };
 
 export type PuzzleFeedback = "other" | "correct" | "wrong" | "go" | "done";
@@ -252,3 +253,5 @@ export type SpacedPuzzle = z.infer<typeof SpacedPuzzleSchema>;
 export type SpacedPuzzleData = {
     puzzles: Record<string, SpacedPuzzle>;
 };
+
+export type feedbackLine = { odds: string; line: string };

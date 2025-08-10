@@ -8,13 +8,18 @@ import StockfishAnalysis from "@/components/repertoire/stockfish/StockfishAnalys
 import { ConfirmProvider } from "@/lib/context/confirm/ConfirmContext";
 
 import { PositionProvider } from "@/lib/context/current-position/PositionContext";
-import { RepertoireProvider } from "@/lib/context/repertoire/RepertoireContext";
+import {
+    RepertoireProvider,
+    useRepertoire,
+} from "@/lib/context/repertoire/RepertoireContext";
 import { StockfishProvider } from "@/lib/context/stockfish/StockfishContext";
 import { DbRepertoire } from "@/lib/types/backend-types";
+import { MovePopualritySettings } from "@/lib/types/types";
+import { useState } from "react";
 import styles from "./Repertoire.module.scss";
 import HolesAnalysis from "./analysis/HolesAnalysis";
 
-const Repertoire = ({
+const RepertoireWithProviders = ({
     repertoireId,
     repertoireData,
 }: {
@@ -29,18 +34,7 @@ const Repertoire = ({
             >
                 <PositionProvider>
                     <StockfishProvider>
-                        <div className={styles["container"]}>
-                            <div className={styles["moves-info"]}>
-                                <StockfishAnalysis />
-                                <MovePopularity />
-                            </div>
-                            <ScoreMeter />
-                            <Chessboard />
-                            <div className={styles["right-side"]}>
-                                <HolesAnalysis />
-                                <MoveHistory mode="regular" />
-                            </div>
-                        </div>
+                        <Repertoire />
                     </StockfishProvider>
                 </PositionProvider>
             </RepertoireProvider>
@@ -48,4 +42,28 @@ const Repertoire = ({
     );
 };
 
-export default Repertoire;
+const Repertoire = () => {
+    const { timeControls, ratings } = useRepertoire();
+
+    const [settings, setSettings] = useState<MovePopualritySettings>({
+        timeControls,
+        ratings,
+    });
+
+    return (
+        <div className={styles["container"]}>
+            <div className={styles["moves-info"]}>
+                <StockfishAnalysis />
+                <MovePopularity settings={settings} setSettings={setSettings} />
+            </div>
+            <ScoreMeter />
+            <Chessboard />
+            <div className={styles["right-side"]}>
+                <HolesAnalysis settings={settings} />
+                <MoveHistory mode="regular" />
+            </div>
+        </div>
+    );
+};
+
+export default RepertoireWithProviders;

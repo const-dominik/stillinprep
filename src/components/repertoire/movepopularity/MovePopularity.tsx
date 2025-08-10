@@ -1,12 +1,11 @@
 import { usePosition } from "@/lib/context/current-position/PositionContext";
-import { useRepertoire } from "@/lib/context/repertoire/RepertoireContext";
 import {
     DbType,
     LichessResponse,
     MovePopualritySettings,
 } from "@/lib/types/types";
 import { moveToMoveHistory } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { CiSettings } from "react-icons/ci";
 import { useDebounce } from "use-debounce";
 import LichessDbSettings from "./LichessDbSettings";
@@ -14,15 +13,17 @@ import { getPopularMoves } from "./logic";
 import MoveItem from "./MoveItem";
 import styles from "./styles/MovePopularity.module.scss";
 
-const MovePopularity = () => {
-    const { timeControls, ratings } = useRepertoire();
+const MovePopularity = ({
+    settings,
+    setSettings,
+}: {
+    settings: MovePopualritySettings;
+    setSettings: Dispatch<SetStateAction<MovePopualritySettings>>;
+}) => {
     const { currentNode } = usePosition();
 
     const [db, setDb] = useState<DbType>("players");
-    const [settings, setSettings] = useState<MovePopualritySettings>({
-        timeControls,
-        ratings,
-    });
+
     const [toggleSettings, setToggleSettings] = useState(false);
     const [popularMoves, setPopularMoves] = useState<LichessResponse | null>(
         null

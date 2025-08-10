@@ -1,7 +1,7 @@
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { ExplorerOptions, ExplorerResponse } from "@/lib/types/types";
 
-const buildExplorerUrl = (options: ExplorerOptions): string => {
+export const buildExplorerUrl = (options: ExplorerOptions): string => {
     const params = new URLSearchParams();
 
     params.set("variant", options.variant ?? "standard");
@@ -25,6 +25,10 @@ const buildExplorerUrl = (options: ExplorerOptions): string => {
 
     if (options.recentGames !== undefined) {
         params.set("recentGames", options.recentGames.toString());
+    }
+
+    if (options.database !== undefined) {
+        params.set("database", options.database.toString());
     }
 
     return `https://explorer.lichess.ovh/lichess?${params.toString()}`;
@@ -51,7 +55,7 @@ const extractMoveCounts = (data: ExplorerResponse): [string, number][] => {
     return moves;
 };
 
-export const getRepertoireFeedback = async (
+const getRepertoireFeedback = async (
     subTree: MovesTreeNode,
     explorerOptions: ExplorerOptions
 ): Promise<[string, number][]> => {
@@ -71,6 +75,7 @@ export const getRepertoireFeedback = async (
         const loadedMoves: [string, number][] = extractMoveCounts(data);
         const checkmoves: [string, number][] = [];
         const deeperMoves: [string, number][] = [];
+        if (sumGames(data) < 5) return [];
 
         for (const child of node.children) {
             const childMove = child.getAlgebraicNotation();
@@ -82,16 +87,11 @@ export const getRepertoireFeedback = async (
                 checkmoves.push(move);
 
                 for (const grandchild of child.children) {
-                    deeperMoves.push(
-                        ...(await getData(
-                            grandchild,
-                            moves +
-                                " " +
-                                move[0] +
-                                " " +
-                                grandchild.getAlgebraicNotation()
-                        ))
+                    const newMoves = await getData(
+                        grandchild,
+                        `${moves} ${move[0]} ${grandchild.getAlgebraicNotation()}`
                     );
+                    deeperMoves.push(...newMoves);
                 }
             }
         }
@@ -112,7 +112,7 @@ export const getRepertoireFeedback = async (
     const rawMoves = await getData(subTree, subTree.getAlgebraicNotation());
 
     const normalizedMoves: [string, number][] = rawMoves.map(
-        ([move, count]) => [move, (count / allGames) * 100]
+        ([move, count]) => [move, count / allGames]
     );
 
     const sortedMoves = normalizedMoves.toSorted((a, b) => b[1] - a[1]);
@@ -123,4 +123,36 @@ export const getRepertoireFeedback = async (
     });
 
     return readyMoves;
+};
+
+export const getFeedback = async (
+    color: "white" | "black",
+    subTree: MovesTreeNode,
+    explorerOptions: ExplorerOptions
+): Promise<[string, number][]> => {
+    if (subTree.getCurrentPlayer() !== color) {
+        return await getRepertoireFeedback(subTree, explorerOptions);
+    }
+
+    const lines: [string, number][][] = await Promise.all(
+        subTree.children.map((node) =>
+            getRepertoireFeedback(node, explorerOptions)
+        )
+    );
+
+    return lines.flat();
+};
+
+export const getFraction = (odds: number): string => {
+    const limit = 2500;
+    let i = 1;
+    while (1 / i > odds) {
+        if (i >= limit) return "less 1/2500";
+
+        i += 1;
+    }
+
+    if (i > 1000) i = i - (i % 100);
+    if (i > 100) i = i - (i % 10);
+    return "1/" + String(i);
 };
