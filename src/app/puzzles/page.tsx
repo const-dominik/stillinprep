@@ -1,16 +1,27 @@
+"use server";
+
 import PuzzlePage from "@/components/puzzles/PuzzlePage";
+import { getSpacedRepetitionData } from "@/lib/actions/puzzles";
 import { getGlobalRepertoire, getRepertoires } from "@/lib/actions/repertoire";
 
 const Page = async () => {
-    // download user repertoires and pass them all?
-    const paths = await getGlobalRepertoire();
-    const repertoires = await getRepertoires();
+    const pathsPromise = getGlobalRepertoire();
+    const repertoriesPromise = getRepertoires();
+    const spacedDataPromise = getSpacedRepetitionData();
+
+    const [paths, repertoires, spacedData] = await Promise.all([
+        pathsPromise,
+        repertoriesPromise,
+        spacedDataPromise,
+    ]);
 
     if (
         !paths.success ||
         !paths.value ||
         !repertoires.success ||
-        !repertoires.value
+        !repertoires.value ||
+        !spacedData.success ||
+        !spacedData.value
     ) {
         throw new Error("Something went wrong!");
     }
@@ -19,6 +30,7 @@ const Page = async () => {
         <PuzzlePage
             paths={paths.value}
             repertoires={repertoires.value["owned"]}
+            spacedData={spacedData.value}
         />
     );
 };

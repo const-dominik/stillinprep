@@ -4,24 +4,17 @@ import { ConfirmProvider } from "@/lib/context/confirm/ConfirmContext";
 import { PositionProvider } from "@/lib/context/current-position/PositionContext";
 import { RepertoireProvider } from "@/lib/context/repertoire/RepertoireContext";
 import { DbGlobalRepertoire, DbRepertoires } from "@/lib/types/backend-types";
-import { MyOption, Puzzle, PuzzleMode } from "@/lib/types/types";
-import { useEffect, useState } from "react";
+import { SpacedPuzzleData } from "@/lib/types/types";
 import Chessboard from "../repertoire/chessboard/Chessboard";
 import MoveHistory from "../repertoire/history/MoveHistory";
 import { MovesTreeNode } from "../utils/MovesTree";
+import { createRepertoire, usePuzzleManager } from "./logic";
 import PuzzleInfo from "./PuzzleInfo";
 import PuzzleModeChoice from "./PuzzleModeChoice";
-import styles from "./PuzzlePage.module.scss";
-import {
-    createRepertoire,
-    useAutoSkip,
-    useGlobalPuzzles,
-    usePuzzleQueue,
-    useRepertoirePuzzles,
-} from "./logic";
+import styles from "./styles/PuzzlePage.module.scss";
 
-const basePuzzle: Puzzle = {
-    color: "white",
+const basePuzzle = {
+    color: "white" as const,
     root: new MovesTreeNode(),
     startingNode: new MovesTreeNode(),
     targetNode: new MovesTreeNode(),
@@ -32,45 +25,27 @@ const basePuzzle: Puzzle = {
 const PuzzlePage = ({
     paths,
     repertoires,
+    spacedData,
 }: {
     paths: DbGlobalRepertoire;
     repertoires: DbRepertoires["owned"];
+    spacedData: SpacedPuzzleData;
 }) => {
-    const [mode, setMode] = useState<PuzzleMode>("global");
-    const [repertoire, setRepertoire] = useState<MyOption | null>(null);
-
-    const globalPuzzles = useGlobalPuzzles(paths);
-
-    const { fetchRepertoirePuzzles, loading: repertoireLoading } =
-        useRepertoirePuzzles();
     const {
+        mode,
+        setMode,
+        repertoire,
+        setRepertoire,
         currentPuzzle,
         feedback,
-        setFeedback,
+        handleFeedback,
         nextPuzzle,
-        loadPuzzles,
-        resetFeedback,
-    } = usePuzzleQueue();
-    const { autoSkip, setAutoSkip } = useAutoSkip(feedback, nextPuzzle);
-
-    useEffect(() => {
-        const loadPuzzlesForMode = async () => {
-            if (mode === "global" && globalPuzzles.length > 0) {
-                loadPuzzles(globalPuzzles);
-            } else if (mode === "repertoire" && repertoire) {
-                const puzzles = await fetchRepertoirePuzzles(repertoire.value);
-                if (puzzles.length > 0) {
-                    loadPuzzles(puzzles);
-                }
-            }
-        };
-
-        loadPuzzlesForMode();
-    }, [mode, repertoire, globalPuzzles, loadPuzzles, fetchRepertoirePuzzles]);
-
-    useEffect(() => {
-        resetFeedback();
-    }, [currentPuzzle, resetFeedback]);
+        autoSkip,
+        setAutoSkip,
+        loading,
+        puzzlesNotLoaded,
+        spacedPuzzlesRemaining,
+    } = usePuzzleManager(paths, spacedData);
 
     const puzzle = currentPuzzle || basePuzzle;
 
@@ -89,7 +64,7 @@ const PuzzlePage = ({
                         <Chessboard
                             mode="puzzle"
                             puzzleTree={puzzle}
-                            feedbackFunction={setFeedback}
+                            feedbackFunction={handleFeedback}
                             feedback={feedback}
                         />
                         <div>
@@ -99,6 +74,7 @@ const PuzzlePage = ({
                                 repertoires={repertoires}
                                 repertoire={repertoire}
                                 setRepertoire={setRepertoire}
+                                spacedPuzzlesAmount={spacedPuzzlesRemaining}
                             />
                             <PuzzleInfo
                                 puzzle={puzzle}
@@ -106,9 +82,9 @@ const PuzzlePage = ({
                                 autoSkip={autoSkip}
                                 setAutoSkip={setAutoSkip}
                                 nextPuzzle={nextPuzzle}
-                                waiting={repertoireLoading}
-                                puzzlesNotLoaded={!currentPuzzle}
-                                repertoireLoading={repertoireLoading}
+                                waiting={loading}
+                                puzzlesNotLoaded={puzzlesNotLoaded}
+                                repertoireLoading={loading}
                             />
                         </div>
                     </div>
@@ -117,4 +93,5 @@ const PuzzlePage = ({
         </ConfirmProvider>
     );
 };
+
 export default PuzzlePage;

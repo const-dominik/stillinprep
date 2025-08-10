@@ -1,5 +1,5 @@
 import { validatePassword } from "@/components/auth-forms/utils";
-import { z } from "zod/v4";
+import { json, z } from "zod/v4";
 import { nicknameRegex } from "../utils";
 
 export const BaseNodeSchema = z.object({
@@ -202,4 +202,28 @@ export const SharedRepertoireData = z.object({
         id: z.string(),
         nickname: z.string().min(3),
     }),
+});
+
+const stringToJSONSchema = z
+    .string()
+    .transform((str, ctx): z.infer<ReturnType<typeof json>> => {
+        try {
+            return JSON.parse(str);
+        } catch {
+            ctx.addIssue({ code: "custom", message: "Invalid JSON" });
+            return z.NEVER;
+        }
+    });
+
+export const SpacedPuzzleSchema = z.object({
+    next_attempt: z.string().refine((val) => !isNaN(Date.parse(val)), {
+        message: "Invalid date format",
+    }),
+    ease_factor: z.number().nonnegative(),
+    interval: z.number().int().nonnegative(),
+    repetition: z.number().int().nonnegative(),
+});
+
+export const SpacedPuzzleDataSchema = z.object({
+    puzzles: stringToJSONSchema.pipe(z.record(z.string(), SpacedPuzzleSchema)),
 });

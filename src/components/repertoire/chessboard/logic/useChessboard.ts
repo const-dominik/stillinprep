@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
     getBoardAfterMove,
@@ -51,7 +51,7 @@ const isMoveSame = (
 
 export const useChessboard = (
     mode: "regular" | "puzzle" = "regular",
-    feedbackFunction?: Dispatch<SetStateAction<PuzzleFeedback>>,
+    feedbackFunction?: (feedback: PuzzleFeedback, nodeId?: string) => void,
     puzzleTree?: Puzzle,
     feedback?: PuzzleFeedback
 ) => {
@@ -115,7 +115,7 @@ export const useChessboard = (
         ) {
             feedbackFunction!("other");
         } else {
-            feedbackFunction!("wrong");
+            feedbackFunction!("wrong", currentNode.getMoveHash());
         }
     };
 

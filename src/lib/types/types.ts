@@ -6,6 +6,7 @@ import {
     PathSchema,
     PopularMove,
     RepertoireSchema,
+    SpacedPuzzleSchema,
 } from "../schema";
 
 export const enum Pieces {
@@ -244,3 +245,8 @@ export type ExplorerOptions = {
 export type PuzzleFeedback = "other" | "correct" | "wrong" | "go" | "done";
 export type PuzzleMode = "global" | "spaced" | "repertoire";
 export type MyOption = { label: string; value: string };
+
+export type SpacedPuzzle = z.infer<typeof SpacedPuzzleSchema>;
+export type SpacedPuzzleData = {
+    puzzles: Record<string, SpacedPuzzle>;
+};
