@@ -1,6 +1,6 @@
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { Analysis, Stockfish, StockfishAPI } from "@/lib/types/types";
-import { getOppositePlayer, moveToMoveHistory } from "@/lib/utils";
+import { getOppositePlayer } from "@/lib/utils";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { parseStockfishLine } from "./logic/stockfish";
 
@@ -22,7 +22,7 @@ export const useStockfish = (
     }, []);
 
     const setPositionAndGo = useCallback(
-        (moves: string) => {
+        (fen: string) => {
             if (!engineRef.current) return;
 
             sendCommand("stop");
@@ -30,7 +30,7 @@ export const useStockfish = (
 
             sendCommand("ucinewgame");
             sendCommand("setoption name MultiPV value 3");
-            sendCommand(`position startpos moves ${moves}`);
+            sendCommand(`position fen ${fen}`);
             sendCommand(`go depth ${depth}`);
         },
         [sendCommand, depth]
@@ -48,7 +48,7 @@ export const useStockfish = (
 
     // run new analysis on ready/node/depth change
     useEffect(() => {
-        setPositionAndGo(moveToMoveHistory(currentNode));
+        setPositionAndGo(currentNode.getFEN());
     }, [isReady, currentNode, depth, setPositionAndGo]);
 
     const flushBufferedUpdates = () => {
