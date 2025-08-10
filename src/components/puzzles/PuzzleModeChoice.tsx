@@ -1,7 +1,7 @@
 import { DbRepertoires } from "@/lib/types/backend-types";
 import { MyOption, PuzzleMode } from "@/lib/types/types";
 import { Dispatch, SetStateAction } from "react";
-import Select, { type StylesConfig } from "react-select";
+import { SelectRepertoire } from "../utils/Utils";
 import styles from "./styles/PuzzleModeChoice.module.scss";
 
 const getClasses = (mode: PuzzleMode, element: PuzzleMode) => {
@@ -11,64 +11,21 @@ const getClasses = (mode: PuzzleMode, element: PuzzleMode) => {
     return classes.join(" ");
 };
 
-const customSelectStyles: StylesConfig<MyOption> = {
-    control: (base) => ({
-        ...base,
-        background: "transparent",
-        border: "1px solid var(--palette-7)",
-        fontSize: "1rem",
-        color: "var(--palette-1)",
-        boxShadow: "none",
-        outline: "none",
-        cursor: "pointer",
-
-        "&:hover": {
-            borderColor: "var(--palette-7)",
-        },
-    }),
-    singleValue: (base) => ({
-        ...base,
-        color: "var(--palette-1)",
-    }),
-    menu: (base) => ({
-        ...base,
-        backgroundColor: "var(--palette-5)",
-        color: "var(--palette-1)",
-        borderRadius: "5px",
-        zIndex: 10,
-    }),
-    option: (base, state) => ({
-        ...base,
-        backgroundColor: state.isFocused ? "var(--palette-6)" : "transparent",
-        color: "var(--palette-1)",
-        cursor: "pointer",
-
-        ":active": {
-            backgroundColor: "var(--palette-6)",
-        },
-    }),
-};
-
 const PuzzleModeChoice = ({
     mode,
     setMode,
     repertoires,
     repertoire,
-    setRepertoires,
+    setRepertoire,
     spacedPuzzlesAmount,
 }: {
     mode: PuzzleMode;
-    setMode: Dispatch<SetStateAction<PuzzleMode>>;
     repertoires: DbRepertoires["owned"];
     repertoire: MyOption | null;
-    setRepertoires: Dispatch<SetStateAction<MyOption | null>>;
+    setMode: Dispatch<SetStateAction<PuzzleMode>>;
+    setRepertoire: Dispatch<SetStateAction<MyOption | null>>;
     spacedPuzzlesAmount: number;
 }) => {
-    const options = repertoires.map((repertoire) => ({
-        value: repertoire.id,
-        label: repertoire.name,
-    }));
-
     return (
         <div className={styles.container}>
             <div className={styles.header}>PUZZLE MODE</div>
@@ -85,19 +42,11 @@ const PuzzleModeChoice = ({
                 >
                     repertoire
                     {mode === "repertoire" && (
-                        <Select<MyOption, false>
-                            styles={customSelectStyles}
-                            options={options}
-                            placeholder="Choose repertoire.."
-                            onChange={(selected) => {
-                                setRepertoires(selected);
-                            }}
-                            isSearchable={false}
-                            value={
-                                options.find(
-                                    (opt) => opt.value === repertoire?.value
-                                ) ?? null
-                            }
+                        <SelectRepertoire
+                            instanceId="select-puzzle-repertoire"
+                            repertoires={repertoires}
+                            setRepertoire={setRepertoire}
+                            chosenRepertoire={repertoire}
                         />
                     )}
                 </div>

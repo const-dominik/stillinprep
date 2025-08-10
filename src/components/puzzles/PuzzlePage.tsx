@@ -73,7 +73,7 @@ const PuzzlePage = ({
                                 setMode={setMode}
                                 repertoires={repertoires}
                                 repertoire={repertoire}
-                                setRepertoires={setRepertoire}
+                                setRepertoire={setRepertoire}
                                 spacedPuzzlesAmount={spacedPuzzlesRemaining}
                             />
                             <PuzzleInfo

@@ -1,10 +1,13 @@
 "use client";
 
+import { DbRepertoires } from "@/lib/types/backend-types";
+import { MyOption } from "@/lib/types/types";
 import { capitalize } from "@/lib/utils";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import { type FieldError, type UseFormRegisterReturn } from "react-hook-form";
+import Select, { StylesConfig } from "react-select";
 import styles from "./Utils.module.scss";
 
 export const WindowElement = ({ children }: { children: ReactNode }) => {
@@ -103,3 +106,75 @@ export const LoginWith = ({ provider }: { provider: "google" | "github" }) => (
         </span>
     </div>
 );
+
+const customSelectStyles: StylesConfig<MyOption> = {
+    control: (base) => ({
+        ...base,
+        background: "transparent",
+        border: "1px solid var(--palette-7)",
+        fontSize: "1rem",
+        color: "var(--palette-1)",
+        boxShadow: "none",
+        outline: "none",
+        cursor: "pointer",
+
+        "&:hover": {
+            borderColor: "var(--palette-7)",
+        },
+    }),
+    singleValue: (base) => ({
+        ...base,
+        color: "var(--palette-1)",
+    }),
+    menu: (base) => ({
+        ...base,
+        backgroundColor: "var(--palette-5)",
+        color: "var(--palette-1)",
+        borderRadius: "5px",
+        zIndex: 10,
+    }),
+    option: (base, state) => ({
+        ...base,
+        backgroundColor: state.isFocused ? "var(--palette-6)" : "transparent",
+        color: "var(--palette-1)",
+        cursor: "pointer",
+
+        ":active": {
+            backgroundColor: "var(--palette-6)",
+        },
+    }),
+};
+
+export const SelectRepertoire = ({
+    repertoires,
+    setRepertoire,
+    chosenRepertoire,
+    instanceId,
+}: {
+    repertoires: DbRepertoires["owned"];
+    setRepertoire: Dispatch<SetStateAction<MyOption | null>>;
+    chosenRepertoire: MyOption | null;
+    instanceId: string;
+}) => {
+    const options: MyOption[] = repertoires.map((repertoire) => ({
+        value: repertoire.id,
+        label: repertoire.name,
+    }));
+
+    return (
+        <Select<MyOption, false>
+            styles={customSelectStyles}
+            options={options}
+            placeholder="Choose repertoire.."
+            onChange={(selected) => {
+                setRepertoire(selected);
+            }}
+            instanceId={instanceId}
+            isSearchable={false}
+            value={
+                options.find((opt) => opt.value === chosenRepertoire?.value) ??
+                null
+            }
+        />
+    );
+};
