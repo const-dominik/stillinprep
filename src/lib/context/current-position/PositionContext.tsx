@@ -24,18 +24,21 @@ export const PositionProvider = ({
     passedLast?: MovesTreeNode;
 }) => {
     let last: MovesTreeNode;
+    let root: MovesTreeNode;
 
     const { paths } = useRepertoire();
-
-    if (passedLast) {
+    if (passedLast && passedRoot) {
+        root = passedRoot;
         last = passedLast;
     } else {
-        const [, computedLast] = mergePathsIntoTree(paths);
+        const [computedRoot, computedLast] = mergePathsIntoTree(paths);
         last = computedLast;
+        root = computedRoot;
     }
 
     const [currentNode, setCurrentNode] = useState(last);
     const [lastNode, setLastNode] = useState(last);
+    const [analysisNode, setAnalysisNode] = useState(root);
 
     useEffect(() => {
         if (passedLast) {
@@ -54,7 +57,14 @@ export const PositionProvider = ({
 
     return (
         <PositionContext.Provider
-            value={{ currentNode, setCurrentNode, lastNode, setLastNode }}
+            value={{
+                currentNode,
+                setCurrentNode,
+                lastNode,
+                setLastNode,
+                analysisNode,
+                setAnalysisNode,
+            }}
         >
             {children}
         </PositionContext.Provider>

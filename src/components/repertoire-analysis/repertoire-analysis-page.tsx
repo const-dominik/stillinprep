@@ -1,87 +1,89 @@
-"use client";
+// TO DO USUNIECIA ALE ZOSTAWIAM JAKBYS MUSIAL COS TU TESTOWAC
 
-import { SelectRepertoire } from "@/components/utils/Utils";
-import { getRepertoire } from "@/lib/actions/repertoire";
-import { DbRepertoires } from "@/lib/types/backend-types";
-import { ExplorerOptions, MyOption } from "@/lib/types/types";
-import { useEffect, useState } from "react";
-import { flattenResult, mergePathsIntoTree } from "../utils/parseDbResponse";
-import { getRepertoireFeedback } from "./logic";
+// "use client";
 
-type Props = {
-    repertoires: DbRepertoires["owned"];
-};
+// import { SelectRepertoire } from "@/components/utils/Utils";
+// import { getRepertoire } from "@/lib/actions/repertoire";
+// import { DbRepertoires } from "@/lib/types/backend-types";
+// import { ExplorerOptions, MyOption } from "@/lib/types/types";
+// import { useEffect, useState } from "react";
+// import { flattenResult, mergePathsIntoTree } from "../utils/parseDbResponse";
+// import { getRepertoireFeedback } from "./logic";
 
-const RepertoireAnalysis = ({ repertoires }: Props) => {
-    const [statsText, setStatsText] = useState("Choose repertoire");
-    const [repertoire, setRepertoire] = useState<MyOption | null>(null);
-    const [loading, setLoading] = useState(false);
+// type Props = {
+//     repertoires: DbRepertoires["owned"];
+// };
 
-    useEffect(() => {
-        if (!repertoire?.value) return;
+// const RepertoireAnalysis = ({ repertoires }: Props) => {
+//     const [statsText, setStatsText] = useState("Choose repertoire");
+//     const [repertoire, setRepertoire] = useState<MyOption | null>(null);
+//     const [loading, setLoading] = useState(false);
 
-        const fetchData = async () => {
-            setLoading(true);
-            setStatsText(
-                `Wybrany repertuar: ${repertoire.label || repertoire.value}`
-            );
+//     useEffect(() => {
+//         if (!repertoire?.value) return;
 
-            try {
-                const data = await getRepertoire(repertoire.value);
-                if (data.success && data.value) {
-                    const [root] = mergePathsIntoTree(
-                        flattenResult(data.value.paths)
-                    );
+//         const fetchData = async () => {
+//             setLoading(true);
+//             setStatsText(
+//                 `Wybrany repertuar: ${repertoire.label || repertoire.value}`
+//             );
 
-                    if (data.value.color === "white") {
-                        const moves: [string, number][] = [];
-                        const explorerOptions: ExplorerOptions = {
-                            variant: "standard",
-                            fen: root.getFEN(),
-                            speeds: ["rapid"],
-                            ratings: [1600, 1800],
-                        };
+//             try {
+//                 const data = await getRepertoire(repertoire.value);
+//                 if (data.success && data.value) {
+//                     const [root] = mergePathsIntoTree(
+//                         flattenResult(data.value.paths)
+//                     );
 
-                        // Pobranie ruchów z feedbacku
-                        const movesOfChilds = await getRepertoireFeedback(
-                            root,
-                            explorerOptions
-                        );
-                        moves.push(...movesOfChilds);
+//                     if (data.value.color === "white") {
+//                         const moves: [string, number][] = [];
+//                         const explorerOptions: ExplorerOptions = {
+//                             variant: "standard",
+//                             fen: root.getFEN(),
+//                             speeds: ["rapid"],
+//                             ratings: [1600, 1800],
+//                         };
 
-                        // Sortowanie i dopisywanie do tekstu
-                        moves.sort((a, b) => b[1] - a[1]);
-                        const movesText = moves
-                            .map(
-                                ([move, prob]) =>
-                                    `\nProbability: ${prob}, move order: ${move}`
-                            )
-                            .join("");
+//                         // Pobranie ruchów z feedbacku
+//                         const movesOfChilds = await getRepertoireFeedback(
+//                             root,
+//                             explorerOptions
+//                         );
+//                         moves.push(...movesOfChilds);
 
-                        setStatsText((prev) => prev + movesText);
-                    }
-                }
-            } catch (err: any) {
-                setStatsText(`Błąd pobierania danych: ${err.message}`);
-            } finally {
-                setLoading(false);
-            }
-        };
+//                         // Sortowanie i dopisywanie do tekstu
+//                         moves.sort((a, b) => b[1] - a[1]);
+//                         const movesText = moves
+//                             .map(
+//                                 ([move, prob]) =>
+//                                     `\nProbability: ${prob}, move order: ${move}`
+//                             )
+//                             .join("");
 
-        fetchData();
-    }, [repertoire]);
+//                         setStatsText((prev) => prev + movesText);
+//                     }
+//                 }
+//             } catch (err: any) {
+//                 setStatsText(`Błąd pobierania danych: ${err.message}`);
+//             } finally {
+//                 setLoading(false);
+//             }
+//         };
 
-    return (
-        <div style={{ whiteSpace: "pre-wrap", fontFamily: "monospace" }}>
-            <SelectRepertoire
-                instanceId="repertoire-select-analysis"
-                repertoires={repertoires}
-                chosenRepertoire={repertoire}
-                setRepertoire={setRepertoire}
-            />
-            {loading ? "\nLoading..." : `\n${statsText}`}
-        </div>
-    );
-};
+//         fetchData();
+//     }, [repertoire]);
 
-export default RepertoireAnalysis;
+//     return (
+//         <div style={{ whiteSpace: "pre-wrap", fontFamily: "monospace" }}>
+//             <SelectRepertoire
+//                 instanceId="repertoire-select-analysis"
+//                 repertoires={repertoires}
+//                 chosenRepertoire={repertoire}
+//                 setRepertoire={setRepertoire}
+//             />
+//             {loading ? "\nLoading..." : `\n${statsText}`}
+//         </div>
+//     );
+// };
+
+// export default RepertoireAnalysis;

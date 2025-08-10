@@ -123,6 +123,9 @@ const LichessDbSettings = ({
                         );
                     })}
                 </div>
+                <div className={styles.info}>
+                    These settings also apply to Repertoire analysis.
+                </div>
             </div>
         </div>
     );

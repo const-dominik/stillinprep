@@ -174,8 +174,10 @@ export type RepertoireData = {
 export type PositionContextValue = {
     currentNode: MovesTreeNode;
     lastNode: MovesTreeNode;
+    analysisNode: MovesTreeNode;
     setCurrentNode: (n: MovesTreeNode) => void;
     setLastNode: (n: MovesTreeNode) => void;
+    setAnalysisNode: (n: MovesTreeNode) => void;
 };
 
 export type PendingPromotion = {

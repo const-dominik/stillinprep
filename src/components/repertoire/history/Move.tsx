@@ -11,9 +11,11 @@ const Move = ({
     move,
     setLine,
     mode,
+    isAnalysisNode,
 }: {
     move: MovesTreeNode;
     setLine: (node: MovesTreeNode) => void;
+    isAnalysisNode: boolean;
     mode?: "regular" | "puzzle";
 }) => {
     const { currentNode, setLastNode, setCurrentNode } = usePosition();
@@ -28,7 +30,15 @@ const Move = ({
     const classes = [styles["move"]];
 
     if (isCurrentNode) {
-        classes.push(styles["current-move"]);
+        if (isAnalysisNode) {
+            classes.push(styles["current-analysis"]);
+        } else {
+            classes.push(styles["current-move"]);
+        }
+    }
+
+    if (isAnalysisNode && !isCurrentNode) {
+        classes.push(styles["analysis-node"]);
     }
 
     const handleDbRelations = (node: MovesTreeNode) => {
@@ -75,6 +85,7 @@ const Move = ({
             onClick={() => setCurrentNode(move)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            title={isAnalysisNode ? "Analysing path from this move" : ""}
         >
             {move.getAlgebraicNotation()}
             {isHovered && (!mode || mode === "regular") && (

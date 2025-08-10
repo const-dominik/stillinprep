@@ -19,3 +19,12 @@
 .current-move {
     background: color.adjust(v.$palette-7, $lightness: -10%);
 }
+
+.analysis-node {
+    background: v.$secondary-dark;
+}
+
+.current-analysis {
+    background: v.$secondary-light;
+    color: v.$palette-2;
+}

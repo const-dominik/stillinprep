@@ -25,7 +25,7 @@
 
 .move-history {
     width: calc(#{v.$square-size} * 4);
-    height: calc(#{v.$square-size} * 8);
+    height: calc(#{v.$square-size} * 4);
     background: v.$palette-7;
     margin-left: 1rem;
     display: flex;

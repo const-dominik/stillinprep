@@ -12,6 +12,7 @@ import { RepertoireProvider } from "@/lib/context/repertoire/RepertoireContext";
 import { StockfishProvider } from "@/lib/context/stockfish/StockfishContext";
 import { DbRepertoire } from "@/lib/types/backend-types";
 import styles from "./Repertoire.module.scss";
+import HolesAnalysis from "./analysis/HolesAnalysis";
 
 const Repertoire = ({
     repertoireId,
@@ -35,7 +36,10 @@ const Repertoire = ({
                             </div>
                             <ScoreMeter />
                             <Chessboard />
-                            <MoveHistory mode="regular" />
+                            <div className={styles["right-side"]}>
+                                <HolesAnalysis />
+                                <MoveHistory mode="regular" />
+                            </div>
                         </div>
                     </StockfishProvider>
                 </PositionProvider>
