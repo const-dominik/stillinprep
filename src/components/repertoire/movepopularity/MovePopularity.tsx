@@ -4,7 +4,6 @@ import {
     LichessResponse,
     MovePopualritySettings,
 } from "@/lib/types/types";
-import { moveToMoveHistory } from "@/lib/utils";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { CiSettings } from "react-icons/ci";
 import { useDebounce } from "use-debounce";
@@ -37,7 +36,7 @@ const MovePopularity = ({
             const moves = await getPopularMoves(
                 db,
                 debouncedSettings,
-                moveToMoveHistory(debouncedCurrentNode, ",")
+                currentNode
             );
             setPopularMoves(moves);
         };

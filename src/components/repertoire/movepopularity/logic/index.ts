@@ -1,66 +1,32 @@
+import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { LichessMovePopularityResponse } from "@/lib/schema";
 import {
     DbType,
-    LiAPIQueryParameters,
+    ExplorerOptions,
     LichessPopularMove,
     LiDbRating,
     MovePopualritySettings,
 } from "@/lib/types/types";
 import { avgRatingsToRatings } from "@/lib/utils";
-
-const getQueryParameters = (
-    dbType: DbType,
-    settings: MovePopualritySettings,
-    moves: string
-): LiAPIQueryParameters => {
-    const common = {
-        play: moves,
-        moves: 6,
-    };
-    const db = dbType === "players" ? "lichess" : "masters";
-
-    if (db === "lichess") {
-        return {
-            ...common,
-            db,
-            variant: "standard",
-            speeds: settings.timeControls,
-            ratings: settings.ratings.reduce<LiDbRating[]>(
-                (prev, curr) => [...prev, ...avgRatingsToRatings[curr]],
-                []
-            ),
-        };
-    }
-
-    return {
-        ...common,
-        db,
-    };
-};
-
-const buildURL = (parameters: LiAPIQueryParameters): string => {
-    const base = `https://explorer.lichess.ovh/${parameters.db}`;
-    const query = new URLSearchParams({
-        play: parameters.play,
-        moves: parameters.moves.toString(),
-    });
-
-    if (parameters.db === "lichess") {
-        query.set("variant", parameters.variant);
-        query.set("speeds", parameters.speeds.join(","));
-        query.set("ratings", parameters.ratings.join(","));
-    }
-
-    return `${base}?${query.toString()}`;
-};
+import { buildExplorerUrl } from "../../repertoire-utils";
 
 export const getPopularMoves = async (
     dbType: DbType,
     settings: MovePopualritySettings,
-    moves: string
+    node: MovesTreeNode
 ) => {
-    const parameters = getQueryParameters(dbType, settings, moves);
-    const URL = buildURL(parameters);
+    const parameters: ExplorerOptions = {
+        fen: node.getFEN(),
+        database: dbType,
+        variant: "standard",
+        speeds: settings.timeControls,
+        moves: 6,
+        ratings: settings.ratings.reduce<LiDbRating[]>(
+            (prev, curr) => [...prev, ...avgRatingsToRatings[curr]],
+            []
+        ),
+    };
+    const URL = buildExplorerUrl(parameters);
 
     const response = await fetch(URL);
     const data = await response.json();
