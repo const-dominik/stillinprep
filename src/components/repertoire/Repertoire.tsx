@@ -34,8 +34,10 @@ const Repertoire = ({
                                 <StockfishAnalysis />
                                 <MovePopularity />
                             </div>
-                            <ScoreMeter />
-                            <Chessboard />
+                            <div className={styles["chess-meter"]}>
+                                <ScoreMeter />
+                                <Chessboard />
+                            </div>
                             <div className={styles["right-side"]}>
                                 <HolesAnalysis />
                                 <MoveHistory mode="regular" />

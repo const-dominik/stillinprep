@@ -65,7 +65,7 @@ const MovePopularity = () => {
                     className={getDbOptionClass(isPlayersDb)}
                     onClick={() => setDb("players")}
                 >
-                    Players
+                    <div className={styles["db-option"]}>Players</div>
                     {isPlayersDb && (
                         <CiSettings
                             className={styles["toggle-settings"]}
@@ -78,7 +78,7 @@ const MovePopularity = () => {
                     className={getDbOptionClass(!isPlayersDb)}
                     onClick={() => setDb("masters")}
                 >
-                    Masters
+                    <div className={styles["db-option"]}>Masters</div>
                 </div>
             </div>
             {db === "players" && toggleSettings && (
@@ -89,26 +89,28 @@ const MovePopularity = () => {
             )}
             {popularMoves && (!toggleSettings || db === "masters") && (
                 <div className={styles["popular-moves-container"]}>
-                    {popularMoves.moves.map((move) => {
-                        const totalGames =
-                            popularMoves.black +
-                            popularMoves.draws +
-                            popularMoves.white;
+                    <div>
+                        {popularMoves.moves.map((move) => {
+                            const totalGames =
+                                popularMoves.black +
+                                popularMoves.draws +
+                                popularMoves.white;
 
-                        return (
-                            <MoveItem
-                                move={move}
-                                totalGames={totalGames}
-                                key={move.san}
-                            />
-                        );
-                    })}
-                    {popularMoves.moves.length === 0 && (
-                        <div className={styles["no-move-info"]}>
-                            No results for this position. You might be making
-                            history!
-                        </div>
-                    )}
+                            return (
+                                <MoveItem
+                                    move={move}
+                                    totalGames={totalGames}
+                                    key={move.san}
+                                />
+                            );
+                        })}
+                        {popularMoves.moves.length === 0 && (
+                            <div className={styles["no-move-info"]}>
+                                No results for this position. You might be
+                                making history!
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

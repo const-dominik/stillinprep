@@ -5,7 +5,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem;
+    padding: calc(v.$square-size * 0.125);
     width: 100%;
 }
 
@@ -15,12 +15,12 @@
     justify-content: center;
     align-items: center;
     border: 1px solid v.$palette-6;
-    width: 1.5rem;
-    height: 1.5rem;
-    font-size: 1.25rem;
+    width: calc(v.$square-size * 0.375);
+    height: calc(v.$square-size * 0.375);
+    font-size: calc(v.$square-size * 0.3125);
     color: v.$palette-4;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: calc(v.$square-size * 0.125);
     overflow: hidden;
 
     &:hover {
@@ -29,13 +29,17 @@
 }
 
 .depth-display {
-    font-size: 0.9rem;
+    font-size: calc(v.$square-size * 0.225);
     color: v.$palette-4;
 }
 
 .depth-info {
-    font-size: 0.7rem;
+    font-size: calc(v.$square-size * 0.175);
     color: v.$palette-4;
     text-align: center;
-    margin-bottom: 0.2rem;
+    margin-bottom: calc(v.$square-size * 0.05);
+}
+
+.depth-title {
+    font-size: calc(v.$square-size * 0.24);
 }

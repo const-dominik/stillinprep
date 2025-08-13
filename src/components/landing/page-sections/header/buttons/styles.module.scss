@@ -1,0 +1,26 @@
+@use "@/styles/variables" as v;
+
+.button {
+    background: v.$palette-7;
+    padding: 1rem;
+    color: v.$palette-2;
+    border-radius: 5px;
+    cursor: pointer;
+
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: center;
+
+    &:hover {
+        background: v.$palette-6;
+    }
+}
+
+.link {
+    all: unset;
+    cursor: pointer;
+    display: inline-block;
+}

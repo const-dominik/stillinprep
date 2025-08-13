@@ -1,47 +1,48 @@
 @use "@/styles/variables" as v;
 
 .container {
-    margin-top: 1rem;
+    margin-top: calc(v.$square-size * 0.25);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
+    padding: calc(v.$square-size * 0.25);
     background: v.$palette-7;
     border-radius: 5px;
-    width: 20vw;
+    width: calc(v.$square-size * 4);
     user-select: none;
 }
 
 .whose-turn {
     font-weight: bold;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+    font-size: calc(v.$square-size * 0.25);
+    margin-bottom: calc(v.$square-size * 0.2);
     color: v.$palette-2;
 }
 
 .feedback {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
+    font-size: calc(v.$square-size * 0.2);
+    margin-bottom: calc(v.$square-size * 0.15);
     text-align: center;
 }
 
 .auto-puzzle {
     display: flex;
-    gap: 0.5rem;
+    gap: calc(v.$square-size * 0.1);
+    font-size: calc(v.$square-size * 0.2);
 }
 
 .next {
     border: 1px solid v.$palette-6;
     border-radius: 5px;
-    padding: 0.5rem;
-    font-size: 1.2rem;
+    padding: calc(v.$square-size * 0.15);
+    font-size: calc(v.$square-size * 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.3rem;
+    gap: calc(v.$square-size * 0.1);
     cursor: pointer;
-    margin-top: 0.5rem;
+    margin-top: calc(v.$square-size * 0.1);
 
     &:hover {
         background: v.$palette-5;

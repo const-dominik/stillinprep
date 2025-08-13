@@ -67,7 +67,7 @@ const PuzzlePage = ({
                             feedbackFunction={handleFeedback}
                             feedback={feedback}
                         />
-                        <div>
+                        <div className={styles["right-sidebar"]}>
                             <PuzzleModeChoice
                                 mode={mode}
                                 setMode={setMode}

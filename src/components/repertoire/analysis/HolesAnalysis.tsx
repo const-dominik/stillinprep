@@ -18,7 +18,7 @@ const HolesAnalysis = () => {
             <div className={styles.title}>Repertoire analysis</div>
             <div className={styles.lines}>
                 {lines.map((lineData) => (
-                    <div className={styles.line}>
+                    <div className={styles.line} key={lineData.odds}>
                         <div>{lineData.odds} games</div>
                         <div>{lineData.line}</div>
                     </div>

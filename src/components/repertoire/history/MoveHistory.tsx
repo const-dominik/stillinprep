@@ -25,9 +25,15 @@ const MoveHistory = (
         setCurrentNode(node);
     };
 
+    const moveHistoryClasses = [styles["move-history"]];
+
+    if (mode === "puzzle") {
+        moveHistoryClasses.push(styles["long-history"]);
+    }
+
     return (
         <div className={styles["history-container"]}>
-            <div className={styles["move-history"]}>
+            <div className={moveHistoryClasses.join(" ")}>
                 <div className={styles["sidebar-scroll-wrapper"]}>
                     <div className={styles["sidebar"]}>
                         {groupedMoves.map(

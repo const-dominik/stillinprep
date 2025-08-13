@@ -3,22 +3,23 @@
 .container {
     background: v.$palette-7;
     border-radius: 5px;
-    width: 20vw;
+    width: calc(v.$square-size * 4);
+    font-family: monospace;
 }
 
 .header {
     border-bottom: 2px solid v.$palette-6;
     text-align: center;
     font-weight: bold;
-    font-size: 1.5rem;
-    padding: 0.6rem;
+    font-size: calc(v.$square-size * 0.25); // smaller, readable
+    padding: calc(v.$square-size * 0.1);
     color: v.$palette-2;
 }
 
 .option {
     text-align: center;
-    padding: 1rem;
-    font-size: 1.1rem;
+    padding: calc(v.$square-size * 0.15);
+    font-size: calc(v.$square-size * 0.2); // smaller, readable
     border-bottom: 1px solid v.$palette-6;
     cursor: pointer;
     display: flex;
@@ -46,18 +47,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 100%;
-    width: 32px;
-    height: 32px;
+    border-radius: 50%;
+    width: calc(v.$square-size * 0.4);
+    height: calc(v.$square-size * 0.4);
     border: 2px solid v.$secondary-dark;
     background: v.$secondary-light;
     color: v.$palette-1;
-    margin-left: 1rem;
-    font-size: 0.7rem;
+    margin-left: calc(v.$square-size * 0.15);
+    font-size: calc(v.$square-size * 0.15); // smaller, readable
 }
 
 .flex {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: calc(v.$square-size * 0.15);
 }

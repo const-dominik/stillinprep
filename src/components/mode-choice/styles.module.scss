@@ -6,6 +6,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .mode {
@@ -31,8 +32,35 @@
     font-size: 1.7rem;
     user-select: none;
 }
-
 .icon {
+    position: relative;
     margin: auto;
     width: 60%;
+    aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 1200px) {
+    .mode {
+        width: 40vw;
+        height: 60vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .mode-choice {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .mode {
+        width: 80vw;
+        height: auto;
+        margin: 1rem 0;
+    }
+    .mode-title {
+        font-size: 1.5rem;
+    }
+    .icon {
+        width: 70%;
+    }
 }
