@@ -3,6 +3,7 @@
 
 .move-popularity {
     @extend %centered-flex;
+
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
@@ -16,6 +17,7 @@
 
 .db-options {
     @extend %centered-flex;
+
     flex-direction: row;
     width: 100%;
     border-bottom: calc(v.$square-size * 0.04) solid v.$palette-6;
@@ -25,7 +27,6 @@
     text-align: center;
     width: 100%;
     font-size: calc(v.$square-size * 0.24);
-
     padding: calc(v.$square-size * 0.04);
     cursor: pointer;
 }

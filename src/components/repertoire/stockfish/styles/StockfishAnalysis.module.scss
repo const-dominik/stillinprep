@@ -3,6 +3,7 @@
 
 .stockfish-lines {
     @extend %centered-flex;
+
     flex-direction: column;
     background: v.$palette-7;
     margin-right: calc(v.$square-size * 0.15);

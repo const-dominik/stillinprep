@@ -9,6 +9,7 @@
     user-select: none;
     position: relative;
 }
+
 .piece-wrapper {
     width: v.$square-size;
     height: v.$square-size;
@@ -16,11 +17,13 @@
     justify-content: center; // horizontal centering
     align-items: center; // vertical centering
 }
+
 .square,
 .dark,
 .light {
     @extend %base-square;
 }
+
 .pointer {
     cursor: pointer;
 }

@@ -12,6 +12,7 @@
 
     .white {
         @extend %centered-flex;
+
         padding: calc(v.$square-size * 0.04);
         color: v.$palette-8;
         background-color: v.$palette-2;
@@ -19,6 +20,7 @@
 
     .draw {
         @extend %centered-flex;
+
         padding: calc(v.$square-size * 0.04);
         color: v.$palette-8;
         background-color: v.$palette-4;
@@ -26,6 +28,7 @@
 
     .black {
         @extend %centered-flex;
+
         padding: calc(v.$square-size * 0.04);
         color: v.$palette-2;
         background-color: v.$palette-8;

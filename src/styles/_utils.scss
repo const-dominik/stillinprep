@@ -67,7 +67,7 @@
     scrollbar-color: color.adjust(v.$palette-7, $lightness: -10%)
         color.adjust(v.$palette-7, $lightness: 5%);
 
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
         width: 30vw;
         max-width: none;
     }
