@@ -1,8 +1,32 @@
+@use "@/styles/variables" as v;
+
 .container {
     width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: calc(#{v.$square-size} * 0.25);
     align-items: center;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        height: auto;
+        padding: 1rem;
+    }
+}
+
+.right-sidebar {
+    display: flex;
+    flex-direction: column;
+    height: calc(#{v.$square-size} * 8);
+    justify-content: space-around;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        height: auto;
+        justify-content: center;
+        align-items: center;
+    }
 }

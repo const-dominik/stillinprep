@@ -1,17 +1,15 @@
 @use "src/styles/utils" as *;
 @use "@/styles/variables" as v;
-
 .popular-move {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    margin: 0.4rem;
+    margin: calc(v.$square-size * 0.08);
 }
 
 .move-info {
     @extend %centered-flex;
-
     text-align: center;
     width: 100%;
 }
@@ -20,19 +18,17 @@
     font-family: monospace;
     color: v.$palette-3;
     text-align: center;
-    padding: 0.2rem;
+    padding: calc(v.$square-size * 0.04);
+    font-size: calc(v.$square-size * 0.16);
 }
-
 .move-data-25 {
     @extend %move-data;
-
     width: 25%;
     text-align: left;
 }
 
 .move-data-50 {
     @extend %move-data;
-
     width: 50%;
     text-align: right;
 }

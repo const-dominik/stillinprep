@@ -100,9 +100,14 @@ const Chessboard = ({
                     <Image
                         src={pieceAssets[draggedPiece]}
                         alt="dragging"
-                        width={70}
-                        height={70}
-                        style={{ cursor: "grabbing" }}
+                        width={0}
+                        height={0}
+                        sizes="5vw"
+                        style={{
+                            width: "80%",
+                            height: "auto",
+                            cursor: "grabbing",
+                        }}
                         draggable={false}
                     />
                 )}

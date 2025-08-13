@@ -12,14 +12,15 @@
     @extend %centered-flex;
 
     width: calc(#{v.$square-size} * 1.75);
-    height: 20px;
-    padding: 1rem;
+    height: calc(#{v.$square-size} * 0.35);
+    padding: calc(#{v.$square-size} * 0.125);
     text-align: center;
     position: relative;
     cursor: pointer;
     color: v.$palette-4;
     border-bottom: 1px solid v.$palette-6;
     border-right: 1px solid v.$palette-6;
+    font-size: calc(#{v.$square-size} * 0.2);
 
     &:hover {
         background: v.$palette-6;
@@ -47,7 +48,8 @@
 }
 
 %single-window-page {
-    width: 30vw;
+    width: 90vw;
+    max-width: 90vw;
     height: 80vh;
     border-radius: 5px;
     background: v.$palette-7;
@@ -64,6 +66,11 @@
     scrollbar-width: thin;
     scrollbar-color: color.adjust(v.$palette-7, $lightness: -10%)
         color.adjust(v.$palette-7, $lightness: 5%);
+
+    @media (min-width: 768px) {
+        width: 30vw;
+        max-width: none;
+    }
 }
 
 %page-container {

@@ -29,6 +29,12 @@
         background: v.$palette-5;
         color: v.$palette-3;
     }
+
+    @media (max-width: 480px) {
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 0.75rem;
+    }
 }
 
 .window-content {
@@ -42,6 +48,8 @@
 .links {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .link {
@@ -51,6 +59,10 @@
 
     &:visited {
         color: v.$palette-5;
+    }
+
+    @media (max-width: 480px) {
+        margin-bottom: 1rem;
     }
 }
 
@@ -78,6 +90,12 @@
     width: 80%;
     margin: auto;
     margin-top: 1rem;
+
+    @media (max-width: 480px) {
+        flex-direction: column;
+        gap: 0.75rem;
+        width: 100%;
+    }
 }
 
 .save {
@@ -93,5 +111,11 @@
 
     &:hover {
         background: v.$palette-5;
+    }
+
+    @media (max-width: 480px) {
+        width: 100%;
+        font-size: 1rem;
+        padding: 0.75rem;
     }
 }

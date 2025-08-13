@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation";
+import LandingPage from "@/components/landing/LandingPage";
 
 const Home = () => {
-    redirect("/mode");
+    return <LandingPage />;
 };
 
 export default Home;

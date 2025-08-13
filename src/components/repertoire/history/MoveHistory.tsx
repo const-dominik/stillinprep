@@ -11,7 +11,8 @@ import TreeNavigator from "./TreeNavigator";
 const MoveHistory = (
     { mode }: { mode?: "regular" | "puzzle" } = { mode: "regular" }
 ) => {
-    const { lastNode, setLastNode, setCurrentNode } = usePosition();
+    const { lastNode, setLastNode, setCurrentNode, analysisNode } =
+        usePosition();
 
     const groupedMoves = getGroupedMoves(lastNode);
 
@@ -24,9 +25,15 @@ const MoveHistory = (
         setCurrentNode(node);
     };
 
+    const moveHistoryClasses = [styles["move-history"]];
+
+    if (mode === "puzzle") {
+        moveHistoryClasses.push(styles["long-history"]);
+    }
+
     return (
         <div className={styles["history-container"]}>
-            <div className={styles["move-history"]}>
+            <div className={moveHistoryClasses.join(" ")}>
                 <div className={styles["sidebar-scroll-wrapper"]}>
                     <div className={styles["sidebar"]}>
                         {groupedMoves.map(
@@ -42,12 +49,18 @@ const MoveHistory = (
                                         move={whiteMove}
                                         setLine={setLine}
                                         mode={mode}
+                                        isAnalysisNode={
+                                            whiteMove === analysisNode
+                                        }
                                     />
                                     {blackMove && (
                                         <Move
                                             move={blackMove}
                                             setLine={setLine}
                                             mode={mode}
+                                            isAnalysisNode={
+                                                blackMove === analysisNode
+                                            }
                                         />
                                     )}
                                 </div>

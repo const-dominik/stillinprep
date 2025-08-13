@@ -6,6 +6,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    @media (max-width: 768px) {
+        flex-direction: column; // stack elements vertically
+        align-items: center;
+        height: auto; // let it grow
+        padding: 1rem;
+        justify-content: space-around;
+        margin-bottom: 1rem;
+        align-items: center;
+    }
 }
 
 .moves-info {
@@ -13,4 +23,34 @@
     flex-direction: column;
     justify-content: flex-start;
     height: calc(v.$square-size * 8);
+
+    @media (max-width: 768px) {
+        width: 80%; // take full width on mobile
+        height: auto;
+        flex-direction: row;
+        justify-content: space-around;
+        margin-bottom: 1rem;
+        align-items: center;
+    }
+}
+
+.right-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(8 * v.$square-size);
+
+    @media (max-width: 768px) {
+        width: 80%;
+        height: auto;
+        margin-top: 1rem; // separate from the top content
+        flex-direction: row;
+        justify-content: space-around;
+        margin-bottom: 1rem;
+        align-items: center;
+    }
+}
+
+.chess-meter {
+    display: flex;
 }

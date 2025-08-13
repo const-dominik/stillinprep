@@ -1,0 +1,90 @@
+@use "sass:color";
+@use "src/styles/utils" as *;
+@use "@/styles/variables" as v;
+
+@mixin custom-scrollbar($bg, $thumb) {
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background: $thumb;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: $thumb $bg;
+}
+
+.lines {
+    width: 100%;
+    height: calc(#{v.$square-size} * 2.6);
+    overflow-y: auto;
+
+    @include custom-scrollbar(
+        color.adjust(v.$palette-7, $lightness: 5%),
+        color.adjust(v.$palette-7, $lightness: -10%)
+    );
+    border-bottom: 2px solid v.$palette-6;
+}
+
+.container {
+    width: calc(#{v.$square-size} * 4);
+    height: calc(#{v.$square-size} * 3.8);
+    background: v.$palette-7;
+    margin-left: calc(#{v.$square-size} * 0.2);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    text-align: center;
+    font-size: calc(#{v.$square-size} * 0.24);
+    color: v.$palette-1;
+    padding: calc(#{v.$square-size} * 0.1);
+    width: 100%;
+    border-bottom: 2px solid v.$palette-6;
+    user-select: none;
+}
+
+.line {
+    width: 100%;
+    display: flex;
+    text-align: center;
+    justify-content: space-around;
+    align-items: center;
+    padding: calc(#{v.$square-size} * 0.1);
+    font-size: calc(#{v.$square-size} * 0.18);
+    cursor: pointer;
+    border-bottom: 1px dotted v.$palette-6;
+    user-select: none;
+    background: color.adjust(v.$palette-7, $lightness: -5%);
+
+    &:hover {
+        background: v.$palette-6;
+    }
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+}
+
+.reanalyse-button {
+    border-radius: 5px;
+    padding: calc(#{v.$square-size} * 0.1);
+    font-size: calc(#{v.$square-size} * 0.18);
+    background: v.$palette-6;
+    text-align: center;
+    cursor: pointer;
+    width: 75%;
+    margin: auto;
+    color: v.$palette-1;
+    user-select: none;
+
+    &:hover {
+        background: v.$palette-5;
+    }
+}

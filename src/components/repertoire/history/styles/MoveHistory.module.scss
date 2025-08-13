@@ -24,15 +24,19 @@
 }
 
 .move-history {
-    width: calc(#{v.$square-size} * 4);
-    height: calc(#{v.$square-size} * 8);
+    width: calc(v.$square-size * 4);
+    height: calc(v.$square-size * 4);
     background: v.$palette-7;
-    margin-left: 1rem;
+    margin-left: calc(v.$square-size * 0.2);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-radius: 5px;
+    border-radius: calc(v.$square-size * 0.125);
     overflow: hidden;
+}
+
+.long-history {
+    height: calc(v.$square-size * 8);
 }
 
 .sidebar-scroll-wrapper {
@@ -45,7 +49,7 @@
 }
 
 .sidebar {
-    width: calc(#{v.$square-size} * 4);
+    width: calc(v.$square-size * 4);
 }
 
 .move-pair {
@@ -55,9 +59,9 @@
 
 .move-number {
     @extend %centered-flex;
-
-    width: calc(#{v.$square-size} / 2);
+    width: calc(v.$square-size / 2);
     background: v.$palette-5;
     border-right: 1px solid v.$palette-4;
     color: v.$palette-1;
+    font-size: calc(v.$square-size * 0.16);
 }

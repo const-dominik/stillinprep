@@ -5,30 +5,28 @@
 .bar {
     display: flex;
     overflow: hidden;
-    border-radius: 5px;
-    font-size: 0.7rem;
+    border-radius: calc(v.$square-size * 0.125);
+    font-size: calc(v.$square-size * 0.14);
     width: 100%;
+    height: calc(v.$square-size * 0.25);
 
     .white {
         @extend %centered-flex;
-
-        padding: 0.2rem;
+        padding: calc(v.$square-size * 0.04);
         color: v.$palette-8;
         background-color: v.$palette-2;
     }
 
     .draw {
         @extend %centered-flex;
-
-        padding: 0.2rem;
+        padding: calc(v.$square-size * 0.04);
         color: v.$palette-8;
         background-color: v.$palette-4;
     }
 
     .black {
         @extend %centered-flex;
-
-        padding: 0.2rem;
+        padding: calc(v.$square-size * 0.04);
         color: v.$palette-2;
         background-color: v.$palette-8;
     }

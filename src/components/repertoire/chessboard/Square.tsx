@@ -73,13 +73,17 @@ const Square = ({
                     {...listeners}
                     {...attributes}
                 >
-                    <Image
-                        src={pieceAssets[piece]}
-                        alt="piece"
-                        width={70}
-                        height={70}
-                        draggable={false}
-                    />
+                    <div className={styles["piece-wrapper"]}>
+                        <Image
+                            src={pieceAssets[piece]}
+                            alt="piece"
+                            width={0}
+                            height={0}
+                            sizes="5vw"
+                            style={{ width: "80%", height: "auto" }}
+                            draggable={false}
+                        />
+                    </div>
                 </div>
             )}
         </div>

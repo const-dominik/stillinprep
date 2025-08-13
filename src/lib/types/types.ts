@@ -136,6 +136,8 @@ type MastersParams = LiQueryCommonParams & {
 
 export type LiAPIQueryParameters = LichessParams | MastersParams;
 
+export type FENAndMove = [string, string];
+
 export type MoveData = {
     parent: string;
     repertoire: string;
@@ -172,8 +174,10 @@ export type RepertoireData = {
 export type PositionContextValue = {
     currentNode: MovesTreeNode;
     lastNode: MovesTreeNode;
+    analysisNode: MovesTreeNode;
     setCurrentNode: (n: MovesTreeNode) => void;
     setLastNode: (n: MovesTreeNode) => void;
+    setAnalysisNode: (n: MovesTreeNode) => void;
 };
 
 export type PendingPromotion = {
@@ -212,6 +216,32 @@ export type Puzzle = {
     targetNode: MovesTreeNode;
     solution: number[];
     newLeaf: MovesTreeNode | null;
+};
+
+export type ExplorerMove = {
+    san: string;
+    white: number;
+    black: number;
+    draws: number;
+    avgRating: number;
+};
+
+export type ExplorerResponse = {
+    moves: ExplorerMove[];
+    nbGames: number;
+    white: number;
+    draws: number;
+    black: number;
+};
+
+export type ExplorerOptions = {
+    fen: string;
+    variant?: "standard" | "chess960";
+    speeds?: ("bullet" | "blitz" | "rapid" | "classical")[];
+    ratings?: number[]; //  [1600, 1800, 2000]
+    moves?: number;
+    topGames?: number;
+    recentGames?: number;
 };
 
 export type PuzzleFeedback = "other" | "correct" | "wrong" | "go" | "done";
