@@ -20,6 +20,7 @@
 
 .svg-container {
     @extend %centered-flex;
+
     padding: calc(v.$square-size * 0.04);
     border: 1px solid v.$palette-6;
     cursor: pointer;
@@ -31,6 +32,7 @@
 
 .rating-container {
     @extend %centered-flex;
+
     padding: calc(v.$square-size * 0.04);
     border: 1px solid v.$palette-6;
     cursor: pointer;

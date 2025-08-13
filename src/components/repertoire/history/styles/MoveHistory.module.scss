@@ -59,6 +59,7 @@
 
 .move-number {
     @extend %centered-flex;
+
     width: calc(v.$square-size / 2);
     background: v.$palette-5;
     border-right: 1px solid v.$palette-4;

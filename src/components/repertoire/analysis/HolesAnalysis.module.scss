@@ -25,6 +25,7 @@
         color.adjust(v.$palette-7, $lightness: 5%),
         color.adjust(v.$palette-7, $lightness: -10%)
     );
+
     border-bottom: 2px solid v.$palette-6;
 }
 
