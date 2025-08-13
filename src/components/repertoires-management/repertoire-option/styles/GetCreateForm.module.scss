@@ -9,7 +9,9 @@
     border-top-right-radius: 5px;
     border-bottom: 1px solid v.$palette-5;
 }
-
+.container-form svg:hover {
+    cursor: pointer;
+}
 .input,
 .repertoire-edit-input {
     border: none;

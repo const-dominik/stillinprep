@@ -2,10 +2,6 @@
 @use "@/styles/variables" as v;
 @use "src/styles/utils" as *;
 
-svg:hover {
-    cursor: pointer;
-}
-
 .no-repertoires {
     color: v.$palette-4;
     padding: 1rem;

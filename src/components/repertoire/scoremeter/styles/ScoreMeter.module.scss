@@ -1,9 +1,5 @@
 @use "@/styles/variables" as v;
 
-:root {
-    --score-untis: 4;
-}
-
 .scoremeter {
     height: calc(v.$square-size * 8);
     width: calc(v.$square-size * 0.125);
