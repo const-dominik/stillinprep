@@ -20,13 +20,12 @@
     width: 100%;
     height: calc(#{v.$square-size} * 2.6);
     overflow-y: auto;
+    border-bottom: 2px solid v.$palette-6;
 
     @include custom-scrollbar(
         color.adjust(v.$palette-7, $lightness: 5%),
         color.adjust(v.$palette-7, $lightness: -10%)
     );
-
-    border-bottom: 2px solid v.$palette-6;
 }
 
 .container {

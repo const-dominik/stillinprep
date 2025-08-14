@@ -175,6 +175,7 @@ export type PositionContextValue = {
     currentNode: MovesTreeNode;
     lastNode: MovesTreeNode;
     analysisNode: MovesTreeNode;
+    root: MovesTreeNode;
     setCurrentNode: (n: MovesTreeNode) => void;
     setLastNode: (n: MovesTreeNode) => void;
     setAnalysisNode: (n: MovesTreeNode) => void;
@@ -237,11 +238,12 @@ export type ExplorerResponse = {
 export type ExplorerOptions = {
     fen: string;
     variant?: "standard" | "chess960";
-    speeds?: ("bullet" | "blitz" | "rapid" | "classical")[];
+    speeds?: TimeControl[];
     ratings?: number[]; //  [1600, 1800, 2000]
     moves?: number;
     topGames?: number;
     recentGames?: number;
+    database?: "players" | "masters";
 };
 
 export type PuzzleFeedback = "other" | "correct" | "wrong" | "go" | "done";
@@ -251,4 +253,10 @@ export type MyOption = { label: string; value: string };
 export type SpacedPuzzle = z.infer<typeof SpacedPuzzleSchema>;
 export type SpacedPuzzleData = {
     puzzles: Record<string, SpacedPuzzle>;
+};
+
+export type FeedbackLine = {
+    odds: string;
+    line: string;
+    fromNode: MovesTreeNode;
 };

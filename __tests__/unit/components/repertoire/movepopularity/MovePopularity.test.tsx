@@ -13,12 +13,19 @@ jest.mock("@/components/repertoire/movepopularity/logic", () => ({
     })),
 }));
 
+// jest.fn();
 import { getPopularMoves } from "@/components/repertoire/movepopularity/logic";
 import { TestProviders } from "@/../__tests__/testing_utils";
+import { MovePopualritySettings } from "@/lib/types/types";
 
 const mockGetPopularMoves = getPopularMoves as jest.Mock;
 
 const mockNode: MovesTreeNode = new MovesTreeNode();
+
+const movePopularitySettings: MovePopualritySettings = {
+    timeControls: ["bullet", "blitz", "rapid"],
+    ratings: [1500, 1700],
+};
 
 const sampleResponse = {
     opening: { name: "King's Pawn" },
@@ -43,7 +50,10 @@ describe("MovePopularity component", () => {
     it("renders title and loads popular moves", async () => {
         render(
             <TestProviders current={mockNode}>
-                <MovePopularity />
+                <MovePopularity
+                    settings={movePopularitySettings}
+                    setSettings={jest.fn()}
+                />
             </TestProviders>
         );
 
@@ -59,7 +69,10 @@ describe("MovePopularity component", () => {
     it("can toggle to Masters DB", async () => {
         render(
             <TestProviders current={mockNode}>
-                <MovePopularity />
+                <MovePopularity
+                    settings={movePopularitySettings}
+                    setSettings={jest.fn()}
+                />
             </TestProviders>
         );
 
@@ -70,7 +83,7 @@ describe("MovePopularity component", () => {
             expect(mockGetPopularMoves).toHaveBeenCalledWith(
                 "masters",
                 expect.anything(),
-                ""
+                expect.anything()
             );
         });
     });
@@ -78,7 +91,10 @@ describe("MovePopularity component", () => {
     it("toggles settings when clicking gear icon", async () => {
         render(
             <TestProviders current={mockNode}>
-                <MovePopularity />
+                <MovePopularity
+                    settings={movePopularitySettings}
+                    setSettings={jest.fn()}
+                />
             </TestProviders>
         );
 
@@ -105,7 +121,10 @@ describe("MovePopularity component", () => {
 
         render(
             <TestProviders current={mockNode}>
-                <MovePopularity />
+                <MovePopularity
+                    settings={movePopularitySettings}
+                    setSettings={jest.fn()}
+                />
             </TestProviders>
         );
 
