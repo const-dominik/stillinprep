@@ -7,7 +7,7 @@ import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import { type FieldError, type UseFormRegisterReturn } from "react-hook-form";
-import Select, { StylesConfig } from "react-select";
+import Select, { type StylesConfig } from "react-select";
 import styles from "./Utils.module.scss";
 
 export const WindowElement = ({ children }: { children: ReactNode }) => {

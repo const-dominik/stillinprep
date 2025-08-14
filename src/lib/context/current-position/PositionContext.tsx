@@ -64,6 +64,7 @@ export const PositionProvider = ({
                 setLastNode,
                 analysisNode,
                 setAnalysisNode,
+                root,
             }}
         >
             {children}

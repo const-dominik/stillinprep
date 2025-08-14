@@ -1,43 +1,59 @@
+import { parseMove } from "@/components/utils/chessAlgebraicNotation";
+import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { usePosition } from "@/lib/context/current-position/PositionContext";
 import { useRepertoire } from "@/lib/context/repertoire/RepertoireContext";
 import {
     ExplorerOptions,
-    feedbackLine,
+    FeedbackLine,
     MovePopualritySettings,
 } from "@/lib/types/types";
 import { avgRatingsToRatings } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { addMoveToDb } from "../chessboard/logic";
 import styles from "./HolesAnalysis.module.scss";
-import { getFeedback, getFraction } from "./logic";
+import { getFeedbackLines, getLastMove } from "./logic";
 
 const HolesAnalysis = ({ settings }: { settings: MovePopualritySettings }) => {
     const { timeControls, ratings } = settings;
-    const { currentNode, setAnalysisNode } = usePosition();
-    const { color } = useRepertoire();
-    const [lines, setLines] = useState<feedbackLine[]>([
-        { odds: "1/12", line: "14. e4 15. e6" },
-    ]);
+    const { currentNode, setAnalysisNode, setCurrentNode, setLastNode, root } =
+        usePosition();
+    const { id: repertoireId, color } = useRepertoire();
+    const [lines, setLines] = useState<FeedbackLine[]>([]);
 
-    const setFeedback = async () => {
+    const setFeedback = async (node: MovesTreeNode) => {
         const explorerOptions: ExplorerOptions = {
             variant: "standard",
-            fen: currentNode.getFEN(),
+            fen: node.getFEN(),
             speeds: timeControls,
             ratings: ratings.flatMap((rt) => avgRatingsToRatings[rt]),
-            //database: "masters",
         };
-        const feedback = await getFeedback(color, currentNode, explorerOptions);
-        const newLines = feedback.map<feedbackLine>(([moves, odds]) => {
-            return { odds: getFraction(odds), line: moves };
-        });
+        const newLines = await getFeedbackLines(color, node, explorerOptions);
         setLines(newLines.slice(0, 10));
     };
     useEffect(() => {
-        setFeedback();
+        setFeedback(root);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     const onClick = async () => {
         setAnalysisNode(currentNode);
-        setFeedback();
+        setFeedback(currentNode);
+    };
+
+    const setLine = (lineData: FeedbackLine) => {
+        const previousNode = lineData.fromNode;
+        const moves = lineData.line;
+        const [from, to, piece, newBoard] = parseMove(
+            getLastMove(moves),
+            previousNode
+        );
+        const { node, isNew } = previousNode.addMove(piece, from, to, newBoard);
+        setCurrentNode(node);
+        setLastNode(node);
+
+        if (isNew) {
+            addMoveToDb(node, repertoireId);
+        }
     };
 
     return (
@@ -48,6 +64,7 @@ const HolesAnalysis = ({ settings }: { settings: MovePopualritySettings }) => {
                     <div
                         className={styles.line}
                         key={`${lineData.line}${lineData.odds}`}
+                        onClick={() => setLine(lineData)}
                     >
                         <div>{lineData.odds} games</div>
                         <div>{lineData.line}</div>

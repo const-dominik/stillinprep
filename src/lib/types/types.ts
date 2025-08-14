@@ -175,6 +175,7 @@ export type PositionContextValue = {
     currentNode: MovesTreeNode;
     lastNode: MovesTreeNode;
     analysisNode: MovesTreeNode;
+    root: MovesTreeNode;
     setCurrentNode: (n: MovesTreeNode) => void;
     setLastNode: (n: MovesTreeNode) => void;
     setAnalysisNode: (n: MovesTreeNode) => void;
@@ -254,4 +255,8 @@ export type SpacedPuzzleData = {
     puzzles: Record<string, SpacedPuzzle>;
 };
 
-export type feedbackLine = { odds: string; line: string };
+export type FeedbackLine = {
+    odds: string;
+    line: string;
+    fromNode: MovesTreeNode;
+};

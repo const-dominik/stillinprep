@@ -15,6 +15,7 @@ const Page = async () => {
         spacedDataPromise,
     ]);
 
+    console.log(paths, repertoires, spacedData);
     if (
         !paths.success ||
         !paths.value ||

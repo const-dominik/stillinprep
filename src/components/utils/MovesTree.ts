@@ -299,15 +299,6 @@ export class MovesTreeNode {
         this.isPuzzleClaimed = true;
     }
 
-    private getRoot(): MovesTreeNode {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let node: MovesTreeNode = this;
-        while (node.moveId > 0) {
-            node = node.parent;
-        }
-        return node;
-    }
-
     private getPath(): MovesTreeNode[] {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let node: MovesTreeNode = this;
@@ -506,5 +497,16 @@ export class MovesTreeNode {
         };
 
         return buildFENList(this);
+    }
+    public getLastMoves(lastMoves: number): string {
+        if (lastMoves === 0) return this.player === "black" ? "" : "...";
+
+        if (this === this.parent) return "";
+
+        let move = this.getAlgebraicNotation();
+        if (this.player === "white") move = `${this.moveId}.${move}`;
+        move += " ";
+
+        return `${this.parent.getLastMoves(lastMoves - 1)}${move}`;
     }
 }

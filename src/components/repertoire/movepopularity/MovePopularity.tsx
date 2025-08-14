@@ -42,7 +42,7 @@ const MovePopularity = ({
         };
         setPopularMoves(null);
         getMoves();
-    }, [debouncedCurrentNode, debouncedSettings, db]);
+    }, [debouncedCurrentNode, debouncedSettings, db, currentNode]);
 
     const activeOptionClasses = [
         styles["db-option"],
