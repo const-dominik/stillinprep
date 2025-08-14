@@ -3,21 +3,22 @@
 @use "@/styles/variables" as v;
 
 .saved-lines {
-    width: calc(#{v.$square-size} * 1.75);
+    width: calc(v.$square-size * 1.75);
     background: v.$palette-7;
-    margin-left: 1rem;
+    margin-left: calc(v.$square-size * 0.2);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-radius: 5px;
+    border-radius: calc(v.$square-size * 0.125);
     overflow: hidden;
 }
 
 .saved-lines-header {
     text-align: center;
     border-bottom: 1px solid v.$palette-6;
-    padding: 0.5rem 0;
+    padding: calc(v.$square-size * 0.0625) 0;
     user-select: none;
+    font-size: calc(v.$square-size * 0.16);
 }
 
 .saved-line-move {

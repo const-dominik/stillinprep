@@ -1,12 +1,9 @@
 @use "@/styles/variables" as v;
 
-:root {
-    --score-untis: 4;
-}
-
 .scoremeter {
-    height: v.$square-size * 8;
+    height: calc(v.$square-size * 8);
     width: calc(v.$square-size * 0.125);
+    min-width: calc(v.$square-size * 0.125);
     border: 1px solid v.$palette-7;
     margin-right: 0.75rem;
     display: flex;

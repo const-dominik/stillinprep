@@ -16,11 +16,6 @@ const ModeChoice = () => {
                 name="Puzzles"
                 redirectPath="/puzzles"
             />
-            <Mode
-                iconPath="mode-choice/sherlock-holmes.svg"
-                name="Repertoire Analysis"
-                redirectPath="#"
-            />
         </div>
     );
 };

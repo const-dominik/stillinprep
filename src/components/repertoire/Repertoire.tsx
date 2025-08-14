@@ -56,8 +56,10 @@ const Repertoire = () => {
                 <StockfishAnalysis />
                 <MovePopularity settings={settings} setSettings={setSettings} />
             </div>
-            <ScoreMeter />
-            <Chessboard />
+            <div className={styles["chess-meter"]}>
+                <ScoreMeter />
+                <Chessboard />
+            </div>
             <div className={styles["right-side"]}>
                 <HolesAnalysis settings={settings} />
                 <MoveHistory mode="regular" />

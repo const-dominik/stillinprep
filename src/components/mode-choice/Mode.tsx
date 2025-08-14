@@ -17,13 +17,14 @@ const Mode = ({
     return (
         <div className={styles.mode} onClick={() => router.push(redirectPath)}>
             <h2 className={styles["mode-title"]}>{name}</h2>
-            <Image
-                src={iconPath}
-                width={500}
-                height={500}
-                alt="icon"
-                className={styles["icon"]}
-            />
+            <div className={styles["icon"]}>
+                <Image
+                    src={iconPath}
+                    alt="icon"
+                    fill
+                    style={{ objectFit: "contain" }}
+                />
+            </div>
         </div>
     );
 };

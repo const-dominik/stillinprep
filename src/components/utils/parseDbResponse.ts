@@ -57,7 +57,7 @@ const enPassantDetection = (
 export const mergePathsIntoTree = (segments: PathNodes[]) => {
     const root = new MovesTreeNode();
     let lastMove = root;
-    let longest = 1;
+    let longest = 0;
     for (const path of segments) {
         let current = root;
 

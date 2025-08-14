@@ -13,7 +13,7 @@
 .cross {
     color: rgb(212 78 78);
     position: absolute;
-    left: 10px;
+    left: calc(v.$square-size * 0.125);
 }
 
 .current-move {

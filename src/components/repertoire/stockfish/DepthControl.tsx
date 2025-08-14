@@ -10,7 +10,7 @@ const DepthControl = ({
     return (
         <div>
             <div className={styles["depth-controls"]}>
-                <div>Depth:</div>
+                <div className={styles["depth-title"]}>Depth:</div>
                 <div
                     className={styles["depth-control-btn"]}
                     onClick={() => setDepth(depth - 1)}

@@ -5,13 +5,13 @@
     @extend %centered-flex;
 
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
     justify-content: flex-start;
     background: v.$palette-7;
-    margin-right: 0.75rem;
-    width: calc(#{v.$square-size} * 3);
-    margin-top: 1rem;
-    border-radius: 5px;
+    margin-right: calc(v.$square-size * 0.15);
+    width: calc(v.$square-size * 3);
+    margin-top: calc(v.$square-size * 0.2);
+    border-radius: calc(v.$square-size * 0.125);
     overflow: hidden;
 }
 
@@ -20,13 +20,14 @@
 
     flex-direction: row;
     width: 100%;
-    border-bottom: 2px solid v.$palette-6;
+    border-bottom: calc(v.$square-size * 0.04) solid v.$palette-6;
 }
 
 .db-option {
     text-align: center;
     width: 100%;
-    padding: 0.2rem;
+    font-size: calc(v.$square-size * 0.24);
+    padding: calc(v.$square-size * 0.04);
     cursor: pointer;
 }
 
@@ -37,24 +38,25 @@
 
 .toggle-settings {
     position: absolute;
-    right: 5px;
-    font-size: 1.2rem;
+    right: calc(v.$square-size * 0.05);
+    top: calc(v.$square-size * 0.1);
+    font-size: calc(v.$square-size * 0.24);
 }
 
 .popular-moves-title {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: calc(v.$square-size * 0.24);
     color: v.$palette-1;
-    padding: 0.2rem 0 0;
+    padding: calc(v.$square-size * 0.04) 0 0;
     width: 100%;
 }
 
 .opening-name {
-    padding: 0 0 1rem;
-    height: 2rem;
-    font-size: 0.7rem;
+    padding: 0 0 calc(v.$square-size * 0.2);
+    height: calc(v.$square-size * 0.4);
+    font-size: calc(v.$square-size * 0.14);
     width: 100%;
-    border-bottom: 2px solid v.$palette-6;
+    border-bottom: calc(v.$square-size * 0.04) solid v.$palette-6;
     text-align: center;
 }
 
@@ -67,6 +69,6 @@
 .no-move-info {
     color: v.$palette-2;
     text-align: center;
-    font-size: 0.8rem;
-    padding: 0.5rem;
+    font-size: calc(v.$square-size * 0.16);
+    padding: calc(v.$square-size * 0.1);
 }

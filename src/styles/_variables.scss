@@ -7,7 +7,7 @@ $palette-5: #6c757d;
 $palette-6: #495057;
 $palette-7: #343a40;
 $palette-8: #212529;
-$square-size: 80px;
+$square-size: min(90px, max(5.2vw, 40px));
 $secondary-dark: #305e55;
 $secondary-light: #4a9184;
 $secondary-lighter: #5fafa1;

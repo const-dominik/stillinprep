@@ -4,4 +4,14 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
+
+    @media (width <= 768px) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        height: auto;
+        padding: 1rem 0;
+    }
 }
