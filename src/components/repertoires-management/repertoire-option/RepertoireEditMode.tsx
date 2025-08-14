@@ -5,6 +5,7 @@ import { changeRepertoireSettings } from "@/lib/actions/repertoire";
 import { Repertoire, RepertoireEditData } from "@/lib/types/types";
 import styles from "@/styles/formStyling.module.scss";
 import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import {
     RemoveButton,
@@ -19,7 +20,7 @@ const RepertoireEditMode = ({
     setEditedSettingsId,
 }: {
     editedSettingsData: Repertoire;
-    setEditedSettingsId: (id: string) => void;
+    setEditedSettingsId: Dispatch<SetStateAction<string>>;
 }) => {
     const { id, name, visibility, hasAccess, color } = editedSettingsData;
     const router = useRouter();
@@ -80,7 +81,10 @@ const RepertoireEditMode = ({
                     baseAccesses={hasAccess}
                 />
 
-                <RemoveButton id={id} />
+                <RemoveButton
+                    id={id}
+                    setEditedSettingsId={setEditedSettingsId}
+                />
                 <div className={styles.formConfirmation}>
                     <div
                         className={styles.save}

@@ -7,7 +7,7 @@ import { deleteRepertoire } from "@/lib/actions/repertoire";
 import { useConfirm } from "@/lib/context/confirm/ConfirmContext";
 import { GivenAccess, MyOption, RepertoireEditData } from "@/lib/types/types";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
     type Control,
     Controller,
@@ -277,7 +277,13 @@ export const UseFormSelect = ({
     );
 };
 
-export const RemoveButton = ({ id }: { id: string }) => {
+export const RemoveButton = ({
+    id,
+    setEditedSettingsId,
+}: {
+    id: string;
+    setEditedSettingsId: Dispatch<SetStateAction<string>>;
+}) => {
     const confirm = useConfirm();
     const router = useRouter();
 
@@ -287,6 +293,7 @@ export const RemoveButton = ({ id }: { id: string }) => {
         );
 
         if (isSure) {
+            setEditedSettingsId("");
             await deleteRepertoire(id);
 
             router.push("/repertoire");
