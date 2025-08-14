@@ -6,7 +6,7 @@ import {
     StockfishEval,
     UCIPromotionPiece,
 } from "@/lib/types/types";
-import { fileAndRankToPosition } from "@/lib/utils";
+import { blackPieces, fileAndRankToPosition } from "@/lib/utils";
 
 const stockfishPromotionMap: Record<
     UCIPromotionPiece,
@@ -44,7 +44,7 @@ export const parseStockfishResponse = (line: string, board: Chessboard) => {
         extraInfo.promotionPiece = to[0] === 0 ? white : black;
     }
 
-    const baseNode = new MovesTreeNode(Pieces.EMPTY, [0, 0], [0, 0], board);
+    const whiteNode = new MovesTreeNode(Pieces.EMPTY, [0, 0], [0, 0], board);
     const nextBoard = getBoardAfterMove(
         board,
         from,
@@ -52,12 +52,19 @@ export const parseStockfishResponse = (line: string, board: Chessboard) => {
         extraInfo.type,
         extraInfo.promotionPiece
     );
-    const { node } = baseNode.addMove(
+
+    const { node: blackNode } = whiteNode.addMove(0, [0, 0], [0, 0], board);
+    const prevNode = blackPieces.includes(nextBoard[to[0]][to[1]])
+        ? blackNode
+        : whiteNode;
+
+    const { node } = prevNode.addMove(
         nextBoard[to[0]][to[1]],
         from,
         to,
         nextBoard
     );
+    console.log(node.getAlgebraicNotation());
     return node.getAlgebraicNotation();
 };
 
