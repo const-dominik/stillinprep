@@ -43,10 +43,10 @@ const HolesAnalysis = ({ settings }: { settings: MovePopualritySettings }) => {
         <div className={styles.container}>
             <div className={styles.title}>Repertoire analysis</div>
             <div className={styles.lines}>
-                {lines.map((lineData) => (
+                {lines.map((lineData, index) => (
                     <div
                         className={styles.line}
-                        key={`${lineData.line}${lineData.odds}`}
+                        key={`${lineData.line}${lineData.odds}${index}`}
                         onClick={() =>
                             setLineOnClick(
                                 setCurrentNode,
