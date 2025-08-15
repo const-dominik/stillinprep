@@ -120,7 +120,6 @@ export const getRepertoires = async (): ServerActionResponse<DbRepertoires> => {
             PublicRepertoireData.parse(rep)
         );
 
-        console.log(shared);
         const sharedRepertoires = shared.map((rep) =>
             SharedRepertoireData.parse(rep)
         );

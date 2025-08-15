@@ -83,7 +83,7 @@ export const getAlgebraicMove = (fullMove: MovesTreeNode) => {
 const notationToPiece = (move: string, color: "white" | "black"): Pieces => {
     const isWhite = color === "white";
 
-    if (move === "0-0" || move === "0-0-0")
+    if (["0-0", "0-0-0", "O-O", "O-O-O"].includes(move))
         return isWhite ? Pieces.WHITE_KING : Pieces.BLACK_KING;
 
     let piece = move.split("").filter((ch) => ch >= "A" && ch <= "Z");
@@ -108,7 +108,7 @@ const notationToPiece = (move: string, color: "white" | "black"): Pieces => {
 };
 
 const notationToCoords = (notation: string): PiecePosition => {
-    if (notation === "0-0" || notation === "0-0-0") return [8, 8];
+    if (["0-0", "0-0-0", "O-O", "O-O-O"].includes(notation)) return [8, 8];
     if (notation.includes("=")) notation = notation.slice(0, -2);
 
     const square = notation.slice(-2);
@@ -139,7 +139,7 @@ const getExtraCoordinates = (
         row = 8 - parseInt(digits[0], 10);
     }
 
-    return [col, row];
+    return [row, col];
 };
 
 const getPromotionPiece = (move: string, color: Player): Pieces => {
@@ -159,12 +159,13 @@ export const parseMove = (
     const board = node.board;
 
     //=== CASTLING ===
-    if (move === "0-0" || move === "0-0-0") {
+    if (["0-0", "0-0-0", "O-O", "O-O-O"].includes(move)) {
         const row = node.getCurrentPlayer() === "white" ? 7 : 0;
         const from: PiecePosition = [row, 4];
-        const to: PiecePosition = [row, move === "0-0" ? 6 : 2];
-        const castlingType: MoveType =
-            move === "0-0" ? "short castling" : "long castling";
+        const to: PiecePosition = [row, ["O-O", "0-0"].includes(move) ? 6 : 2];
+        const castlingType: MoveType = ["O-O", "0-0"].includes(move)
+            ? "short castling"
+            : "long castling";
 
         const newBoard = getBoardAfterMove(
             node.board,
