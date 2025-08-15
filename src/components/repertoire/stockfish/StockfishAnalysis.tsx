@@ -5,6 +5,7 @@ import { usePosition } from "@/lib/context/current-position/PositionContext";
 import { useRepertoire } from "@/lib/context/repertoire/RepertoireContext";
 import { useStockfishContext } from "@/lib/context/stockfish/StockfishContext";
 import useChange from "@/lib/hooks/useChange";
+import { setLineOnClick } from "../repertoire-utils";
 import DepthControl from "./DepthControl";
 import { parseStockfishResponse, parseStockfishScore } from "./logic";
 import styles from "./styles/StockfishAnalysis.module.scss";
@@ -12,7 +13,7 @@ import styles from "./styles/StockfishAnalysis.module.scss";
 const StockfishAnalysis = () => {
     const { id: repertoireId } = useRepertoire();
     const { multiPV, setDepth, depth } = useStockfishContext();
-    const { currentNode } = usePosition();
+    const { currentNode, setCurrentNode, setLastNode } = usePosition();
 
     useChange(() => {
         updateRepertoireField(repertoireId, "depth", String(depth));
@@ -31,7 +32,22 @@ const StockfishAnalysis = () => {
 
             <div className={styles["stockfish-lines-list"]}>
                 {currentStockfishLines.map((analysisNode, index) => (
-                    <div className={styles["stockfish-line"]} key={index}>
+                    <div
+                        className={styles["stockfish-line"]}
+                        onClick={() =>
+                            setLineOnClick(
+                                setCurrentNode,
+                                setLastNode,
+                                currentNode,
+                                parseStockfishResponse(
+                                    analysisNode.line.pv![0],
+                                    currentNode.board
+                                ),
+                                repertoireId
+                            )
+                        }
+                        key={index}
+                    >
                         <div className={styles["stockfish-score"]}>
                             {parseStockfishScore(analysisNode.line.score!)}
                         </div>

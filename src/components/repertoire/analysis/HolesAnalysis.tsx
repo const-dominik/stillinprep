@@ -1,4 +1,3 @@
-import { parseMove } from "@/components/utils/chessAlgebraicNotation";
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { usePosition } from "@/lib/context/current-position/PositionContext";
 import { useRepertoire } from "@/lib/context/repertoire/RepertoireContext";
@@ -9,7 +8,7 @@ import {
 } from "@/lib/types/types";
 import { avgRatingsToRatings } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { addMoveToDb } from "../chessboard/logic";
+import { setLineOnClick } from "../repertoire-utils";
 import styles from "./HolesAnalysis.module.scss";
 import { getFeedbackLines, getLastMove } from "./logic";
 
@@ -40,22 +39,6 @@ const HolesAnalysis = ({ settings }: { settings: MovePopualritySettings }) => {
         setFeedback(currentNode);
     };
 
-    const setLine = (lineData: FeedbackLine) => {
-        const previousNode = lineData.fromNode;
-        const moves = lineData.line;
-        const [from, to, piece, newBoard] = parseMove(
-            getLastMove(moves),
-            previousNode
-        );
-        const { node, isNew } = previousNode.addMove(piece, from, to, newBoard);
-        setCurrentNode(node);
-        setLastNode(node);
-
-        if (isNew) {
-            addMoveToDb(node, repertoireId);
-        }
-    };
-
     return (
         <div className={styles.container}>
             <div className={styles.title}>Repertoire analysis</div>
@@ -64,7 +47,15 @@ const HolesAnalysis = ({ settings }: { settings: MovePopualritySettings }) => {
                     <div
                         className={styles.line}
                         key={`${lineData.line}${lineData.odds}`}
-                        onClick={() => setLine(lineData)}
+                        onClick={() =>
+                            setLineOnClick(
+                                setCurrentNode,
+                                setLastNode,
+                                lineData.fromNode,
+                                getLastMove(lineData.line),
+                                repertoireId
+                            )
+                        }
                     >
                         <div>{lineData.odds} games</div>
                         <div>{lineData.line}</div>

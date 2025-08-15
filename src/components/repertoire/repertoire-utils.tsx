@@ -1,4 +1,7 @@
 import { ExplorerOptions } from "@/lib/types/types";
+import { MovesTreeNode } from "../utils/MovesTree";
+import { parseMove } from "../utils/chessAlgebraicNotation";
+import { addMoveToDb } from "./chessboard/logic";
 
 export const buildExplorerUrl = (options: ExplorerOptions): string => {
     const params = new URLSearchParams();
@@ -30,4 +33,21 @@ export const buildExplorerUrl = (options: ExplorerOptions): string => {
     }
 
     return `https://explorer.lichess.ovh/lichess?${params.toString()}`;
+};
+
+export const setLineOnClick = (
+    setCurrentNode: (n: MovesTreeNode) => void,
+    setLastNode: (n: MovesTreeNode) => void,
+    previousNode: MovesTreeNode,
+    move: string,
+    repertoireId: string
+) => {
+    const [from, to, piece, newBoard] = parseMove(move, previousNode);
+    const { node, isNew } = previousNode.addMove(piece, from, to, newBoard);
+    setCurrentNode(node);
+    setLastNode(node);
+
+    if (isNew) {
+        addMoveToDb(node, repertoireId);
+    }
 };

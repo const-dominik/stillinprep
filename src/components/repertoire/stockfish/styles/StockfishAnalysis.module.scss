@@ -37,6 +37,7 @@
     width: 100%;
     height: calc(v.$square-size * 0.5);
     border-bottom: calc(v.$square-size * 0.02) solid v.$palette-6;
+    cursor: pointer;
 
     &:last-of-type {
         border-bottom: none;

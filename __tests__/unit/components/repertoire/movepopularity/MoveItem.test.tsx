@@ -1,6 +1,7 @@
 import MoveItem from "@/components/repertoire/movepopularity/MoveItem";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
+import { TestProviders } from "../../../../testing_utils";
 
 describe("MoveItem", () => {
     const mockMove = {
@@ -13,7 +14,11 @@ describe("MoveItem", () => {
     };
 
     it("renders move info correctly", () => {
-        render(<MoveItem move={mockMove} totalGames={5000} />);
+        render(
+            <TestProviders>
+                <MoveItem move={mockMove} totalGames={5000} />
+            </TestProviders>
+        );
 
         expect(screen.getByText("e4")).toBeInTheDocument();
         expect(screen.getByText("40.00%")).toBeInTheDocument();

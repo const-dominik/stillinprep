@@ -7,6 +7,12 @@
     justify-content: space-between;
     align-items: center;
     margin: calc(v.$square-size * 0.08);
+    border-radius: calc(v.$square-size * 0.125);
+    cursor: pointer;
+
+    &:hover {
+        background: v.$palette-6;
+    }
 }
 
 .move-info {
