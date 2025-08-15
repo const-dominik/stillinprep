@@ -2,7 +2,7 @@
 
 .container {
     width: 100vw;
-    height: 100vh;
+    height: 90vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,5 +51,9 @@
 }
 
 .chess-meter {
+    display: flex;
+}
+
+.nav {
     display: flex;
 }

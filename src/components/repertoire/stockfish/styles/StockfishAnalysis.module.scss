@@ -26,6 +26,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    height: calc(v.$square-size * 1.5);
     border-bottom: calc(v.$square-size * 0.04) solid v.$palette-6;
 }
 

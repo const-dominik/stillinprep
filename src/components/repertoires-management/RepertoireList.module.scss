@@ -1,5 +1,5 @@
 .window-container {
-    height: 100vh;
+    height: 90vh;
     width: 100vw;
     display: flex;
     justify-content: space-around;
@@ -14,4 +14,8 @@
         height: auto;
         padding: 1rem 0;
     }
+}
+
+.nav {
+    display: flex;
 }
