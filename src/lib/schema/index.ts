@@ -194,7 +194,7 @@ export const SharedRepertoireData = z.object({
     id: z.string(),
     name: z.string().min(1),
     visibility: z.enum(["public", "private"]),
-    source: "shared",
+    source: z.literal("shared"),
     accessMode: z.enum(["edit", "readonly"]),
     color: z.enum(["white", "black"]),
 

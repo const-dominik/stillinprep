@@ -5,6 +5,7 @@ import { protectRoute } from "@/lib/auth";
 
 const Content = async () => {
     await protectRoute();
+
     try {
         const response = await getRepertoires();
 
