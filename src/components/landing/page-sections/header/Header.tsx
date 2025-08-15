@@ -4,12 +4,20 @@ import Logout from "./buttons/Logout";
 import Logo from "./Logo";
 import styles from "./styles.module.scss";
 
-const Header = async () => {
+const Header = async ({
+    logo = true,
+    study = true,
+    logout = true,
+}: {
+    logo?: boolean;
+    study?: boolean;
+    logout?: boolean;
+}) => {
     const user = await auth();
 
     return (
         <header className={styles.header}>
-            <Logo />
+            {logo && <Logo />}
             {!user && (
                 <div className={styles.buttons}>
                     <Button href="/login" text="SIGN IN" />
@@ -18,8 +26,8 @@ const Header = async () => {
             )}
             {user && (
                 <div className={styles.buttons}>
-                    <Button href="/mode" text="STUDY" />
-                    <Logout />
+                    {study && <Button href="/mode" text="STUDY" />}
+                    {logout && <Logout />}
                 </div>
             )}
         </header>

@@ -16,6 +16,7 @@ import { StockfishProvider } from "@/lib/context/stockfish/StockfishContext";
 import { DbRepertoire } from "@/lib/types/backend-types";
 import { MovePopualritySettings } from "@/lib/types/types";
 import { useState } from "react";
+import { Back, GoToPuzzle } from "../utils/Utils";
 import styles from "./Repertoire.module.scss";
 import HolesAnalysis from "./analysis/HolesAnalysis";
 
@@ -51,18 +52,27 @@ const Repertoire = () => {
     });
 
     return (
-        <div className={styles["container"]}>
-            <div className={styles["moves-info"]}>
-                <StockfishAnalysis />
-                <MovePopularity settings={settings} setSettings={setSettings} />
+        <div>
+            <div className={styles["nav"]}>
+                <Back url="/repertoire" />
+                <GoToPuzzle />
             </div>
-            <div className={styles["chess-meter"]}>
-                <ScoreMeter />
-                <Chessboard />
-            </div>
-            <div className={styles["right-side"]}>
-                <HolesAnalysis settings={settings} />
-                <MoveHistory mode="regular" />
+            <div className={styles["container"]}>
+                <div className={styles["moves-info"]}>
+                    <StockfishAnalysis />
+                    <MovePopularity
+                        settings={settings}
+                        setSettings={setSettings}
+                    />
+                </div>
+                <div className={styles["chess-meter"]}>
+                    <ScoreMeter />
+                    <Chessboard />
+                </div>
+                <div className={styles["right-side"]}>
+                    <HolesAnalysis settings={settings} />
+                    <MoveHistory mode="regular" />
+                </div>
             </div>
         </div>
     );

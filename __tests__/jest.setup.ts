@@ -1,4 +1,4 @@
-import * as TestingProviders from "./__tests__/test_providers";
+import * as TestingProviders from "./test_providers";
 
 jest.mock("@/lib/context/current-position/PositionContext", () => {
     const originalModule = jest.requireActual(

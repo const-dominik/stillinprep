@@ -8,6 +8,7 @@ import { SpacedPuzzleData } from "@/lib/types/types";
 import Chessboard from "../repertoire/chessboard/Chessboard";
 import MoveHistory from "../repertoire/history/MoveHistory";
 import { MovesTreeNode } from "../utils/MovesTree";
+import { Back } from "../utils/Utils";
 import { createRepertoire, usePuzzleManager } from "./logic";
 import PuzzleInfo from "./PuzzleInfo";
 import PuzzleModeChoice from "./PuzzleModeChoice";
@@ -59,33 +60,37 @@ const PuzzlePage = ({
                     passedRoot={puzzle.root}
                     passedLast={puzzle.startingNode}
                 >
-                    <div className={styles.container}>
-                        <MoveHistory mode="puzzle" />
-                        <Chessboard
-                            mode="puzzle"
-                            puzzleTree={puzzle}
-                            feedbackFunction={handleFeedback}
-                            feedback={feedback}
-                        />
-                        <div className={styles["right-sidebar"]}>
-                            <PuzzleModeChoice
-                                mode={mode}
-                                setMode={setMode}
-                                repertoires={repertoires}
-                                repertoire={repertoire}
-                                setRepertoire={setRepertoire}
-                                spacedPuzzlesAmount={spacedPuzzlesRemaining}
-                            />
-                            <PuzzleInfo
-                                puzzle={puzzle}
+                    <div>
+                        <Back url="/mode" />
+
+                        <div className={styles.container}>
+                            <MoveHistory mode="puzzle" />
+                            <Chessboard
+                                mode="puzzle"
+                                puzzleTree={puzzle}
+                                feedbackFunction={handleFeedback}
                                 feedback={feedback}
-                                autoSkip={autoSkip}
-                                setAutoSkip={setAutoSkip}
-                                nextPuzzle={nextPuzzle}
-                                waiting={loading}
-                                puzzlesNotLoaded={puzzlesNotLoaded}
-                                repertoireLoading={loading}
                             />
+                            <div className={styles["right-sidebar"]}>
+                                <PuzzleModeChoice
+                                    mode={mode}
+                                    setMode={setMode}
+                                    repertoires={repertoires}
+                                    repertoire={repertoire}
+                                    setRepertoire={setRepertoire}
+                                    spacedPuzzlesAmount={spacedPuzzlesRemaining}
+                                />
+                                <PuzzleInfo
+                                    puzzle={puzzle}
+                                    feedback={feedback}
+                                    autoSkip={autoSkip}
+                                    setAutoSkip={setAutoSkip}
+                                    nextPuzzle={nextPuzzle}
+                                    waiting={loading}
+                                    puzzlesNotLoaded={puzzlesNotLoaded}
+                                    repertoireLoading={loading}
+                                />
+                            </div>
                         </div>
                     </div>
                 </PositionProvider>

@@ -5,8 +5,10 @@ import { MyOption } from "@/lib/types/types";
 import { capitalize } from "@/lib/utils";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import { type FieldError, type UseFormRegisterReturn } from "react-hook-form";
+import { IoChevronBackOutline, IoExtensionPuzzle } from "react-icons/io5";
 import Select, { type StylesConfig } from "react-select";
 import styles from "./Utils.module.scss";
 
@@ -176,5 +178,30 @@ export const SelectRepertoire = ({
                 null
             }
         />
+    );
+};
+
+export const Back = ({ url }: { url: string }) => {
+    const router = useRouter();
+
+    return (
+        <div
+            className={styles["icon-wrapper"]}
+            onClick={() => router.push(url)}
+        >
+            <IoChevronBackOutline fontSize="2rem" />
+        </div>
+    );
+};
+
+export const GoToPuzzle = () => {
+    const router = useRouter();
+    return (
+        <div
+            className={styles["icon-wrapper"]}
+            onClick={() => router.push("/puzzles")}
+        >
+            <IoExtensionPuzzle fontSize="2rem" />
+        </div>
     );
 };
