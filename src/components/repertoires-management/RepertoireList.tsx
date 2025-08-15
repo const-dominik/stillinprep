@@ -17,7 +17,7 @@ const RepertoireList = ({
         <ConfirmProvider>
             <div>
                 <div className={styles["nav"]}>
-                    <Back url="/" />
+                    <Back url="/mode" />
                     <GoToPuzzle />
                 </div>{" "}
                 <div className={styles["window-container"]}>
