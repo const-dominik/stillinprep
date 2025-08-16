@@ -37,6 +37,7 @@ export const createPuzzlesFromTree = (
 
         for (const leaf of leaves) {
             if (!leaf || leaf.isClaimed()) continue;
+            if (leaf === leaf.parent) continue;
 
             const movesUp = getMovesUp();
             const startingNode = goUpMoves(leaf, movesUp);
@@ -109,7 +110,11 @@ const goUpMoves = (node: MovesTreeNode, moves: number) => {
     let current = node;
 
     for (let i = 0; i < moves; i++) {
-        if (current.parent === current.parent.parent && current !== node)
+        if (
+            i % 2 === 1 &&
+            (current.parent === current.parent.parent ||
+                current.parent.parent === current.parent.parent.parent)
+        )
             return current;
         current = current.parent;
     }

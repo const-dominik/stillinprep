@@ -64,7 +64,6 @@ export const parseStockfishResponse = (line: string, board: Chessboard) => {
         to,
         nextBoard
     );
-    console.log(node.getAlgebraicNotation());
     return node.getAlgebraicNotation();
 };
 
