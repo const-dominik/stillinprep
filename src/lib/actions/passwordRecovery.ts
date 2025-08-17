@@ -101,7 +101,7 @@ export const resetPassword = async (
             "Password reset request"
         );
 
-        if (!isEmail) {
+        if (!isIdentifierEmail) {
             return { success: true, message: successes["nickname"] };
         }
 
