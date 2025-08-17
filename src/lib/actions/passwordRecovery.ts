@@ -69,14 +69,25 @@ export const resetPassword = async (
         });
 
         const record = result.records[0];
-        const parsed = NewTokenSchema.safeParse(neoRecordToObj(record));
 
-        if (!record || !parsed.success) {
+        if (!record) {
             if (!isEmail) {
                 return { success: false, error: errors["doesntExist"] };
             }
 
             // Account doesn't exist, but we don't want to doxx if user with email have an account
+            return {
+                success: true,
+                message: successes["email"],
+            };
+        }
+        const parsed = NewTokenSchema.safeParse(neoRecordToObj(record));
+
+        if (!parsed.success) {
+            if (!isEmail) {
+                return { success: false, error: errors["doesntExist"] };
+            }
+
             return {
                 success: true,
                 message: successes["email"],
