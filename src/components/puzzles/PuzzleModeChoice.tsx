@@ -47,6 +47,7 @@ const PuzzleModeChoice = ({
                             repertoires={repertoires}
                             setRepertoire={setRepertoire}
                             chosenRepertoire={repertoire}
+                            isSearchable={true}
                         />
                     )}
                 </div>
