@@ -43,6 +43,7 @@ export const resetPassword = async (
     const token = v4();
 
     const isIdentifierEmail = isEmail(identifier);
+    console.log(isIdentifierEmail);
     const loginProperty = isIdentifierEmail ? "email" : "nickname";
     const expiration = new Date(Date.now() + 30 * 60 * 1000).toISOString();
 
@@ -71,7 +72,7 @@ export const resetPassword = async (
         const record = result.records[0];
 
         if (!record) {
-            if (!isEmail) {
+            if (!isIdentifierEmail) {
                 return { success: false, error: errors["doesntExist"] };
             }
 
@@ -84,7 +85,7 @@ export const resetPassword = async (
         const parsed = NewTokenSchema.safeParse(neoRecordToObj(record));
 
         if (!parsed.success) {
-            if (!isEmail) {
+            if (!isIdentifierEmail) {
                 return { success: false, error: errors["doesntExist"] };
             }
 
