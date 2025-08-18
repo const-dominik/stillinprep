@@ -18,9 +18,11 @@ import customStyles from "./styles/RepertoireEditMode.module.scss";
 const RepertoireEditMode = ({
     editedSettingsData,
     setEditedSettingsId,
+    setRemovedRepertoires,
 }: {
     editedSettingsData: Repertoire;
     setEditedSettingsId: Dispatch<SetStateAction<string>>;
+    setRemovedRepertoires: Dispatch<SetStateAction<string[]>>;
 }) => {
     const { id, name, visibility, hasAccess, color } = editedSettingsData;
     const router = useRouter();
@@ -84,6 +86,7 @@ const RepertoireEditMode = ({
                 <RemoveButton
                     id={id}
                     setEditedSettingsId={setEditedSettingsId}
+                    setRemovedRepertoires={setRemovedRepertoires}
                 />
                 <div className={styles.formConfirmation}>
                     <div

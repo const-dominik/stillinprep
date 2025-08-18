@@ -15,7 +15,7 @@ jest.mock("next/navigation", () => ({
 describe("OwnedList", () => {
     it("renders info if no repertoires passed", () => {
         render(<OwnedList ownedRepertoires={[]} />);
-        const info = screen.getByText("You don't have any repertoires.");
+        const info = screen.getByText("Create your first repertoire above.");
         expect(info).toBeVisible();
     });
     it("doesn't render search if no repertoires passed", () => {
@@ -31,6 +31,7 @@ describe("OwnedList", () => {
                 visibility: "private",
                 hasAccess: [],
                 source: "owned",
+                color: "white",
             },
             {
                 id: "2",
@@ -38,6 +39,7 @@ describe("OwnedList", () => {
                 visibility: "private",
                 hasAccess: [],
                 source: "owned",
+                color: "white",
             },
         ];
         render(<OwnedList ownedRepertoires={repertoireList} />);
@@ -54,6 +56,7 @@ describe("OwnedList", () => {
                 visibility: "private",
                 hasAccess: [],
                 source: "owned",
+                color: "white",
             },
             {
                 id: "2",
@@ -61,6 +64,7 @@ describe("OwnedList", () => {
                 visibility: "private",
                 hasAccess: [],
                 source: "owned",
+                color: "white",
             },
         ];
         render(<OwnedList ownedRepertoires={repertoireList} />);

@@ -121,3 +121,8 @@
     all: unset;
     cursor: pointer;
 }
+
+.title {
+    color: v.$palette-2;
+    margin-bottom: 0.3rem;
+}

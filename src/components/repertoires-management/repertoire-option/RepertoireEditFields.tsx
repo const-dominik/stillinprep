@@ -6,7 +6,6 @@ import {
 import { deleteRepertoire } from "@/lib/actions/repertoire";
 import { useConfirm } from "@/lib/context/confirm/ConfirmContext";
 import { GivenAccess, MyOption, RepertoireEditData } from "@/lib/types/types";
-import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
     type Control,
@@ -280,12 +279,13 @@ export const UseFormSelect = ({
 export const RemoveButton = ({
     id,
     setEditedSettingsId,
+    setRemovedRepertoires,
 }: {
     id: string;
     setEditedSettingsId: Dispatch<SetStateAction<string>>;
+    setRemovedRepertoires: Dispatch<SetStateAction<string[]>>;
 }) => {
     const confirm = useConfirm();
-    const router = useRouter();
 
     const remove = async () => {
         const isSure = await confirm(
@@ -293,10 +293,9 @@ export const RemoveButton = ({
         );
 
         if (isSure) {
+            setRemovedRepertoires((prev) => [...prev, id]);
             setEditedSettingsId("");
             await deleteRepertoire(id);
-
-            router.push("/repertoire");
         }
     };
 

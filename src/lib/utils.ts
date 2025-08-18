@@ -24,6 +24,7 @@ import {
 } from "react-icons/gi";
 import { ImFire } from "react-icons/im";
 import { LuRabbit } from "react-icons/lu";
+import { DbRepertoire } from "./types/backend-types";
 
 export const initialBoard: Chessboard = [
     [
@@ -428,3 +429,13 @@ export const neoRecordToObj = (record: NeoRecord) =>
 
 export const shuffle = <T>(arr: Array<T>) =>
     arr.toSorted(() => Math.random() - 0.5);
+
+export const getBaseDbRepertoire = (
+    color: "white" | "black"
+): DbRepertoire => ({
+    paths: [],
+    timeControls: "rapid,classical",
+    ratings: "1700,1900,2100",
+    depth: "15",
+    color,
+});

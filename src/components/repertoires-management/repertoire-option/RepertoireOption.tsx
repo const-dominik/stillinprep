@@ -15,6 +15,8 @@ const RepertoireOption = ({
 }) => {
     const handleSettingsClick = (e: MouseEvent) => {
         e.stopPropagation();
+        e.preventDefault();
+
         setEditedSettingsId(id);
     };
 

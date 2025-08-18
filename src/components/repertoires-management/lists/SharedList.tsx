@@ -20,7 +20,7 @@ const SharedList = ({
     );
 
     return (
-        <WindowElement>
+        <WindowElement title="Repertoires shared with you">
             <GetCreateForm
                 search={search}
                 setSearch={setSearch}
@@ -29,7 +29,7 @@ const SharedList = ({
             />
             {!sharedRepertoires.length && (
                 <p className={styles["no-repertoires"]}>
-                    Nobody shared a repertoire with you. :(
+                    Nobody shared a repertoire with you.
                 </p>
             )}
             {filteredRepertoires.map((repertoire) => (

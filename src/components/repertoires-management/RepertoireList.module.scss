@@ -5,6 +5,7 @@
     justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
+    user-select: none;
 
     @media (width <= 768px) {
         flex-direction: column;

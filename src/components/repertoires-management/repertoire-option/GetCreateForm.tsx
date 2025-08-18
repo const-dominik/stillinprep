@@ -53,13 +53,15 @@ const GetCreateForm = ({
     const router = useRouter();
 
     const addRepertoire = async () => {
-        if (name.trim().length === 0) return;
+        if (name.trim().length === 0 || isCreating) return;
 
         setIsCreating(true);
         const response = await createRepertoire(name, creatingColor);
 
         if (response.success && response.value) {
-            router.push(`/repertoire/${response.value.id}`);
+            router.push(
+                `/repertoire/${response.value.id}?type=new&color=${creatingColor}`
+            );
         }
 
         setIsCreating(false);
@@ -71,7 +73,7 @@ const GetCreateForm = ({
                 <div className={styles["container-form"]}>
                     <input
                         type="text"
-                        placeholder={`New repertoire for ${creatingColor}...`}
+                        placeholder={`Enter name of your new repertoire for ${creatingColor}...`}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && addRepertoire()}
@@ -81,12 +83,14 @@ const GetCreateForm = ({
                         color={creatingColor}
                         onClick={setCreatingColor}
                     />
-                    <div
-                        className={styles["plus"]}
-                        onClick={() => !isCreating && addRepertoire()}
-                    >
-                        +
-                    </div>
+                    {name.trim() && (
+                        <div
+                            className={styles["plus"]}
+                            onClick={() => !isCreating && addRepertoire()}
+                        >
+                            +
+                        </div>
+                    )}
                 </div>
             )}
             {hasRepertoires && (

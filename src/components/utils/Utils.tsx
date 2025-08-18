@@ -13,8 +13,19 @@ import Select, { type StylesConfig } from "react-select";
 import LogoHeader from "../landing/page-sections/header/LogoHeader";
 import styles from "./Utils.module.scss";
 
-export const WindowElement = ({ children }: { children: ReactNode }) => {
-    return <div className={styles.window}>{children}</div>;
+export const WindowElement = ({
+    children,
+    title,
+}: {
+    children: ReactNode;
+    title?: string;
+}) => {
+    return (
+        <div className={styles["flex"]}>
+            <p className={styles["title"]}>{title}</p>
+            <div className={styles.window}>{children}</div>
+        </div>
+    );
 };
 
 export const SingleWindowPage = ({ children }: { children: ReactNode }) => {

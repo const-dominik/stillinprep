@@ -19,7 +19,7 @@ const RepertoireList = ({
                 <div className={styles["nav"]}>
                     <Back url="/mode" />
                     <GoToPuzzle />
-                </div>{" "}
+                </div>
                 <div className={styles["window-container"]}>
                     <PublicList publicRepertoires={allRepertoires["public"]} />
                     <OwnedList ownedRepertoires={allRepertoires["owned"]} />

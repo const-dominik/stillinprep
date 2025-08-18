@@ -15,23 +15,29 @@ const OwnedList = ({
 }) => {
     const [search, setSearch] = useState("");
     const [editedSettingsId, setEditedSettingsId] = useState("");
+    const [removedRepertoires, setRemovedRepertoires] = useState<string[]>([]);
 
-    const filteredRepertoires = ownedRepertoires.filter(({ name }) =>
-        name.toLowerCase().includes(search.toLowerCase())
+    const filteredRepertoires = ownedRepertoires.filter(
+        ({ name, id }) =>
+            name.toLowerCase().includes(search.toLowerCase()) &&
+            !removedRepertoires.includes(id)
     );
+
+    const hasRepertoires =
+        ownedRepertoires.length - removedRepertoires.length > 0;
 
     return (
         <>
             {!editedSettingsId && (
-                <WindowElement>
+                <WindowElement title="Your repertoires">
                     <GetCreateForm
                         search={search}
                         setSearch={setSearch}
-                        hasRepertoires={ownedRepertoires.length > 0}
+                        hasRepertoires={hasRepertoires}
                     />
-                    {!ownedRepertoires.length && (
+                    {!hasRepertoires && (
                         <p className={styles["no-repertoires"]}>
-                            You don&apos;t have any repertoires.
+                            Create your first repertoire above.
                         </p>
                     )}
                     {filteredRepertoires.map(({ id, name }) => (
@@ -52,6 +58,7 @@ const OwnedList = ({
                         )!
                     }
                     setEditedSettingsId={setEditedSettingsId}
+                    setRemovedRepertoires={setRemovedRepertoires}
                 />
             )}
         </>

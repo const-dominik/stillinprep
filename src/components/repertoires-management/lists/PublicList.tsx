@@ -20,7 +20,7 @@ const PublicList = ({
     );
 
     return (
-        <WindowElement>
+        <WindowElement title="Public repertoires">
             <GetCreateForm
                 search={search}
                 setSearch={setSearch}

@@ -15,9 +15,7 @@ jest.mock("next/navigation", () => ({
 describe("SharedList", () => {
     it("renders info if no repertoires passed", () => {
         render(<SharedList sharedRepertoires={[]} />);
-        const info = screen.getByText(
-            "Nobody shared a repertoire with you. :("
-        );
+        const info = screen.getByText("Nobody shared a repertoire with you.");
         expect(info).toBeVisible();
     });
 
@@ -36,14 +34,16 @@ describe("SharedList", () => {
                 source: "shared",
                 accessMode: "edit",
                 owner: { nickname: "Dominik", id: "user-1" },
+                color: "white",
             },
             {
                 id: "2",
                 name: "test2!",
                 visibility: "public",
-                source: "public",
+                source: "shared",
                 accessMode: "readonly",
                 owner: { nickname: "Michał", id: "user-2" },
+                color: "white",
             },
         ];
         render(<SharedList sharedRepertoires={repertoireList} />);
@@ -65,18 +65,19 @@ describe("SharedList", () => {
                 id: "1",
                 name: "Sicilian",
                 visibility: "public",
-                source: "public",
+                source: "shared",
                 accessMode: "edit",
-
+                color: "white",
                 owner: { nickname: "Michał", id: "user-2" },
             },
             {
                 id: "2",
                 name: "French",
                 visibility: "public",
-                source: "public",
+                source: "shared",
                 accessMode: "readonly",
                 owner: { nickname: "Dominik", id: "user-1" },
+                color: "white",
             },
         ];
         render(<SharedList sharedRepertoires={repertoireList} />);
