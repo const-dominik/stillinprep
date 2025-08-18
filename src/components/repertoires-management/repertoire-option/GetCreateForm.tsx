@@ -39,11 +39,13 @@ const GetCreateForm = ({
     setSearch,
     hasRepertoires,
     noAdd,
+    setCreatingRepertoire,
 }: {
     search: string;
     setSearch: Dispatch<SetStateAction<string>>;
     hasRepertoires: boolean;
     noAdd?: boolean;
+    setCreatingRepertoire?: Dispatch<SetStateAction<string>>;
 }) => {
     const [name, setName] = useState("");
     const [isCreating, setIsCreating] = useState(false);
@@ -56,6 +58,7 @@ const GetCreateForm = ({
         if (name.trim().length === 0 || isCreating) return;
 
         setIsCreating(true);
+        setCreatingRepertoire!(name);
         const response = await createRepertoire(name, creatingColor);
 
         if (response.success && response.value) {

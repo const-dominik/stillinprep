@@ -8,25 +8,42 @@ const RepertoireOption = ({
     name,
     id,
     setEditedSettingsId,
+    creatingRepertoire,
 }: {
     name: string;
     id: string;
     setEditedSettingsId: (id: string) => void;
+    creatingRepertoire: string;
 }) => {
     const handleSettingsClick = (e: MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
 
-        setEditedSettingsId(id);
+        if (!creatingRepertoire) {
+            setEditedSettingsId(id);
+        }
     };
+
+    const handleLinkClick = (e: MouseEvent) => {
+        if (creatingRepertoire) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    };
+
+    const classes = [styles["repertoire-element"]];
+    if (creatingRepertoire) {
+        classes.push(styles["cursor-disabled"]);
+    }
 
     return (
         <Link
             href={`/repertoire/${id}`}
             className={styles["link"]}
             prefetch={true}
+            onClick={handleLinkClick}
         >
-            <div className={styles["repertoire-element"]}>
+            <div className={classes.join(" ")}>
                 {name}
                 <div className={styles["repertoire-settings"]}>
                     <CiSettings
@@ -38,5 +55,4 @@ const RepertoireOption = ({
         </Link>
     );
 };
-
 export default RepertoireOption;

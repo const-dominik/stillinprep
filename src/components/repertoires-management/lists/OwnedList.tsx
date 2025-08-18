@@ -3,6 +3,7 @@
 import { WindowElement } from "@/components/utils/Utils";
 import { DbRepertoires } from "@/lib/types/backend-types";
 import { useState } from "react";
+import FakeRepertoireOption from "../repertoire-option/FakeRepertoireOption";
 import GetCreateForm from "../repertoire-option/GetCreateForm";
 import RepertoireEditMode from "../repertoire-option/RepertoireEditMode";
 import RepertoireOption from "../repertoire-option/RepertoireOption";
@@ -16,6 +17,7 @@ const OwnedList = ({
     const [search, setSearch] = useState("");
     const [editedSettingsId, setEditedSettingsId] = useState("");
     const [removedRepertoires, setRemovedRepertoires] = useState<string[]>([]);
+    const [creatingRepertoire, setCreatingRepertoire] = useState("");
 
     const filteredRepertoires = ownedRepertoires.filter(
         ({ name, id }) =>
@@ -34,17 +36,22 @@ const OwnedList = ({
                         search={search}
                         setSearch={setSearch}
                         hasRepertoires={hasRepertoires}
+                        setCreatingRepertoire={setCreatingRepertoire}
                     />
                     {!hasRepertoires && (
                         <p className={styles["no-repertoires"]}>
                             Create your first repertoire above.
                         </p>
                     )}
+                    {creatingRepertoire && (
+                        <FakeRepertoireOption name={creatingRepertoire} />
+                    )}
                     {filteredRepertoires.map(({ id, name }) => (
                         <RepertoireOption
                             id={id}
                             name={name}
                             setEditedSettingsId={setEditedSettingsId}
+                            creatingRepertoire={creatingRepertoire}
                             key={id}
                         />
                     ))}

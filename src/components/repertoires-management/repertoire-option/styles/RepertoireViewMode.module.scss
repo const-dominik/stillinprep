@@ -23,3 +23,27 @@
     all: unset;
     cursor: pointer;
 }
+
+.spinning-icon {
+    position: absolute;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    gap: 5px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.cursor-disabled {
+    cursor: not-allowed !important;
+}
