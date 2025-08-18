@@ -19,7 +19,11 @@ const RepertoireOption = ({
     };
 
     return (
-        <Link href={`/repertoire/${id}`} className={styles["link"]}>
+        <Link
+            href={`/repertoire/${id}`}
+            className={styles["link"]}
+            prefetch={true}
+        >
             <div className={styles["repertoire-element"]}>
                 {name}
                 <div className={styles["repertoire-settings"]}>

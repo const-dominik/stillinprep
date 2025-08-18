@@ -185,7 +185,7 @@ export const SelectRepertoire = ({
 
 export const Back = ({ url }: { url: string }) => {
     return (
-        <Link href={url} className={styles["link"]}>
+        <Link href={url} className={styles["link"]} prefetch={true}>
             <div className={styles["icon-wrapper"]}>
                 <IoChevronBackOutline fontSize="2rem" />
             </div>
@@ -195,7 +195,7 @@ export const Back = ({ url }: { url: string }) => {
 
 export const GoToPuzzle = () => {
     return (
-        <Link href="/puzzles" className={styles["link"]}>
+        <Link href="/puzzles" className={styles["link"]} prefetch={true}>
             <div className={styles["icon-wrapper"]}>
                 <IoExtensionPuzzle fontSize="2rem" />
             </div>

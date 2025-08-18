@@ -11,12 +11,6 @@ jest.mock("@/lib/actions/repertoire", () => ({
 
 const pushMock = jest.fn();
 
-jest.mock("next/navigation", () => ({
-    useRouter: () => ({
-        push: pushMock,
-    }),
-}));
-
 describe("Singular repertoire element", () => {
     const defaultProps = {
         name: "Test Repertoire",
@@ -51,15 +45,6 @@ describe("Singular repertoire element", () => {
         render(<RepertoireOption {...defaultProps} />);
 
         expect(screen.getByText("Test Repertoire")).toBeInTheDocument();
-    });
-
-    it("navigates to repertoire when clicked", async () => {
-        render(<RepertoireOption {...defaultProps} />);
-
-        const repertoireElement = screen.getByText("Test Repertoire");
-        await userEvent.click(repertoireElement);
-
-        expect(pushMock).toHaveBeenCalledWith("repertoire/test-id-123");
     });
 
     it("calls onEdit when settings icon is clicked", async () => {

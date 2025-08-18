@@ -12,10 +12,18 @@ const ModeChoice = async () => {
             <Header study={false} />
 
             <div className={styles["mode-choice"]}>
-                <Link href="/repertoire" className={styles["link"]}>
+                <Link
+                    href="/repertoire"
+                    className={styles["link"]}
+                    prefetch={true}
+                >
                     <Mode iconPath="mode-choice/pawn.svg" name="Repertoires" />
                 </Link>
-                <Link href="/puzzles" className={styles["link"]}>
+                <Link
+                    href="/puzzles"
+                    className={styles["link"]}
+                    prefetch={true}
+                >
                     <Mode
                         iconPath="mode-choice/jigsaw-piece.svg"
                         name="Puzzles"

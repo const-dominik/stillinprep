@@ -15,7 +15,11 @@ const ListElement = ({
 }) => {
     const ownerClass = accessMode ? "list-owner-30" : "list-owner-50";
     return (
-        <Link href={`/repertoire/${id}`} className={styles["link"]}>
+        <Link
+            href={`/repertoire/${id}`}
+            className={styles["link"]}
+            prefetch={true}
+        >
             <div className={styles["list-element"]}>
                 <div className={styles["list-name"]}>{name}</div>
                 <div className={styles[ownerClass]}>{owner}</div>
