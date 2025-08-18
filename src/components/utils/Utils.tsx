@@ -5,7 +5,7 @@ import { MyOption } from "@/lib/types/types";
 import { capitalize } from "@/lib/utils";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import { type FieldError, type UseFormRegisterReturn } from "react-hook-form";
 import { IoChevronBackOutline, IoExtensionPuzzle } from "react-icons/io5";
@@ -184,26 +184,21 @@ export const SelectRepertoire = ({
 };
 
 export const Back = ({ url }: { url: string }) => {
-    const router = useRouter();
-
     return (
-        <div
-            className={styles["icon-wrapper"]}
-            onClick={() => router.push(url)}
-        >
-            <IoChevronBackOutline fontSize="2rem" />
-        </div>
+        <Link href={url} className={styles["link"]}>
+            <div className={styles["icon-wrapper"]}>
+                <IoChevronBackOutline fontSize="2rem" />
+            </div>
+        </Link>
     );
 };
 
 export const GoToPuzzle = () => {
-    const router = useRouter();
     return (
-        <div
-            className={styles["icon-wrapper"]}
-            onClick={() => router.push("/puzzles")}
-        >
-            <IoExtensionPuzzle fontSize="2rem" />
-        </div>
+        <Link href="/puzzles" className={styles["link"]}>
+            <div className={styles["icon-wrapper"]}>
+                <IoExtensionPuzzle fontSize="2rem" />
+            </div>
+        </Link>
     );
 };

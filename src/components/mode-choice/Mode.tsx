@@ -1,21 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import styles from "./styles.module.scss";
 
-const Mode = ({
-    iconPath,
-    name,
-    redirectPath,
-}: {
-    iconPath: string;
-    name: string;
-    redirectPath: string;
-}) => {
-    const router = useRouter();
+const Mode = ({ iconPath, name }: { iconPath: string; name: string }) => {
     return (
-        <div className={styles.mode} onClick={() => router.push(redirectPath)}>
+        <div className={styles.mode}>
             <h2 className={styles["mode-title"]}>{name}</h2>
             <div className={styles["icon"]}>
                 <Image

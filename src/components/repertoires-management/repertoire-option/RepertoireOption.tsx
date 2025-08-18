@@ -1,7 +1,7 @@
-import { useRouter } from "next/navigation";
 import { MouseEvent } from "react";
 import { CiSettings } from "react-icons/ci";
 
+import Link from "next/link";
 import styles from "./styles/RepertoireViewMode.module.scss";
 
 const RepertoireOption = ({
@@ -13,29 +13,23 @@ const RepertoireOption = ({
     id: string;
     setEditedSettingsId: (id: string) => void;
 }) => {
-    const router = useRouter();
     const handleSettingsClick = (e: MouseEvent) => {
         e.stopPropagation();
         setEditedSettingsId(id);
     };
 
-    const handleRepertoireClick = () => {
-        router.push(`repertoire/${id}`);
-    };
-
     return (
-        <div
-            onClick={handleRepertoireClick}
-            className={styles["repertoire-element"]}
-        >
-            {name}
-            <div className={styles["repertoire-settings"]}>
-                <CiSettings
-                    onClick={handleSettingsClick}
-                    data-testid="settings"
-                />
+        <Link href={`/repertoire/${id}`} className={styles["link"]}>
+            <div className={styles["repertoire-element"]}>
+                {name}
+                <div className={styles["repertoire-settings"]}>
+                    <CiSettings
+                        onClick={handleSettingsClick}
+                        data-testid="settings"
+                    />
+                </div>
             </div>
-        </div>
+        </Link>
     );
 };
 
