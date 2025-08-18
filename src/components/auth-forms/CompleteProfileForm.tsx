@@ -80,20 +80,25 @@ const CompleteProfileForm = ({ id }: { id: string }) => {
 
     return (
         <SmallWindowPage>
-            <p className={styles.title}>Complete Profile</p>
-            {error && <p className={styles.error}>{error}</p>}
-            {success && <p className={styles.success}>{success}</p>}
-            {awaiting && <p className={styles.awaiting}>Completing...</p>}
-            <form className={styles.form}>
-                <UseFormInput
-                    label={"Nickname"}
-                    settings={nickInput}
-                    error={errors[nickInput.name]}
-                />
-                <div className={styles.submit} onClick={handleSubmit(onSubmit)}>
-                    COMPLETE
-                </div>
-            </form>
+            <div className={styles["window-content"]}>
+                <p className={styles.title}>Complete Profile</p>
+                {error && <p className={styles.error}>{error}</p>}
+                {success && <p className={styles.success}>{success}</p>}
+                {awaiting && <p className={styles.awaiting}>Completing...</p>}
+                <form className={styles.form}>
+                    <UseFormInput
+                        label={"Nickname"}
+                        settings={nickInput}
+                        error={errors[nickInput.name]}
+                    />
+                    <div
+                        className={styles.submit}
+                        onClick={handleSubmit(onSubmit)}
+                    >
+                        COMPLETE
+                    </div>
+                </form>
+            </div>
         </SmallWindowPage>
     );
 };

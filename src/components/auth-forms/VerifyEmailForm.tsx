@@ -38,25 +38,29 @@ const VerifyEmail = ({ email }: { email: string }) => {
 
     return (
         <SmallWindowPage>
-            <p className={styles.title}>Verification Needed</p>
+            <div className={styles["window-content"]}>
+                <p className={styles.title}>Verification Needed</p>
 
-            <p className={styles.awaiting}>
-                To continue, please verify your email by clicking the link we
-                sent you in an email.
-            </p>
+                <p className={styles.awaiting}>
+                    To continue, please verify your email by clicking the link
+                    we sent you in an email.
+                </p>
 
-            {success && <p className={styles.success}>{success}</p>}
+                {success && <p className={styles.success}>{success}</p>}
 
-            <div
-                className={styles.submit}
-                style={{
-                    cursor: resendCounter > 0 ? "not-allowed" : "pointer",
-                    opacity: resendCounter > 0 ? 0.5 : 1,
-                    userSelect: "none",
-                }}
-                onClick={resendEmail}
-            >
-                {resendCounter > 0 ? `Resend in ${resendCounter}s` : "RESEND"}
+                <div
+                    className={styles.submit}
+                    style={{
+                        cursor: resendCounter > 0 ? "not-allowed" : "pointer",
+                        opacity: resendCounter > 0 ? 0.5 : 1,
+                        userSelect: "none",
+                    }}
+                    onClick={resendEmail}
+                >
+                    {resendCounter > 0
+                        ? `Resend in ${resendCounter}s`
+                        : "RESEND"}
+                </div>
             </div>
         </SmallWindowPage>
     );

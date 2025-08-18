@@ -77,25 +77,31 @@ const NewPassword = ({ token }: { token: string }) => {
 
     return (
         <SingleWindowPage>
-            <p className={styles.title}>Change password</p>
-            {error && <p className={styles.error}>{error}</p>}
-            {success && <p className={styles.success}>{success}</p>}
-            {awaiting && (
-                <p className={styles.awaiting}>Changing password...</p>
-            )}
-            <form className={styles.form}>
-                {Object.entries(inputs).map(([label, inputSettings]) => (
-                    <UseFormInput
-                        label={label}
-                        settings={inputSettings}
-                        error={errors[inputSettings.name]}
-                        key={label}
-                    />
-                ))}
-                <div className={styles.submit} onClick={handleSubmit(onSubmit)}>
-                    SET PASSWORD
-                </div>
-            </form>
+            {" "}
+            <div className={styles["window-content"]}>
+                <p className={styles.title}>Change password</p>
+                {error && <p className={styles.error}>{error}</p>}
+                {success && <p className={styles.success}>{success}</p>}
+                {awaiting && (
+                    <p className={styles.awaiting}>Changing password...</p>
+                )}
+                <form className={styles.form}>
+                    {Object.entries(inputs).map(([label, inputSettings]) => (
+                        <UseFormInput
+                            label={label}
+                            settings={inputSettings}
+                            error={errors[inputSettings.name]}
+                            key={label}
+                        />
+                    ))}
+                    <div
+                        className={styles.submit}
+                        onClick={handleSubmit(onSubmit)}
+                    >
+                        SET PASSWORD
+                    </div>
+                </form>
+            </div>
         </SingleWindowPage>
     );
 };

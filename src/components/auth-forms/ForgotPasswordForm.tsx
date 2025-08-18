@@ -2,6 +2,7 @@
 
 import { resetPassword } from "@/lib/actions/passwordRecovery";
 import styles from "@/styles/formStyling.module.scss";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SmallWindowPage, UseFormInput } from "../utils/Utils";
@@ -56,24 +57,33 @@ const ForgotPassword = () => {
 
     return (
         <SmallWindowPage>
-            <p className={styles.title}>Reset password</p>
-            {error && <p className={styles.error}>{error}</p>}
-            {success && <p className={styles.success}>{success}</p>}
-            {awaiting && (
-                <p className={styles.awaiting}>Sending reset email...</p>
-            )}
-            <form className={styles.form}>
-                <UseFormInput
-                    label="Nickname/Email"
-                    settings={register("identifier", {
-                        required: "Identifier is required!",
-                    })}
-                    error={errors["identifier"]}
-                />
-                <div className={styles.submit} onClick={handleSubmit(onSubmit)}>
-                    RESET
-                </div>
-            </form>
+            <div className={styles["window-content"]}>
+                <p className={styles.title}>Reset password</p>
+                {error && <p className={styles.error}>{error}</p>}
+                {success && <p className={styles.success}>{success}</p>}
+                {awaiting && (
+                    <p className={styles.awaiting}>Sending reset email...</p>
+                )}
+                <form className={styles.form}>
+                    <UseFormInput
+                        label="Nickname/Email"
+                        settings={register("identifier", {
+                            required: "Identifier is required!",
+                        })}
+                        error={errors["identifier"]}
+                    />
+                    <div
+                        className={styles.submit}
+                        onClick={handleSubmit(onSubmit)}
+                    >
+                        RESET
+                    </div>
+                </form>
+
+                <Link href="/login" className={styles["link"]} prefetch={true}>
+                    Remembered your password?
+                </Link>
+            </div>
         </SmallWindowPage>
     );
 };

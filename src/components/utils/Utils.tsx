@@ -10,6 +10,7 @@ import { Dispatch, ReactNode, SetStateAction } from "react";
 import { type FieldError, type UseFormRegisterReturn } from "react-hook-form";
 import { IoChevronBackOutline, IoExtensionPuzzle } from "react-icons/io5";
 import Select, { type StylesConfig } from "react-select";
+import LogoHeader from "../landing/page-sections/header/LogoHeader";
 import styles from "./Utils.module.scss";
 
 export const WindowElement = ({ children }: { children: ReactNode }) => {
@@ -18,16 +19,22 @@ export const WindowElement = ({ children }: { children: ReactNode }) => {
 
 export const SingleWindowPage = ({ children }: { children: ReactNode }) => {
     return (
-        <div className={styles.container}>
-            <WindowElement>{children}</WindowElement>
+        <div>
+            <LogoHeader />
+            <div className={styles.container}>
+                <WindowElement>{children}</WindowElement>
+            </div>
         </div>
     );
 };
 
 export const SmallWindowPage = ({ children }: { children: ReactNode }) => {
     return (
-        <div className={styles.container}>
-            <div className={styles["half-window"]}>{children}</div>
+        <div>
+            <LogoHeader />
+            <div className={styles.container}>
+                <div className={styles["half-window"]}>{children}</div>
+            </div>
         </div>
     );
 };

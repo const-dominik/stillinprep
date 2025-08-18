@@ -6,6 +6,8 @@
 
 .container {
     @extend %page-container;
+
+    height: 80vh;
 }
 
 .window {
