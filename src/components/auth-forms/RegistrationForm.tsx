@@ -119,7 +119,7 @@ const RegistrationForm = () => {
                         REGISTER
                     </div>
                 </form>
-                <Link href="/login" className={styles["link"]}>
+                <Link href="/login" className={styles["link"]} prefetch={true}>
                     Already have an account?
                 </Link>
             </div>

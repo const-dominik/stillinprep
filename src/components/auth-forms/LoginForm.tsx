@@ -113,10 +113,18 @@ const LoginForm = () => {
                     <LoginWith provider={"github"} />
                 </div>
                 <div className={styles["links"]}>
-                    <Link href="/forgot-password" className={styles["link"]}>
+                    <Link
+                        href="/forgot-password"
+                        className={styles["link"]}
+                        prefetch={true}
+                    >
                         Forgot your password?
                     </Link>
-                    <Link href="/register" className={styles["link"]}>
+                    <Link
+                        href="/register"
+                        className={styles["link"]}
+                        prefetch={true}
+                    >
                         Don&apos;t have an account?
                     </Link>
                 </div>
