@@ -18,8 +18,22 @@ import { neoDriver } from "./neo4j";
 const sessionExpiry = 60 * 60 * 24 * 30;
 
 const providers: Provider[] = [
-    Google,
-    Github,
+    Google({
+        profile(profile) {
+            return {
+                id: profile.sub,
+                email: profile.email,
+            };
+        },
+    }),
+    Github({
+        profile(profile) {
+            return {
+                id: profile.id.toString(),
+                email: profile.email! || "",
+            };
+        },
+    }),
     Credentials({
         name: "Credentials",
         credentials: {
@@ -103,23 +117,27 @@ export const authOptions = NextAuth({
 
 export const { handlers, signIn, signOut, auth } = authOptions;
 
-export const protectRoute = async () => {
+export const protectRoute = async (checkLogged: boolean = true) => {
     if (process.env.TEST_ENV) return;
     const session = await auth();
 
-    if (!session?.user) {
-        redirect("/login");
+    if (checkLogged) {
+        if (!session?.user) {
+            redirect("/login");
+        }
     }
 
-    const user = session.user;
+    if (session?.user) {
+        const user = session.user;
 
-    const usedCredentials = !!user.password;
+        const usedCredentials = !!user.password;
 
-    if (usedCredentials && !user.emailVerified) {
-        redirect("register/verify");
-    }
+        if (usedCredentials && !user.emailVerified) {
+            redirect("register/verify");
+        }
 
-    if (!user.nickname) {
-        redirect("register/complete-profile");
+        if (!user.nickname) {
+            redirect("register/complete-profile");
+        }
     }
 };
