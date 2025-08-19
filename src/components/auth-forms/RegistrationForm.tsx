@@ -1,6 +1,10 @@
 "use client";
 
-import { SingleWindowPage, UseFormInput } from "@/components/utils/Utils";
+import {
+    LoginWith,
+    SingleWindowPage,
+    UseFormInput,
+} from "@/components/utils/Utils";
 import { registerUser } from "@/lib/actions/register";
 import { RegistrationData } from "@/lib/types/types";
 import { emailRegex, nicknameRegex } from "@/lib/utils";
@@ -119,6 +123,10 @@ const RegistrationForm = () => {
                         REGISTER
                     </div>
                 </form>
+                <div className={styles["flex"]}>
+                    <LoginWith provider={"google"} type="compact" />
+                    <LoginWith provider={"github"} type="compact" />
+                </div>
                 <Link href="/login" className={styles["link"]} prefetch={true}>
                     Already have an account?
                 </Link>

@@ -113,7 +113,13 @@ export const UseFormInput = ({
     );
 };
 
-export const LoginWith = ({ provider }: { provider: "google" | "github" }) => (
+export const LoginWith = ({
+    provider,
+    type = "regular",
+}: {
+    provider: "google" | "github";
+    type?: "compact" | "regular";
+}) => (
     <div className={styles["login-with"]} onClick={() => signIn(provider)}>
         <Image
             src={`/auth/${provider}.svg`}
@@ -121,9 +127,11 @@ export const LoginWith = ({ provider }: { provider: "google" | "github" }) => (
             width={20}
             height={20}
         />
-        <span className={styles["login-with-text"]}>
-            Continue with {capitalize(provider)}
-        </span>
+        {type === "regular" && (
+            <span className={styles["login-with-text"]}>
+                Continue with {capitalize(provider)}
+            </span>
+        )}
     </div>
 );
 

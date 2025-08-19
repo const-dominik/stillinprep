@@ -6,7 +6,7 @@ import { ServerActionResponse } from "../types/backend-types";
 
 const errors = {
     parsing: "Error parsing data.",
-    taken: "User not found/nickname already set/nickname is taken.",
+    taken: "Nickname is taken.",
     somethingWrong: "Sorry, something went wrong.",
 };
 

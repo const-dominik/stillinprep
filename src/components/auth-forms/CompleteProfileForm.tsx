@@ -3,7 +3,7 @@
 import { completeProfile } from "@/lib/actions/completeProfile";
 import { nicknameRegex } from "@/lib/utils";
 import styles from "@/styles/formStyling.module.scss";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SmallWindowPage, UseFormInput } from "../utils/Utils";
@@ -13,6 +13,7 @@ type CompleteProfileData = {
 };
 
 const CompleteProfileForm = ({ id }: { id: string }) => {
+    const router = useRouter();
     const {
         register,
         formState: { errors },
@@ -39,7 +40,7 @@ const CompleteProfileForm = ({ id }: { id: string }) => {
                 setError(response.error!);
             } else {
                 setSuccess("Completed!");
-                redirect("/");
+                router.push("/");
             }
         },
         [id]
@@ -98,6 +99,7 @@ const CompleteProfileForm = ({ id }: { id: string }) => {
                         COMPLETE
                     </div>
                 </form>
+                <div></div>
             </div>
         </SmallWindowPage>
     );
