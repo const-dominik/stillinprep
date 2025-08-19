@@ -23,11 +23,13 @@ const Chessboard = ({
     feedbackFunction,
     puzzleTree,
     feedback,
+    isPublic,
 }: {
     mode?: "puzzle" | "regular";
     feedbackFunction?: (feedback: PuzzleFeedback, nodeId?: string) => void;
     puzzleTree?: Puzzle;
     feedback?: PuzzleFeedback;
+    isPublic?: boolean;
 }) => {
     const {
         board,
@@ -76,21 +78,30 @@ const Chessboard = ({
             onDragEnd={handleDragEnd}
             collisionDetection={closestCenter}
         >
-            <div className={styles.board}>
-                {board.map((row, rowIndex) => {
-                    const y = color === "black" ? 7 - rowIndex : rowIndex;
-                    return (
-                        <div className={styles.row} key={rowIndex}>
-                            {row.map((_, colIndex) => {
-                                const x =
-                                    color === "black" ? 7 - colIndex : colIndex;
-                                return renderSquare(x, y);
-                            })}
-                        </div>
-                    );
-                })}
+            <div>
+                {isPublic && (
+                    <p className={styles["public-info"]}>
+                        This is a public repertoire. Feel free to explore, but
+                        changes won&apos;t be saved.
+                    </p>
+                )}
+                <div className={styles.board}>
+                    {board.map((row, rowIndex) => {
+                        const y = color === "black" ? 7 - rowIndex : rowIndex;
+                        return (
+                            <div className={styles.row} key={rowIndex}>
+                                {row.map((_, colIndex) => {
+                                    const x =
+                                        color === "black"
+                                            ? 7 - colIndex
+                                            : colIndex;
+                                    return renderSquare(x, y);
+                                })}
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
-
             <DragOverlay
                 adjustScale={false}
                 modifiers={[snapCenterToCursor]}

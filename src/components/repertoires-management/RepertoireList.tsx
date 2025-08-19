@@ -2,7 +2,7 @@
 
 import { ConfirmProvider } from "@/lib/context/confirm/ConfirmContext";
 import { DbRepertoires } from "@/lib/types/backend-types";
-import { User } from "next-auth";
+import { type User } from "next-auth";
 import { Back, GoToPuzzle } from "../utils/Utils";
 import OwnedList from "./lists/OwnedList";
 import PublicList from "./lists/PublicList";
@@ -24,7 +24,10 @@ const RepertoireList = ({
                     <GoToPuzzle />
                 </div>
                 <div className={styles["window-container"]}>
-                    <PublicList publicRepertoires={allRepertoires["public"]} />
+                    <PublicList
+                        publicRepertoires={allRepertoires["public"]}
+                        user={user}
+                    />
                     <OwnedList
                         ownedRepertoires={allRepertoires["owned"]}
                         user={user}

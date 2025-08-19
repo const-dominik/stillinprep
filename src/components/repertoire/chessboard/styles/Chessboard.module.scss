@@ -13,3 +13,8 @@
     height: v.$square-size;
     width: calc(#{v.$square-size} * 8);
 }
+
+.public-info {
+    height: 3vh;
+    margin-top: -3vh;
+}

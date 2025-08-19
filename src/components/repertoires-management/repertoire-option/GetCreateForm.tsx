@@ -58,7 +58,9 @@ const GetCreateForm = ({
         if (name.trim().length === 0 || isCreating) return;
 
         setIsCreating(true);
-        setCreatingRepertoire!(name);
+        if (setCreatingRepertoire) {
+            setCreatingRepertoire(name);
+        }
         const response = await createRepertoire(name, creatingColor);
 
         if (response.success && response.value) {

@@ -5,13 +5,16 @@ import { WindowElement } from "../../utils/Utils";
 import GetCreateForm from "../repertoire-option/GetCreateForm";
 
 import { DbRepertoires } from "@/lib/types/backend-types";
+import { type User } from "next-auth";
 import ListElement from "./ListElement";
 import styles from "./styles.module.scss";
 
 const PublicList = ({
     publicRepertoires,
+    user,
 }: {
     publicRepertoires: DbRepertoires["public"];
+    user: User;
 }) => {
     const [search, setSearch] = useState("");
 
@@ -38,6 +41,9 @@ const PublicList = ({
                     owner={repertoire.owner.nickname}
                     id={repertoire.id}
                     key={repertoire.id}
+                    isPublic={
+                        true && user?.nickname !== repertoire.owner.nickname
+                    }
                 />
             ))}
         </WindowElement>

@@ -10,7 +10,9 @@ const Content = async ({
     searchParams,
 }: {
     params: Promise<{ id: string }>;
-    searchParams: Promise<{ type: "new"; color: "black" | "white" } | null>;
+    searchParams: Promise<
+        { type: "new"; color: "black" | "white" } | { type: "public" } | null
+    >;
 }) => {
     await protectRoute();
 
@@ -34,7 +36,13 @@ const Content = async ({
         repertoireData = response.value;
     }
 
-    return <Repertoire repertoireId={id} repertoireData={repertoireData!} />;
+    return (
+        <Repertoire
+            repertoireId={id}
+            repertoireData={repertoireData!}
+            isPublic={searchParamsValue?.type === "public"}
+        />
+    );
 };
 
 export default Content;

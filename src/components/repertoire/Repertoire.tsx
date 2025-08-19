@@ -23,9 +23,11 @@ import HolesAnalysis from "./analysis/HolesAnalysis";
 const RepertoireWithProviders = ({
     repertoireId,
     repertoireData,
+    isPublic = false,
 }: {
     repertoireId: string;
     repertoireData: DbRepertoire;
+    isPublic?: boolean;
 }) => {
     return (
         <ConfirmProvider>
@@ -35,7 +37,7 @@ const RepertoireWithProviders = ({
             >
                 <PositionProvider>
                     <StockfishProvider>
-                        <Repertoire />
+                        <Repertoire isPublic={isPublic} />
                     </StockfishProvider>
                 </PositionProvider>
             </RepertoireProvider>
@@ -43,7 +45,7 @@ const RepertoireWithProviders = ({
     );
 };
 
-const Repertoire = () => {
+const Repertoire = ({ isPublic }: { isPublic?: boolean }) => {
     const { timeControls, ratings } = useRepertoire();
 
     const [settings, setSettings] = useState<MovePopualritySettings>({
@@ -57,6 +59,7 @@ const Repertoire = () => {
                 <Back url="/repertoire" />
                 <GoToPuzzle />
             </div>
+            {isPublic}
             <div className={styles["container"]}>
                 <div className={styles["moves-info"]}>
                     <StockfishAnalysis />
@@ -67,7 +70,7 @@ const Repertoire = () => {
                 </div>
                 <div className={styles["chess-meter"]}>
                     <ScoreMeter />
-                    <Chessboard />
+                    <Chessboard isPublic={isPublic} />
                 </div>
                 <div className={styles["right-side"]}>
                     <HolesAnalysis settings={settings} />

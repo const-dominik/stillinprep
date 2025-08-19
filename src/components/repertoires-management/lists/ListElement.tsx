@@ -7,16 +7,18 @@ const ListElement = ({
     owner,
     accessMode,
     id,
+    isPublic,
 }: {
     name: string;
     id: string;
     owner: string;
     accessMode?: "readonly" | "edit";
+    isPublic?: boolean;
 }) => {
     const ownerClass = accessMode ? "list-owner-30" : "list-owner-50";
     return (
         <Link
-            href={`/repertoire/${id}`}
+            href={`/repertoire/${id}${isPublic ? "?type=public" : ""}`}
             className={styles["link"]}
             prefetch={true}
         >
