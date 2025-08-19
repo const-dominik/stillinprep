@@ -139,5 +139,7 @@ export const protectRoute = async (checkLogged: boolean = true) => {
         if (!user.nickname) {
             redirect("register/complete-profile");
         }
+
+        return user;
     }
 };

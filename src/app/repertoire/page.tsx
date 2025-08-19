@@ -4,7 +4,7 @@ import { getRepertoires } from "@/lib/actions/repertoire";
 import { protectRoute } from "@/lib/auth";
 
 const Content = async () => {
-    await protectRoute();
+    const user = await protectRoute();
 
     try {
         const response = await getRepertoires();
@@ -13,7 +13,7 @@ const Content = async () => {
             return <SmallInfoPage>Sorry. Something went wrong.</SmallInfoPage>;
         }
 
-        return <RepertoireList allRepertoires={response.value} />;
+        return <RepertoireList allRepertoires={response.value} user={user!} />;
     } catch (e) {
         console.log(e);
         throw new Error(

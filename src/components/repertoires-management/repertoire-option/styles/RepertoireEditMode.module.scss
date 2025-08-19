@@ -42,3 +42,14 @@
     justify-content: center;
     align-items: center;
 }
+
+.error {
+    color: v.$error-red !important;
+    text-align: center;
+    margin: 1rem 2rem;
+}
+
+.awaiting {
+    text-align: center;
+    margin: 1rem 2rem;
+}

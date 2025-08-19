@@ -445,6 +445,28 @@ export const updateRepertoireField = async (
     }
 };
 
+export const checkUserExists = async (
+    nickname: string
+): ServerActionResponse<boolean> => {
+    const session = getNeoSession();
+    try {
+        const result = await session.run(
+            `
+            MATCH (u:User {nickname: $nickname})
+            RETURN u
+            `,
+            { nickname }
+        );
+
+        return {
+            success: true,
+            value: result.records.length > 0,
+        };
+    } finally {
+        await session.close();
+    }
+};
+
 export const changeRepertoireSettings = async (
     data: RepertoireEditData,
     id: string

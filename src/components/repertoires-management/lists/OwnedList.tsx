@@ -2,6 +2,7 @@
 
 import { WindowElement } from "@/components/utils/Utils";
 import { DbRepertoires } from "@/lib/types/backend-types";
+import { User } from "next-auth";
 import { useState } from "react";
 import FakeRepertoireOption from "../repertoire-option/FakeRepertoireOption";
 import GetCreateForm from "../repertoire-option/GetCreateForm";
@@ -11,8 +12,10 @@ import styles from "./styles.module.scss";
 
 const OwnedList = ({
     ownedRepertoires,
+    user,
 }: {
     ownedRepertoires: DbRepertoires["owned"];
+    user: User;
 }) => {
     const [search, setSearch] = useState("");
     const [editedSettingsId, setEditedSettingsId] = useState("");
@@ -66,6 +69,7 @@ const OwnedList = ({
                     }
                     setEditedSettingsId={setEditedSettingsId}
                     setRemovedRepertoires={setRemovedRepertoires}
+                    nickname={user.nickname!}
                 />
             )}
         </>

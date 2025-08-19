@@ -2,6 +2,7 @@
 
 import { ConfirmProvider } from "@/lib/context/confirm/ConfirmContext";
 import { DbRepertoires } from "@/lib/types/backend-types";
+import { User } from "next-auth";
 import { Back, GoToPuzzle } from "../utils/Utils";
 import OwnedList from "./lists/OwnedList";
 import PublicList from "./lists/PublicList";
@@ -10,8 +11,10 @@ import styles from "./RepertoireList.module.scss";
 
 const RepertoireList = ({
     allRepertoires,
+    user,
 }: {
     allRepertoires: DbRepertoires;
+    user: User;
 }) => {
     return (
         <ConfirmProvider>
@@ -22,7 +25,10 @@ const RepertoireList = ({
                 </div>
                 <div className={styles["window-container"]}>
                     <PublicList publicRepertoires={allRepertoires["public"]} />
-                    <OwnedList ownedRepertoires={allRepertoires["owned"]} />
+                    <OwnedList
+                        ownedRepertoires={allRepertoires["owned"]}
+                        user={user}
+                    />
                     <SharedList sharedRepertoires={allRepertoires["shared"]} />
                 </div>
             </div>

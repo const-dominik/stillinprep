@@ -5,7 +5,7 @@ import { changeRepertoireSettings } from "@/lib/actions/repertoire";
 import { Repertoire, RepertoireEditData } from "@/lib/types/types";
 import styles from "@/styles/formStyling.module.scss";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
     RemoveButton,
@@ -19,13 +19,17 @@ const RepertoireEditMode = ({
     editedSettingsData,
     setEditedSettingsId,
     setRemovedRepertoires,
+    nickname,
 }: {
     editedSettingsData: Repertoire;
     setEditedSettingsId: Dispatch<SetStateAction<string>>;
     setRemovedRepertoires: Dispatch<SetStateAction<string[]>>;
+    nickname: string;
 }) => {
     const { id, name, visibility, hasAccess, color } = editedSettingsData;
     const router = useRouter();
+    const [isCheckingUser, setIsCheckingUser] = useState(false);
+    const [userError, setUserError] = useState<string>("");
 
     const {
         register,
@@ -55,7 +59,10 @@ const RepertoireEditMode = ({
     return (
         <WindowElement>
             <p className={styles.title}>Repertoire Settings</p>
-
+            {userError && <p className={styles.error}>{userError}</p>}
+            {isCheckingUser && (
+                <p className={styles.awaiting}>Checking user existance...</p>
+            )}
             <form className={styles.form}>
                 <div className={customStyles["short-field"]}>
                     <UseFormInput
@@ -81,6 +88,9 @@ const RepertoireEditMode = ({
                 <UserAccessFields
                     setValue={setValue}
                     baseAccesses={hasAccess}
+                    setIsCheckingUser={setIsCheckingUser}
+                    setUserError={setUserError}
+                    nickname={nickname}
                 />
 
                 <RemoveButton

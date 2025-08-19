@@ -3,7 +3,7 @@ import {
     getLabelClasses,
     labelToId,
 } from "@/components/utils/Utils";
-import { deleteRepertoire } from "@/lib/actions/repertoire";
+import { checkUserExists, deleteRepertoire } from "@/lib/actions/repertoire";
 import { useConfirm } from "@/lib/context/confirm/ConfirmContext";
 import { GivenAccess, MyOption, RepertoireEditData } from "@/lib/types/types";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -24,9 +24,15 @@ import styles from "./styles/RepertoireEditFields.module.scss";
 export const UserAccessFields = ({
     setValue,
     baseAccesses,
+    setUserError,
+    setIsCheckingUser,
+    nickname,
 }: {
     setValue: UseFormSetValue<RepertoireEditData>;
     baseAccesses: GivenAccess[];
+    setUserError: Dispatch<SetStateAction<string>>;
+    setIsCheckingUser: Dispatch<SetStateAction<boolean>>;
+    nickname: string;
 }) => {
     const [chosenMode, setChosenMode] = useState<"readonly" | "edit">(
         "readonly"
@@ -41,12 +47,45 @@ export const UserAccessFields = ({
     const userExists = (nickname: string) =>
         accesses.some((el) => el.nickname === nickname);
 
-    const addAccess = () => {
-        if (name.length < 3 || userExists(name)) return;
+    const addAccess = async () => {
+        if (name.length < 3) {
+            setUserError("Username must be at least 3 characters");
+            return;
+        }
 
-        setAccesses((prev) => [...prev, { nickname: name, mode: chosenMode }]);
-        setName("");
-        setChosenMode("readonly");
+        if (name === nickname) {
+            setUserError("You can't share your own repertoire with yourself!");
+            return;
+        }
+
+        if (userExists(name)) {
+            setUserError("User already has access");
+            return;
+        }
+
+        setIsCheckingUser(true);
+        setUserError("");
+
+        try {
+            const userExistsInDb = await checkUserExists(name);
+
+            if (userExistsInDb.success && !userExistsInDb.value) {
+                setUserError(`User ${name} doesn't exist!`);
+                return;
+            }
+
+            setAccesses((prev) => [
+                ...prev,
+                { nickname: name, mode: chosenMode },
+            ]);
+            setName("");
+            setChosenMode("readonly");
+            setUserError("");
+        } catch (error) {
+            setUserError("Failed to verify user");
+        } finally {
+            setIsCheckingUser(false);
+        }
     };
 
     const removeAccess = (nickname: string) => {
