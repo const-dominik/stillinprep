@@ -43,7 +43,7 @@ const CompleteProfileForm = ({ id }: { id: string }) => {
                 router.push("/");
             }
         },
-        [id]
+        [id, router]
     );
 
     const nickInput = register("nickname", {

@@ -81,7 +81,7 @@ export const UserAccessFields = ({
             setName("");
             setChosenMode("readonly");
             setUserError("");
-        } catch (error) {
+        } catch {
             setUserError("Failed to verify user");
         } finally {
             setIsCheckingUser(false);

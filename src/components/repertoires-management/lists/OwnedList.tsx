@@ -2,7 +2,7 @@
 
 import { WindowElement } from "@/components/utils/Utils";
 import { DbRepertoires } from "@/lib/types/backend-types";
-import { User } from "next-auth";
+import { type User } from "next-auth";
 import { useState } from "react";
 import FakeRepertoireOption from "../repertoire-option/FakeRepertoireOption";
 import GetCreateForm from "../repertoire-option/GetCreateForm";
