@@ -55,13 +55,14 @@ const GetCreateForm = ({
     const router = useRouter();
 
     const addRepertoire = async () => {
-        if (name.trim().length === 0 || isCreating) return;
+        if (name.trim().length === 0 || isCreating || name.trim().length > 100)
+            return;
 
         setIsCreating(true);
         if (setCreatingRepertoire) {
-            setCreatingRepertoire(name);
+            setCreatingRepertoire(name.trim());
         }
-        const response = await createRepertoire(name, creatingColor);
+        const response = await createRepertoire(name.trim(), creatingColor);
 
         if (response.success && response.value) {
             router.push(
@@ -84,6 +85,7 @@ const GetCreateForm = ({
                         onKeyDown={(e) => e.key === "Enter" && addRepertoire()}
                         className={styles["input"]}
                     />
+
                     <ColorChoice
                         color={creatingColor}
                         onClick={setCreatingColor}
@@ -97,6 +99,11 @@ const GetCreateForm = ({
                         </div>
                     )}
                 </div>
+            )}
+            {setCreatingRepertoire && name.length > 100 && (
+                <p className={styles["error"]}>
+                    Repertoire name can be at most 100 characters long.
+                </p>
             )}
             {hasRepertoires && (
                 <div className={styles["container-form"]}>

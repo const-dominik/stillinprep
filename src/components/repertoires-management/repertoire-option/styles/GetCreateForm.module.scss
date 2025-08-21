@@ -41,6 +41,12 @@
 }
 
 .for-black {
-    // background: v.$palette-2;
     color: black;
+}
+
+.error {
+    color: v.$error-red;
+    border-bottom: 1px solid v.$palette-5;
+    text-align: center;
+    padding: 0.2rem;
 }

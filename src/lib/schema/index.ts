@@ -132,7 +132,7 @@ export const ChangePasswordSArgs = z.object({
 
 // edit repertoire
 export const RepertoireEditDataSchema = z.object({
-    name: z.string().min(1),
+    name: z.string().min(1).max(100),
     visibility: z.enum(["public", "private"]),
     color: z.enum(["white", "black"]),
 

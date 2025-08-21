@@ -69,6 +69,11 @@ const RepertoireEditMode = ({
                         label={"Name"}
                         settings={register("name", {
                             required: "Repertoire need to have a name.",
+                            maxLength: {
+                                value: 100,
+                                message:
+                                    "Repertoire name can be at most 100 characters long.",
+                            },
                         })}
                         error={errors["name"]}
                     />

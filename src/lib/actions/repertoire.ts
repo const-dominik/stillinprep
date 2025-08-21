@@ -329,6 +329,13 @@ export const createRepertoire = async (
         };
     }
 
+    if (name.length > 100) {
+        return {
+            success: false,
+            error: "Name too long.",
+        };
+    }
+
     const userId = authSession.user.id;
     const id = uuid();
 
@@ -348,7 +355,7 @@ export const createRepertoire = async (
             MATCH (u:User { id: $userId })
             CREATE (u)-[:OWNS]->(r)
             RETURN r { .id, .name } AS repertoire`,
-            { id, name: name.trim(), userId, color }
+            { id, name: name, userId, color }
         );
 
         const repertoire = result.records[0].get("repertoire");
