@@ -16,6 +16,7 @@ import {
 } from "@/lib/types/types";
 import { FENToChessboard } from "@/lib/utils";
 import { ElementHandle, expect, Page } from "@playwright/test";
+import { type User } from "next-auth";
 import { ReactNode } from "react";
 import { MockPositionProvider, MockStockfishProvider } from "./test_providers";
 
@@ -381,3 +382,8 @@ export const getMockedStockfishAPI = (): StockfishAPI => ({
 });
 
 export const authenticate = () => {};
+
+export const user: User = {
+    email: "est@mail.com",
+    id: "",
+};

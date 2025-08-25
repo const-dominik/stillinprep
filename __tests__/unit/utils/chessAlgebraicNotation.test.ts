@@ -137,6 +137,4 @@ describe("chessAlgebraicNotation", () => {
 
         expect(complicatedMove.getAlgebraicNotation()).toEqual("fxg8=Q#");
     });
-
-    it.todo("detects castle");
 });

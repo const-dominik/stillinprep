@@ -17,7 +17,7 @@ describe("Move component", () => {
         const [e4] = create_e4_e5_Nf3();
         render(
             <TestProviders current={e4}>
-                <Move move={e4} setLine={jest.fn} />,
+                <Move move={e4} setLine={jest.fn} isAnalysisNode={false} />,
             </TestProviders>
         );
 
@@ -28,7 +28,7 @@ describe("Move component", () => {
         const [e4] = create_e4_e5_Nf3();
         render(
             <TestProviders current={e4}>
-                <Move move={e4} setLine={jest.fn} />,
+                <Move move={e4} setLine={jest.fn} isAnalysisNode={false} />,
             </TestProviders>
         );
         const moveElement = screen.getByText(e4.getAlgebraicNotation());
@@ -41,7 +41,7 @@ describe("Move component", () => {
         const [e4] = create_e4_e5_Nf3();
         render(
             <TestProviders current={e4} mockSetRoot={setCurrentNode}>
-                <Move move={e4} setLine={jest.fn} />,
+                <Move move={e4} setLine={jest.fn} isAnalysisNode={false} />,
             </TestProviders>
         );
 
@@ -56,7 +56,7 @@ describe("Move component", () => {
 
         render(
             <TestProviders current={e4}>
-                <Move move={e4} setLine={jest.fn} />,
+                <Move move={e4} setLine={jest.fn} isAnalysisNode={false} />,
             </TestProviders>
         );
 
@@ -82,7 +82,7 @@ describe("Move component", () => {
                 mockSetLast={setLastNode}
                 mockSetRoot={setCurrentNode}
             >
-                <Move move={e5} setLine={setLine} />,
+                <Move move={e5} setLine={setLine} isAnalysisNode={false} />,
             </TestProviders>
         );
 

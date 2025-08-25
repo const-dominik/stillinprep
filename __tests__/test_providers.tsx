@@ -34,6 +34,9 @@ export const MockPositionProvider = ({
                 setCurrentNode: setCurrent,
                 lastNode,
                 setLastNode: setLast,
+                root: currentNode,
+                setAnalysisNode: setCurrent,
+                analysisNode: currentNode,
             }}
         >
             {children}

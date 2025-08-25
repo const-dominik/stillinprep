@@ -1,7 +1,7 @@
 "use client";
 
+import styles from "@/components/utils/styles/formStyling.module.scss";
 import { emailRegex, nicknameRegex } from "@/lib/utils";
-import styles from "@/styles/formStyling.module.scss";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { redirect, useSearchParams } from "next/navigation";

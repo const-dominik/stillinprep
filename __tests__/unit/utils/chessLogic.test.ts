@@ -140,14 +140,5 @@ describe("chessLogic", () => {
                 );
             });
         });
-        // describe("gets corect moves for pined pieces", () => {
-        //     it("Wade game: 1.e4 d6 2.Sf3 Gg4", () => {
-        //         console.log(notationToChessTree("1.e4 d6 2.Nf3 Bg4"));
-        //         expect(2).toEqual(2);
-        //     });
-        // });
     });
-
-    it.todo("detects mate");
-    it.todo("checks move legality");
 });

@@ -1,7 +1,7 @@
 "use client";
 
+import styles from "@/components/utils/styles/formStyling.module.scss";
 import { resetPassword } from "@/lib/actions/passwordRecovery";
-import styles from "@/styles/formStyling.module.scss";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

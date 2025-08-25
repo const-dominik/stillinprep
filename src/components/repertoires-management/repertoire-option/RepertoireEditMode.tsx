@@ -1,9 +1,9 @@
 "use client";
 
+import styles from "@/components/utils/styles/formStyling.module.scss";
 import { UseFormInput, WindowElement } from "@/components/utils/Utils";
 import { changeRepertoireSettings } from "@/lib/actions/repertoire";
 import { Repertoire, RepertoireEditData } from "@/lib/types/types";
-import styles from "@/styles/formStyling.module.scss";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";

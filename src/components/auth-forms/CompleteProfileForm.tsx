@@ -1,8 +1,8 @@
 "use client";
 
+import styles from "@/components/utils/styles/formStyling.module.scss";
 import { completeProfile } from "@/lib/actions/completeProfile";
 import { nicknameRegex } from "@/lib/utils";
-import styles from "@/styles/formStyling.module.scss";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

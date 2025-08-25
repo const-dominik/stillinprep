@@ -1,3 +1,4 @@
+import { user } from "@/../__tests__/testing_utils";
 import OwnedList from "@/components/repertoires-management/lists/OwnedList";
 import { DbRepertoires } from "@/lib/types/backend-types";
 import "@testing-library/jest-dom";
@@ -14,12 +15,12 @@ jest.mock("next/navigation", () => ({
 
 describe("OwnedList", () => {
     it("renders info if no repertoires passed", () => {
-        render(<OwnedList ownedRepertoires={[]} />);
+        render(<OwnedList ownedRepertoires={[]} user={user} />);
         const info = screen.getByText("Create your first repertoire above.");
         expect(info).toBeVisible();
     });
     it("doesn't render search if no repertoires passed", () => {
-        render(<OwnedList ownedRepertoires={[]} />);
+        render(<OwnedList ownedRepertoires={[]} user={user} />);
         const search = screen.queryByPlaceholderText("Find repertoire...");
         expect(search).not.toBeInTheDocument();
     });
@@ -42,7 +43,7 @@ describe("OwnedList", () => {
                 color: "white",
             },
         ];
-        render(<OwnedList ownedRepertoires={repertoireList} />);
+        render(<OwnedList ownedRepertoires={repertoireList} user={user} />);
         repertoireList.forEach(({ name }) => {
             const repertoireElement = screen.getByText(name);
             expect(repertoireElement).toBeInTheDocument();
@@ -67,7 +68,7 @@ describe("OwnedList", () => {
                 color: "white",
             },
         ];
-        render(<OwnedList ownedRepertoires={repertoireList} />);
+        render(<OwnedList ownedRepertoires={repertoireList} user={user} />);
         const searchInput = screen.getByPlaceholderText("Find repertoire...");
         expect(searchInput).toBeInTheDocument();
         await userEvent.type(searchInput, "sicilian");

@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "@/components/utils/styles/formStyling.module.scss";
 import {
     LoginWith,
     SingleWindowPage,
@@ -8,7 +9,6 @@ import {
 import { registerUser } from "@/lib/actions/register";
 import { RegistrationData } from "@/lib/types/types";
 import { emailRegex, nicknameRegex } from "@/lib/utils";
-import styles from "@/styles/formStyling.module.scss";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

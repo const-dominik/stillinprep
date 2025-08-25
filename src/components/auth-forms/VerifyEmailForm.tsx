@@ -1,7 +1,7 @@
 "use client";
 
+import styles from "@/components/utils/styles/formStyling.module.scss";
 import { createVerificationToken } from "@/lib/actions/register";
-import styles from "@/styles/formStyling.module.scss";
 import { useEffect, useState } from "react";
 import { SmallWindowPage } from "../utils/Utils";
 

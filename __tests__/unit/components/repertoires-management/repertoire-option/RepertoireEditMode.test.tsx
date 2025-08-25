@@ -33,11 +33,14 @@ describe("RepertoireEditMode", () => {
             { nickname: "user1", mode: "readonly" },
             { nickname: "user2", mode: "edit" },
         ],
+        color: "white",
     };
 
     const defaultProps = {
         editedSettingsData: mockRepertoire,
         setEditedSettingsId: jest.fn(),
+        setRemovedRepertoires: jest.fn(),
+        nickname: "test",
     };
 
     beforeEach(() => {

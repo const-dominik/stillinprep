@@ -75,8 +75,4 @@ describe("MovesTreeNode", () => {
 
         expect(Nf3.getAllMoves()).toEqual([e4, e5, Nf3]);
     });
-
-    it.todo("return castling rights properly");
-    it.todo("detects check");
-    it.todo("detects mate");
 });

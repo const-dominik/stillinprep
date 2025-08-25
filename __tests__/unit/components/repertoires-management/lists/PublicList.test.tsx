@@ -1,3 +1,4 @@
+import { user } from "@/../__tests__/testing_utils";
 import PublicList from "@/components/repertoires-management/lists/PublicList";
 import { DbRepertoires } from "@/lib/types/backend-types";
 import "@testing-library/jest-dom";
@@ -14,13 +15,13 @@ jest.mock("next/navigation", () => ({
 
 describe("PublicList", () => {
     it("renders info if no repertoires passed", () => {
-        render(<PublicList publicRepertoires={[]} />);
+        render(<PublicList publicRepertoires={[]} user={user} />);
         const info = screen.getByText("There are no public repertoires.");
         expect(info).toBeVisible();
     });
 
     it("doesn't render search if no repertoires passed", () => {
-        render(<PublicList publicRepertoires={[]} />);
+        render(<PublicList publicRepertoires={[]} user={user} />);
         const search = screen.queryByPlaceholderText("Find repertoire...");
         expect(search).not.toBeInTheDocument();
     });
@@ -33,6 +34,7 @@ describe("PublicList", () => {
                 visibility: "public",
                 source: "public",
                 owner: { nickname: "Dominik", id: "user-1" },
+                color: "white",
             },
             {
                 id: "2",
@@ -40,9 +42,10 @@ describe("PublicList", () => {
                 visibility: "public",
                 source: "public",
                 owner: { nickname: "Michał", id: "user-2" },
+                color: "white",
             },
         ];
-        render(<PublicList publicRepertoires={repertoireList} />);
+        render(<PublicList publicRepertoires={repertoireList} user={user} />);
 
         repertoireList.forEach(({ name, owner }) => {
             const repertoireElement = screen.getByText(name);
@@ -60,6 +63,7 @@ describe("PublicList", () => {
                 visibility: "public",
                 source: "public",
                 owner: { nickname: "Michał", id: "user-2" },
+                color: "white",
             },
             {
                 id: "2",
@@ -67,9 +71,10 @@ describe("PublicList", () => {
                 visibility: "public",
                 source: "public",
                 owner: { nickname: "Dominik", id: "user-1" },
+                color: "white",
             },
         ];
-        render(<PublicList publicRepertoires={repertoireList} />);
+        render(<PublicList publicRepertoires={repertoireList} user={user} />);
         const searchInput = screen.getByPlaceholderText("Find repertoire...");
         expect(searchInput).toBeInTheDocument();
         await userEvent.type(searchInput, "sicilian");

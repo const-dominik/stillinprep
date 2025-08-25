@@ -16,6 +16,7 @@ describe("Singular repertoire element", () => {
         name: "Test Repertoire",
         id: "test-id-123",
         setEditedSettingsId: jest.fn(),
+        creatingRepertoire: "",
     };
 
     beforeEach(() => {
