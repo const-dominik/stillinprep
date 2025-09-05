@@ -9,7 +9,7 @@ export const validatePassword = (password: string) => {
     if (!/[a-z]/.test(password))
         messages.push("At least one lowercase letter required");
     if (!/\d/.test(password)) messages.push("At least one number required");
-    if (!/[!@#$%^&*]/.test(password))
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(password))
         messages.push("At least one special character required");
     if (messages.length) {
         return messages.join("\n");

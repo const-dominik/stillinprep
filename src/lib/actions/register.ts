@@ -98,7 +98,7 @@ export const verifyEmail = async (
 export const createVerificationToken = async (
     email: string
 ): ServerActionResponse<never> => {
-    const parsedArg = z.email().safeParse({ email });
+    const parsedArg = z.email().safeParse(email);
 
     if (!parsedArg.success) {
         return {
@@ -113,19 +113,19 @@ export const createVerificationToken = async (
     const session = getNeoSession();
 
     const createTokenQuery = `
-        MATCH (u:User { email: $email })
-        CREATE (t:VerificationToken {
-          token: $token,
-          expires: datetime($expires)
+    MATCH (u:User { email: $email })
+    CREATE (t:VerificationToken {
+        token: $token,
+        expires: datetime($expires)
         })
         CREATE (u)-[:HAS_TOKEN]->(t)
         RETURN t
-    `;
+        `;
 
     const deleteTokenQuery = `
         MATCH (u:User { email: $email })-[r:HAS_TOKEN]->(t:VerificationToken)
         DELETE r, t
-    `;
+        `;
 
     try {
         await session.executeWrite(async (tx) => {
@@ -171,7 +171,6 @@ export const registerUser = async (
     const { nickname, password, email } = parsed.data;
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const query = `
         OPTIONAL MATCH (existingUser:User { email: $email })
         WHERE existingUser.emailVerified IS NULL
