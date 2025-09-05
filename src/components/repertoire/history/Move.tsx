@@ -53,7 +53,13 @@ const Move = ({
         } else {
             const leaves = getTreeLeavesHashes(node);
 
-            manageLeaves(repertoireId, leaves, node.parent.getMoveHash());
+            manageLeaves(
+                repertoireId,
+                leaves,
+                node.parent.children.length > 1
+                    ? undefined
+                    : node.parent.getMoveHash()
+            );
         }
     };
 

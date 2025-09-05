@@ -110,12 +110,16 @@ const goUpMoves = (node: MovesTreeNode, moves: number) => {
     let current = node;
 
     for (let i = 0; i < moves; i++) {
-        if (
-            i % 2 === 1 &&
-            (current.parent === current.parent.parent ||
-                current.parent.parent === current.parent.parent.parent)
-        )
-            return current;
+        if (i % 2 === 1) {
+            if (
+                current.parent === current.parent.parent ||
+                current.parent.parent === current.parent.parent.parent
+            )
+                return current;
+
+            if (current.parent.parent.isClaimed()) return current;
+        }
+
         current = current.parent;
     }
 

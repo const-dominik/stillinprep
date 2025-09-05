@@ -56,10 +56,7 @@ const PuzzlePage = ({
                 repertoireId="mock"
                 repertoireData={createRepertoire(puzzle.color)}
             >
-                <PositionProvider
-                    passedRoot={puzzle.root}
-                    passedLast={puzzle.startingNode}
-                >
+                <PositionProvider puzzle={puzzle}>
                     <div>
                         <Back url="/mode" />
 

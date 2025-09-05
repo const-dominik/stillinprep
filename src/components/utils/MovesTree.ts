@@ -13,11 +13,11 @@ import {
 } from "@/lib/types/types";
 import {
     bishopMoves,
-    chessboardToFEN,
     copyBoard,
     getOppositePlayer,
     initialBoard,
     knightMoves,
+    moveToMoveHistory,
     rookMoves,
     xToFile,
     yToRank,
@@ -284,7 +284,7 @@ export class MovesTreeNode {
 
     public getMoveHash(): string {
         if (this.hash === "") {
-            const compositeKey = `${this.moveId}${this.from[0]}${this.from[1]}${this.to[0]}${this.to[1]}${chessboardToFEN(this.board)}`;
+            const compositeKey = moveToMoveHistory(this);
             this.hash = createHash("sha256").update(compositeKey).digest("hex");
         }
 

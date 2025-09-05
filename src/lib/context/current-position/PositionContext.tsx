@@ -2,7 +2,7 @@
 
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { mergePathsIntoTree } from "@/components/utils/parseDbResponse";
-import { PositionContextValue } from "@/lib/types/types";
+import { PositionContextValue, Puzzle } from "@/lib/types/types";
 import {
     createContext,
     ReactNode,
@@ -16,18 +16,17 @@ const PositionContext = createContext<PositionContextValue | null>(null);
 
 export const PositionProvider = ({
     children,
-    passedRoot,
-    passedLast,
+    puzzle,
 }: {
     children: ReactNode;
-    passedRoot?: MovesTreeNode;
-    passedLast?: MovesTreeNode;
+    puzzle?: Puzzle;
 }) => {
     let last: MovesTreeNode;
     let root: MovesTreeNode;
 
     const { paths } = useRepertoire();
-    if (passedLast && passedRoot) {
+    if (puzzle) {
+        const { root: passedRoot, startingNode: passedLast } = puzzle;
         root = passedRoot;
         last = passedLast;
     } else {
@@ -41,19 +40,20 @@ export const PositionProvider = ({
     const [analysisNode, setAnalysisNode] = useState(root);
 
     useEffect(() => {
-        if (passedLast) {
+        if (puzzle) {
+            const { startingNode: passedLast } = puzzle;
             setCurrentNode(passedLast);
             setLastNode(passedLast);
         }
-    }, [passedLast]);
+    }, [puzzle]);
 
     useEffect(() => {
-        if (!passedRoot && !passedLast) {
+        if (!puzzle) {
             const [, computedLast] = mergePathsIntoTree(paths);
             setCurrentNode(computedLast);
             setLastNode(computedLast);
         }
-    }, [paths, passedRoot, passedLast]);
+    }, [paths, puzzle]);
 
     return (
         <PositionContext.Provider
