@@ -89,7 +89,9 @@ export const saveSpacedRepetitionData = async (
             else if (repetition === 1) interval = 6;
             else interval = Math.round(interval * EF);
 
-            EF = EF + (0.1 - (5 - g) * (0.08 + (5 - g) * 0.02));
+            EF = Number(
+                (EF + (0.1 - (5 - g) * (0.08 + (5 - g) * 0.02))).toFixed(6)
+            );
             if (EF < 1.3) EF = 1.3;
             repetition++;
         } else {
