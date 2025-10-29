@@ -9,7 +9,7 @@ const Logo = () => {
         <Link href="/" prefetch={true} className={styles["link"]}>
             <div className={styles.logo}>
                 <Image
-                    src="/logo/logo.png"
+                    src="/logo/logo.webp"
                     alt="logo"
                     fill
                     style={{ objectFit: "contain" }}

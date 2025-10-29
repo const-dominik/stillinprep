@@ -7,7 +7,7 @@ const Main = () => {
         <div className={styles.container}>
             <div className={styles.imageWrapper}>
                 <Image
-                    src="/features/main.png"
+                    src="/features/main.webp"
                     width={0}
                     height={0}
                     sizes="100vw"
