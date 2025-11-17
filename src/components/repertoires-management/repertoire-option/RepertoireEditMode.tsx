@@ -68,7 +68,7 @@ const RepertoireEditMode = ({
                     <UseFormInput
                         label={"Name"}
                         settings={register("name", {
-                            required: "Repertoire need to have a name.",
+                            required: "Repertoire needs to have a name.",
                             maxLength: {
                                 value: 100,
                                 message:

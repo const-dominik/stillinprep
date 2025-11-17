@@ -25,7 +25,7 @@ export default defineConfig([globalIgnores(["!**/.*", "**/dist", "**/node_module
     settings: {
         "import/resolver": {
             typescript: true,
-            node: true,
-        },
+                node: true,
+            },
     },
 }]);
