@@ -93,7 +93,7 @@ describe("RepertoireEditMode", () => {
             await userEvent.clear(nameInput);
 
             expect(
-                screen.getByText("Repertoire need to have a name.")
+                screen.getByText("Repertoire needs to have a name.")
             ).toBeInTheDocument();
         });
     });
