@@ -11,7 +11,10 @@ const keepDbAlive = async (request: NextRequest) => {
 
     const result = await sendDatabaseHealthcheck();
 
-    return Response.json({ success: result.success });
+    return new Response(JSON.stringify({ success: result.success }), {
+        status: result.success ? 200 : 500,
+        headers: { "Content-Type": "application/json" },
+    });
 };
 
 export { keepDbAlive as GET };
