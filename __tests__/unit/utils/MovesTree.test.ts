@@ -5,7 +5,7 @@
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { Pieces } from "@/lib/types/types";
 import { copyBoard, FENToChessboard, initialBoard } from "@/lib/utils";
-import { create_e4_e5_Nf3 } from "../../testing_utils";
+import { create_e4_e5_Nf3 } from "../utils";
 
 describe("MovesTreeNode", () => {
     it("initalizes to base values without arguments", () => {

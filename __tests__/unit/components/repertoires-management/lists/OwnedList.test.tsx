@@ -1,9 +1,9 @@
-import { user } from "@/../__tests__/testing_utils";
 import OwnedList from "@/components/repertoires-management/lists/OwnedList";
 import { DbRepertoires } from "@/lib/types/backend-types";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { user } from "../../../utils";
 
 jest.mock("next/navigation", () => ({
     useRouter: () => ({

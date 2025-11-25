@@ -2,11 +2,7 @@
 import StockfishAnalysis from "@/components/repertoire/stockfish/StockfishAnalysis";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import {
-    getMockedStockfishAPI,
-    TestProviders,
-} from "@/../__tests__/testing_utils";
-
+import { getMockedStockfishAPI, TestProviders } from "../../../utils";
 
 jest.mock("@/lib/context/stockfish/StockfishContext", () => {
     return {

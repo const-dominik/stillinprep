@@ -3,10 +3,7 @@
 import ScoreMeter from "@/components/repertoire/scoremeter/ScoreMeter";
 import "@testing-library/jest-dom";
 
-import {
-    getMockedStockfishAPI,
-    TestProviders,
-} from "@/../__tests__/testing_utils";
+import { getMockedStockfishAPI, TestProviders } from "../../../utils";
 
 import { render, screen } from "@testing-library/react";
 

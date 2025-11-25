@@ -4,7 +4,7 @@ import { Repertoire } from "@/lib/types/types";
 import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { TestProviders } from "../../../../testing_utils";
+import { TestProviders } from "../../../utils";
 
 // Mock the dependencies
 jest.mock("@/lib/actions/repertoire");

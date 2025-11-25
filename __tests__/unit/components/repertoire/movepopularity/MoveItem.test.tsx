@@ -1,7 +1,7 @@
 import MoveItem from "@/components/repertoire/movepopularity/MoveItem";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import { TestProviders } from "../../../../testing_utils";
+import { TestProviders } from "../../../utils";
 
 describe("MoveItem", () => {
     const mockMove = {

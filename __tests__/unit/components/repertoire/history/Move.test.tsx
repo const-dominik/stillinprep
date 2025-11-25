@@ -5,8 +5,8 @@
 import Move from "@/components/repertoire/history/Move";
 import "@testing-library/jest-dom";
 
-import { create_e4_e5_Nf3, TestProviders } from "@/../__tests__/testing_utils";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { create_e4_e5_Nf3, TestProviders } from "../../../utils";
 
 jest.mock("@/lib/actions/move", () => ({
     manageLeaves: jest.fn(),

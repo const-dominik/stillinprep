@@ -15,10 +15,9 @@ import {
     StockfishAPI,
 } from "@/lib/types/types";
 import { FENToChessboard } from "@/lib/utils";
-import { ElementHandle, expect, Page } from "@playwright/test";
 import { type User } from "next-auth";
 import { ReactNode } from "react";
-import { MockPositionProvider, MockStockfishProvider } from "./test_providers";
+import { MockPositionProvider, MockStockfishProvider } from "../test_providers";
 
 export const create_e4_e5_Nf3 = () => {
     const root = new MovesTreeNode();
@@ -114,7 +113,7 @@ const enPassantDetection = (
 
 const getSquare = (move: string) => {
     const match = move.match(/([a-h][1-8])$/);
-    if (!match) throw new Error("Shouldn't happend");
+    if (!match) throw new Error("incorrect move");
     const square = match[1];
     const col = square[0].charCodeAt(0) - "a".charCodeAt(0);
     const row = 8 - parseInt(square[1]);
@@ -143,8 +142,6 @@ export const notationToChessTree = (chess_game: string) => {
         .trim()
         .split(/\s+/)
         .filter((move) => move.length > 0);
-
-    console.log(moves);
 
     const moveList: MovesTreeNode[] = [];
     let lastMove = new MovesTreeNode();
@@ -234,7 +231,6 @@ export const notationToChessTree = (chess_game: string) => {
             const piece = getPiece(move, player);
             const to = getSquare(move);
             const squaresToCheck: PiecePosition[] = [];
-            console.log();
 
             for (let y = 0; y < 8; y++) {
                 for (let x = 0; x < 8; x++) {
@@ -254,7 +250,7 @@ export const notationToChessTree = (chess_game: string) => {
                     }
                 }
             }
-            console.log(squaresToCheck);
+
             if (squaresToCheck.length === 1) {
                 const from = squaresToCheck[0];
 
@@ -290,7 +286,6 @@ export const notationToChessTree = (chess_game: string) => {
         }
 
         moveList.push(lastMove);
-        console.log(move);
     });
 };
 
@@ -338,34 +333,6 @@ export const TestProviders = ({
     );
 };
 
-export const getSquareSelector = (position: PiecePosition) =>
-    `div[class*="board"] div:nth-child(${position[0] + 1}) > div:nth-child(${position[1] + 1})`;
-
-export const getSquareBySelector = async (
-    page: Page,
-    position: PiecePosition
-): Promise<{
-    square: ElementHandle<SVGElement | HTMLElement>;
-    selector: string;
-}> => {
-    const selector = getSquareSelector(position);
-    const square = await page.$(selector);
-
-    expect(square).not.toBeNull();
-
-    if (!square) {
-        throw new Error("Square is null.");
-    }
-
-    return { square, selector };
-};
-
-export const getLocatorWithText = (
-    classPart: string,
-    text: string,
-    page: Page
-) => page.locator(`div[class*="${classPart}"] >> text=${text}`);
-
 export const getMockedStockfishAPI = (): StockfishAPI => ({
     setPositionAndGo: jest.fn(),
     setDepth: jest.fn(),
@@ -380,8 +347,6 @@ export const getMockedStockfishAPI = (): StockfishAPI => ({
     ],
     depth: 15,
 });
-
-export const authenticate = () => {};
 
 export const user: User = {
     email: "est@mail.com",

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { getLocatorWithText, getSquareBySelector } from "../testing_utils";
+import { getLocatorWithText, getSquareBySelector } from "./utils";
 
 test("Stockfish", async ({ page }) => {
     test.slow();

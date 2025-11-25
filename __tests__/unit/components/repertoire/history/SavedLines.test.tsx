@@ -1,10 +1,10 @@
-import { create_e4_e5_Nf3, TestProviders } from "@/../__tests__/testing_utils";
 import SavedLines from "@/components/repertoire/history/SavedLines";
 import { Pieces } from "@/lib/types/types";
 import { FENToChessboard } from "@/lib/utils";
 import { fireEvent } from "@testing-library/dom";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
+import { create_e4_e5_Nf3, TestProviders } from "../../../utils";
 
 describe("Saved lines", () => {
     it("doesn't show saved lines when there is none", () => {

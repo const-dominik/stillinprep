@@ -7,7 +7,7 @@ import { MovePopualritySettings } from "@/lib/types/types";
 import "@testing-library/jest-dom";
 
 import { fireEvent, render, screen } from "@testing-library/react";
-import { TestProviders } from "../../../../testing_utils";
+import { TestProviders } from "../../../utils";
 
 jest.mock("@/lib/actions/repertoire", () => ({
     updateRepertoireField: jest.fn(),

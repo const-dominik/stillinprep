@@ -15,7 +15,7 @@ jest.mock("@/components/repertoire/movepopularity/logic", () => ({
 
 // jest.fn();
 import { getPopularMoves } from "@/components/repertoire/movepopularity/logic";
-import { TestProviders } from "@/../__tests__/testing_utils";
+import { TestProviders } from "../../../utils";
 import { MovePopualritySettings } from "@/lib/types/types";
 
 const mockGetPopularMoves = getPopularMoves as jest.Mock;

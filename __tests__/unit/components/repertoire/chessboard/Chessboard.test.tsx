@@ -1,10 +1,11 @@
 import Chessboard from "@/components/repertoire/chessboard/Chessboard";
 import "@testing-library/jest-dom";
 
-import { getSquareSelector, TestProviders } from "@/../__tests__/testing_utils";
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { getSquareSelector } from "../../../../e2e/utils";
+import { TestProviders } from "../../../utils";
 
 jest.mock("@/lib/actions/move");
 

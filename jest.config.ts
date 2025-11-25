@@ -8,7 +8,7 @@ const createJestConfig = nextJest({
 const config: Config = {
     coverageProvider: "v8",
     modulePathIgnorePatterns: [
-        "<rootDir>/__tests__/testing_utils.tsx",
+        "<rootDir>/__tests__/unit/utils.tsx",
         "<rootDir>/__tests__/test_providers.tsx",
         "<rootDir>/__tests__/jest.setup.ts",
         "<rootDir>/__tests__/e2e",
@@ -20,8 +20,10 @@ const config: Config = {
     setupFiles: ["<rootDir>/__tests__/jest.setup.ts"],
 };
 
-export default async () => ({
+const setup = async () => ({
     ...(await createJestConfig(config)()),
     transformIgnorePatterns: ["<rootDir>/node_modules/(?!next-auth)/"],
     testEnvironment: "jest-fixed-jsdom",
 });
+
+export default setup;

@@ -1,8 +1,8 @@
-import { TestProviders } from "@/../__tests__/testing_utils";
 import RepertoireOption from "@/components/repertoires-management/repertoire-option/RepertoireOption";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { TestProviders } from "../../../utils";
 
 jest.mock("@/lib/actions/repertoire", () => ({
     updateRepertoireField: jest.fn(),

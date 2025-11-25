@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { getSquareBySelector } from "../testing_utils";
+import { getSquareBySelector } from "./utils";
 
 test("White promotion to Rook", async ({ page }) => {
     await page.goto("/repertoire/mock-id");

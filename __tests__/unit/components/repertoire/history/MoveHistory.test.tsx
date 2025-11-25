@@ -1,7 +1,7 @@
-import { create_e4_e5_Nf3, TestProviders } from "@/../__tests__/testing_utils";
 import MoveHistory from "@/components/repertoire/history/MoveHistory";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { create_e4_e5_Nf3, TestProviders } from "../../../utils";
 
 describe("Move history", () => {
     it("displays all played moves", () => {

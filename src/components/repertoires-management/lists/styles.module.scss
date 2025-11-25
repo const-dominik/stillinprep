@@ -1,6 +1,6 @@
 @use "sass:color";
 @use "@/styles/variables" as v;
-@use "src/styles/utils" as *;
+@use "@/styles/utils" as *;
 
 .no-repertoires {
     color: v.$palette-4;

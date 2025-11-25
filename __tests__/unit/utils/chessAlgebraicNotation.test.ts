@@ -5,7 +5,7 @@
 import { MovesTreeNode } from "@/components/utils/MovesTree";
 import { Pieces } from "@/lib/types/types";
 import { FENToChessboard } from "@/lib/utils";
-import { create_e4_d5_exd5, create_e4_e5_Nf3 } from "../../testing_utils";
+import { create_e4_d5_exd5, create_e4_e5_Nf3 } from "../utils";
 
 describe("chessAlgebraicNotation", () => {
     it("works for simple moves", () => {

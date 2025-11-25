@@ -8,7 +8,7 @@ import {
     moveToMoveHistory,
     positionToAlgebraicNotation,
 } from "@/lib/utils";
-import { create_e4_d5_exd5 } from "../../testing_utils";
+import { create_e4_d5_exd5 } from "../utils";
 
 describe("Utility functions:", () => {
     it("copyBoard creates deep copy of board", () => {

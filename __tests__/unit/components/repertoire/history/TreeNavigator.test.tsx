@@ -1,7 +1,7 @@
-import { create_e4_e5_Nf3, TestProviders } from "@/../__tests__/testing_utils";
 import TreeNavigator from "@/components/repertoire/history/TreeNavigator";
 import { fireEvent } from "@testing-library/dom";
 import { render, screen } from "@testing-library/react";
+import { create_e4_e5_Nf3, TestProviders } from "../../../utils";
 
 describe("Tree navigator", () => {
     it("changes line on arrow click", () => {
