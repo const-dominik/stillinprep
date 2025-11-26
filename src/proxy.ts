@@ -10,7 +10,7 @@ export default auth((req: NextAuthRequest) => {
 
     const isAuthRoute =
         path === "/login" ||
-        path.startsWith("/register") ||
+        path === "/register" ||
         path.startsWith("/forgot-password");
     const isProtected = path !== "/" && path !== "/privacy";
 
@@ -19,17 +19,16 @@ export default auth((req: NextAuthRequest) => {
     }
 
     if (session) {
-        if (!session.user.nickname) {
-            return NextResponse.redirect(
-                new URL("/register/complete", nextUrl)
-            );
+        if (!session.user.nickname && path !== "/complete-profile") {
+            return NextResponse.redirect(new URL("/complete-profile", nextUrl));
         }
 
         if (
             session.user.provider === "credentials" &&
-            !session.user.isEmailVerified
+            !session.user.isEmailVerified &&
+            path !== "/verify-email"
         ) {
-            return NextResponse.redirect(new URL("/register/verify", nextUrl));
+            return NextResponse.redirect(new URL("/verify-email", nextUrl));
         }
 
         if (isAuthRoute) {
@@ -41,5 +40,7 @@ export default auth((req: NextAuthRequest) => {
 });
 
 export const config = {
-    matcher: ["/((?!api|_next/static|_next/image|favicon.ico|auth).*)"],
+    matcher: [
+        "/((?!api|_next/static|_next/image|favicon.ico|auth|logo|features|pieces|stockfish).*)",
+    ],
 };

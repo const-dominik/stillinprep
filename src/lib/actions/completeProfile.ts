@@ -50,7 +50,7 @@ export const completeProfile = async (
             };
         }
 
-        return { success: true };
+        return { success: true, message: "Completed!" };
     } catch {
         return { success: false, error: errors["somethingWrong"] };
     } finally {

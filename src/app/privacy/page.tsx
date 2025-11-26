@@ -1,4 +1,6 @@
-const PrivacyPolicy = () => {
+"use cache";
+
+const PrivacyPolicy = async () => {
     return (
         <div>
             <pre>

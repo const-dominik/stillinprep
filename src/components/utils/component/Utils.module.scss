@@ -1,0 +1,128 @@
+@use "sass:color";
+@use "@/styles/variables" as v;
+@use "@/styles/utils" as *;
+
+@import "https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap";
+
+.container {
+    @extend %page-container;
+
+    height: 80vh;
+}
+
+.window {
+    @extend %single-window-page;
+}
+
+.window-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    max-height: 100%;
+}
+
+.input-group {
+    @extend %centered-flex;
+
+    position: relative;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 80%;
+    margin: 0.5rem auto;
+}
+
+.input {
+    background: transparent;
+    border: 1px solid v.$palette-4;
+    outline: none;
+    border-radius: 5px;
+    padding: 1rem;
+    width: 100%;
+    font-size: 1rem;
+    color: v.$palette-2;
+
+    &:-webkit-autofill {
+        /* stylelint-disable-next-line property-no-vendor-prefix */
+        -webkit-background-clip: text;
+        /* stylelint-disable-next-line property-no-vendor-prefix */
+        -webkit-text-fill-color: v.$palette-2 !important;
+    }
+}
+
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.input:-webkit-autofill:active {
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+}
+
+.input-error {
+    border: 1px solid v.$error-red !important;
+}
+
+.label-error {
+    color: v.$error-red !important;
+}
+
+.error-message {
+    color: v.$error-red;
+    text-align: left;
+    font-size: 0.8rem;
+    padding: 0.2rem;
+    white-space: pre-line;
+}
+
+.label-on-border {
+    position: absolute;
+    top: -0.6rem;
+    left: 1rem;
+    padding: 0.25rem;
+    background: v.$palette-7;
+    font-size: 0.8rem;
+    color: v.$palette-4;
+    border-radius: 5px;
+}
+
+.login-with {
+    @extend %centered-flex;
+
+    background: v.$palette-8;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 1rem;
+    height: 40px;
+    margin: 0 12px;
+}
+
+.login-with-text {
+    color: #e3e3e3;
+    font-family: Roboto, sans-serif;
+    margin-left: 10px;
+}
+
+.info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.5rem;
+}
+
+.icon-wrapper {
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.link {
+    all: unset;
+    cursor: pointer;
+}
+
+.title {
+    color: v.$palette-2;
+    margin-bottom: 0.3rem;
+}

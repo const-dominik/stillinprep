@@ -3,7 +3,7 @@
 import { ConfirmProvider } from "@/lib/context/confirm/ConfirmContext";
 import { DbRepertoires } from "@/lib/types/backend-types";
 import { type User } from "next-auth";
-import { Back, GoToPuzzle } from "../utils/Utils";
+import { Back, GoToPuzzle } from "../utils/component/Utils";
 import OwnedList from "./lists/OwnedList";
 import PublicList from "./lists/PublicList";
 import SharedList from "./lists/SharedList";
@@ -17,25 +17,25 @@ const RepertoireList = ({
     user: User;
 }) => {
     return (
-        <ConfirmProvider>
-            <div>
-                <div className={styles["nav"]}>
-                    <Back url="/mode" />
-                    <GoToPuzzle />
-                </div>
-                <div className={styles["window-container"]}>
-                    <PublicList
-                        publicRepertoires={allRepertoires["public"]}
-                        user={user}
-                    />
+        <div>
+            <div className={styles["nav"]}>
+                <Back url="/mode" />
+                <GoToPuzzle />
+            </div>
+            <div className={styles["window-container"]}>
+                <PublicList
+                    publicRepertoires={allRepertoires["public"]}
+                    user={user}
+                />
+                <ConfirmProvider>
                     <OwnedList
                         ownedRepertoires={allRepertoires["owned"]}
                         user={user}
                     />
-                    <SharedList sharedRepertoires={allRepertoires["shared"]} />
-                </div>
+                </ConfirmProvider>
+                <SharedList sharedRepertoires={allRepertoires["shared"]} />
             </div>
-        </ConfirmProvider>
+        </div>
     );
 };
 

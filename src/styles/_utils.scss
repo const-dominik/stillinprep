@@ -48,12 +48,14 @@
 }
 
 %single-window-page {
-    width: 90vw;
     max-width: 90vw;
-    height: 80vh;
+    max-height: 80vh;
+    height: auto;
+    width: auto;
     border-radius: 5px;
     background: v.$palette-7;
     overflow-y: auto;
+    padding: 0.5rem 0;
 
     &::-webkit-scrollbar {
         width: 8px;

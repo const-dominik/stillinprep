@@ -1,6 +1,6 @@
 "use client";
 
-import { WindowElement } from "@/components/utils/Utils";
+import { WindowElement } from "@/components/utils/component/ClientOnlyUtils";
 import { DbRepertoires } from "@/lib/types/backend-types";
 import { type User } from "next-auth";
 import { useState } from "react";

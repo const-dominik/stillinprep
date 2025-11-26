@@ -16,7 +16,7 @@ import { StockfishProvider } from "@/lib/context/stockfish/StockfishContext";
 import { DbRepertoire } from "@/lib/types/backend-types";
 import { MovePopualritySettings } from "@/lib/types/types";
 import { useState } from "react";
-import { Back, GoToPuzzle } from "../utils/Utils";
+import { Back, GoToPuzzle } from "../utils/auth";
 import styles from "./Repertoire.module.scss";
 import HolesAnalysis from "./analysis/HolesAnalysis";
 

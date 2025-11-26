@@ -1,5 +1,5 @@
 import Repertoire from "@/components/repertoire/Repertoire";
-import { SmallInfoPage } from "@/components/utils/Utils";
+import { SmallInfoPage } from "@/components/utils/component/ClientOnlyUtils";
 import { getRepertoire } from "@/lib/actions/repertoire";
 import { DbRepertoire } from "@/lib/types/backend-types";
 import { getBaseDbRepertoire } from "@/lib/utils";

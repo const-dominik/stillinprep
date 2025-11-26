@@ -2,13 +2,14 @@ import {
     BadCredentials,
     InvalidCredentials,
     SomethingWentWrong,
-} from "@/components/auth-forms/utils";
+} from "@/components/utils/auth";
 import { Neo4jAdapter } from "@auth/neo4j-adapter";
 import NextAuth from "next-auth";
 import type { Provider } from "next-auth/providers";
 import Credentials from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
+import "server-only";
 import { loginUser } from "./actions/login";
 import { neoDriver } from "./neo4j";
 

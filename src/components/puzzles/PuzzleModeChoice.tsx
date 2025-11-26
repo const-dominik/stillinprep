@@ -1,7 +1,7 @@
 import { DbRepertoires } from "@/lib/types/backend-types";
 import { MyOption, PuzzleMode } from "@/lib/types/types";
 import { Dispatch, SetStateAction } from "react";
-import { SelectRepertoire } from "../utils/Utils";
+import { SelectRepertoire } from "../utils/component/ClientOnlyUtils";
 import styles from "./styles/PuzzleModeChoice.module.scss";
 
 const getClasses = (mode: PuzzleMode, element: PuzzleMode) => {

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import GetCreateForm from "../repertoire-option/GetCreateForm";
 
-import { WindowElement } from "@/components/utils/Utils";
+import { WindowElement } from "@/components/utils/component/ClientOnlyUtils";
 import { DbRepertoires } from "@/lib/types/backend-types";
 import ListElement from "./ListElement";
 import styles from "./styles.module.scss";

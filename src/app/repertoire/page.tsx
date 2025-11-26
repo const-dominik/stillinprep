@@ -1,5 +1,4 @@
 import RepertoireList from "@/components/repertoires-management/RepertoireList";
-import { SmallInfoPage } from "@/components/utils/Utils";
 import { getRepertoires } from "@/lib/actions/repertoire";
 import { auth } from "@/lib/auth";
 
@@ -9,7 +8,8 @@ const Content = async () => {
     const response = await getRepertoires();
 
     if (!response.success || !response.value || !session) {
-        return <SmallInfoPage>Sorry. Something went wrong.</SmallInfoPage>;
+        // todo: Suspened this or do something iwth it
+        return <div>Sorry. Something went wrong.</div>;
     }
 
     return (

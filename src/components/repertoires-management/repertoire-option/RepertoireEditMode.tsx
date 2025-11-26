@@ -1,7 +1,10 @@
 "use client";
 
+import {
+    UseFormInput,
+    WindowElement,
+} from "@/components/utils/component/ClientOnlyUtils";
 import styles from "@/components/utils/styles/formStyling.module.scss";
-import { UseFormInput, WindowElement } from "@/components/utils/Utils";
 import { changeRepertoireSettings } from "@/lib/actions/repertoire";
 import { Repertoire, RepertoireEditData } from "@/lib/types/types";
 import { useRouter } from "next/navigation";

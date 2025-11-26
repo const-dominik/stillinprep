@@ -36,6 +36,7 @@
         "react-hook-form": "^7.59.0",
         "react-icons": "^5.5.0",
         "react-select": "^5.10.2",
+        "server-only": "^0.0.1",
         "stillinprep": "file:",
         "stockfish.wasm": "^0.10.0",
         "ts-jest": "^29.4.0",

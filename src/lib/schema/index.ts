@@ -1,4 +1,4 @@
-import { validatePassword } from "@/components/auth-forms/utils";
+import { validatePassword } from "@/components/utils/auth";
 import { json, z } from "zod/v4";
 import { nicknameRegex } from "../utils";
 

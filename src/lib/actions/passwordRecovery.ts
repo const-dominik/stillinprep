@@ -43,7 +43,6 @@ export const resetPassword = async (
     const token = v4();
 
     const isIdentifierEmail = isEmail(identifier);
-    console.log(isIdentifierEmail);
     const loginProperty = isIdentifierEmail ? "email" : "nickname";
     const expiration = new Date(Date.now() + 30 * 60 * 1000).toISOString();
 
