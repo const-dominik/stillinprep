@@ -184,9 +184,7 @@ export const registerUser = async (
             email: $email,
             password: $password,
             nickname: $nickname,
-            name: null,
             emailVerified: null,
-            image: null
         })
         RETURN u { .id, .nickname, .email } AS user
     `;
