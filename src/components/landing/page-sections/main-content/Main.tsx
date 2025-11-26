@@ -1,8 +1,10 @@
+"use cache";
+
 import Image from "next/image";
 import Feature from "./Feature";
 import styles from "./styles.module.scss";
 
-const Main = () => {
+const Main = async () => {
     return (
         <div className={styles.container}>
             <div className={styles.imageWrapper}>

@@ -9,7 +9,6 @@ import type { Provider } from "next-auth/providers";
 import Credentials from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
-import { redirect } from "next/navigation";
 import { loginUser } from "./actions/login";
 import { neoDriver } from "./neo4j";
 
@@ -134,30 +133,3 @@ export const authOptions = NextAuth({
 });
 
 export const { handlers, signIn, signOut, auth } = authOptions;
-
-export const protectRoute = async (checkLogged: boolean = true) => {
-    if (process.env.TEST_ENV) return;
-    const session = await auth();
-
-    if (checkLogged) {
-        if (!session?.user) {
-            redirect("/login");
-        }
-    }
-
-    if (session?.user) {
-        const user = session.user;
-
-        const usedCredentials = user.provider === "credentials";
-
-        if (usedCredentials && !user.isEmailVerified) {
-            redirect("register/verify");
-        }
-
-        if (!user.nickname) {
-            redirect("register/complete-profile");
-        }
-
-        return user;
-    }
-};
