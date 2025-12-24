@@ -1,4 +1,4 @@
-import GetCreateForm from "@/components/repertoires-management/repertoire-option/GetCreateForm";
+import GetCreateForm from "@/components/repertoires-management/lists/ui/CreateForm";
 import { createRepertoire } from "@/lib/actions/repertoire";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";

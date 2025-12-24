@@ -1,4 +1,4 @@
-import PublicList from "@/components/repertoires-management/lists/PublicList";
+import PublicList from "@/components/repertoires-management/lists/RepertoiresFetcher";
 import { DbRepertoires } from "@/lib/types/backend-types";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";

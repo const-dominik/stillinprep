@@ -2,11 +2,14 @@
 
 import PuzzlePage from "@/components/puzzles/PuzzlePage";
 import { getSpacedRepetitionData } from "@/lib/actions/puzzles";
-import { getGlobalRepertoire, getRepertoires } from "@/lib/actions/repertoire";
+import {
+    getGlobalRepertoire,
+    getOwnedRepertoires,
+} from "@/lib/actions/repertoire";
 
 const Page = async () => {
     const pathsPromise = getGlobalRepertoire();
-    const repertoriesPromise = getRepertoires();
+    const repertoriesPromise = getOwnedRepertoires();
     const spacedDataPromise = getSpacedRepetitionData();
 
     const [paths, repertoires, spacedData] = await Promise.all([
@@ -29,7 +32,7 @@ const Page = async () => {
     return (
         <PuzzlePage
             paths={paths.value}
-            repertoires={repertoires.value["owned"]}
+            repertoires={repertoires.value}
             spacedData={spacedData.value}
         />
     );

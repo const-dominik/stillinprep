@@ -15,29 +15,31 @@ import {
 } from "../schema";
 import {
     DbGlobalRepertoire,
+    DbOwnedRepertoires,
+    DbPublicRepertoires,
     DbRepertoire,
-    DbRepertoires,
+    DbSharedRepertoires,
     ServerActionResponse,
 } from "../types/backend-types";
 import { RepertoireEditData } from "../types/types";
 
-export const getRepertoires = async (): ServerActionResponse<DbRepertoires> => {
-    const authSession = await auth();
+export const getOwnedRepertoires =
+    async (): ServerActionResponse<DbOwnedRepertoires> => {
+        const authSession = await auth();
 
-    if (!authSession?.user) {
-        return {
-            success: false,
-            error: "Unauthorized",
-        };
-    }
+        if (!authSession?.user) {
+            return {
+                success: false,
+                error: "Unauthorized",
+            };
+        }
 
-    const userId = authSession.user.id;
-    const session = getNeoSession();
+        const userId = authSession.user.id;
+        const session = getNeoSession();
 
-    try {
-        const result = await session.run(
-            `
-        CALL {
+        try {
+            const result = await session.run(
+                `
             MATCH (u:User { id: $userId })-[:OWNS]->(r:Repertoire)
             OPTIONAL MATCH (accessUser:User)-[rel:HAS_EDIT_ACCESS|HAS_READONLY_ACCESS]->(r)
             WITH r, COLLECT(
@@ -52,35 +54,111 @@ export const getRepertoires = async (): ServerActionResponse<DbRepertoires> => {
                 END
             ) AS rawAccesses
             WITH r, [x IN rawAccesses WHERE x IS NOT NULL] AS hasAccess
-            RETURN collect(r {
+            RETURN r {
                 .id,
                 .name,
                 .visibility,
                 .color,
                 hasAccess: hasAccess,
                 source: "owned"
-            }) AS owned
+            } AS repertoire
+            `,
+                { userId }
+            );
+
+            const owned = result.records.map((record) =>
+                record.get("repertoire")
+            );
+
+            if (!Array.isArray(owned)) {
+                throw new Error("Not an array!");
+            }
+
+            const ownedRepertoires = owned.map((rep) =>
+                OwnedRepertoireData.parse(rep)
+            );
+
+            return { success: true, value: ownedRepertoires };
+        } catch (err) {
+            console.error("Neo4j error:", err);
+            throw new Error("Failed to fetch owned repertoires");
+        } finally {
+            await session.close();
+        }
+    };
+
+export const getPublicRepertoires =
+    async (): ServerActionResponse<DbPublicRepertoires> => {
+        const authSession = await auth();
+
+        if (!authSession?.user) {
+            return {
+                success: false,
+                error: "Unauthorized",
+            };
         }
 
-        CALL {
+        const session = getNeoSession();
+
+        try {
+            const result = await session.run(
+                `
             MATCH (r:Repertoire)
             WHERE r.visibility = "public"
             OPTIONAL MATCH (owner:User)-[:OWNS]->(r)
-            RETURN collect(r {
+            RETURN r {
                 .id,
                 .name,
                 .visibility,
                 .color,
                 source: "public",
                 owner: owner { .id, .nickname }
-            }) AS public
+            } AS repertoire
+            `
+            );
+
+            const publicReps = result.records.map((record) =>
+                record.get("repertoire")
+            );
+
+            if (!Array.isArray(publicReps)) {
+                throw new Error("Not an array!");
+            }
+
+            const publicRepertoires = publicReps.map((rep) =>
+                PublicRepertoireData.parse(rep)
+            );
+
+            return { success: true, value: publicRepertoires };
+        } catch (err) {
+            console.error("Neo4j error:", err);
+            throw new Error("Failed to fetch public repertoires");
+        } finally {
+            await session.close();
+        }
+    };
+
+export const getSharedRepertoires =
+    async (): ServerActionResponse<DbSharedRepertoires> => {
+        const authSession = await auth();
+
+        if (!authSession?.user) {
+            return {
+                success: false,
+                error: "Unauthorized",
+            };
         }
 
-        CALL {
+        const userId = authSession.user.id;
+        const session = getNeoSession();
+
+        try {
+            const result = await session.run(
+                `
             MATCH (u:User { id: $userId })-[rel:HAS_EDIT_ACCESS|HAS_READONLY_ACCESS]->(r:Repertoire)
             WHERE NOT (u)-[:OWNS]->(r)
             OPTIONAL MATCH (owner:User)-[:OWNS]->(r)
-            RETURN collect(r {
+            RETURN r {
                 .id,
                 .name,
                 .visibility,
@@ -91,53 +169,31 @@ export const getRepertoires = async (): ServerActionResponse<DbRepertoires> => {
                     ELSE "readonly"
                 END,
                 owner: owner { .id, .nickname }
-            }) AS shared
+            } AS repertoire
+            `,
+                { userId }
+            );
+
+            const shared = result.records.map((record) =>
+                record.get("repertoire")
+            );
+
+            if (!Array.isArray(shared)) {
+                throw new Error("Not an array!");
+            }
+
+            const sharedRepertoires = shared.map((rep) =>
+                SharedRepertoireData.parse(rep)
+            );
+
+            return { success: true, value: sharedRepertoires };
+        } catch (err) {
+            console.error("Neo4j error:", err);
+            throw new Error("Failed to fetch shared repertoires");
+        } finally {
+            await session.close();
         }
-
-        RETURN owned, public, shared
-        `,
-            { userId }
-        );
-
-        const record = result.records[0];
-        const owned = record.get("owned") || [];
-        const publicReps = record.get("public") || [];
-        const shared = record.get("shared") || [];
-
-        if (
-            !Array.isArray(owned) ||
-            !Array.isArray(publicReps) ||
-            !Array.isArray(shared)
-        ) {
-            throw new Error("Not an array!");
-        }
-
-        const ownedRepertoires = owned.map((rep) =>
-            OwnedRepertoireData.parse(rep)
-        );
-
-        const publicRepertoires = publicReps.map((rep) =>
-            PublicRepertoireData.parse(rep)
-        );
-
-        const sharedRepertoires = shared.map((rep) =>
-            SharedRepertoireData.parse(rep)
-        );
-
-        const data = {
-            owned: ownedRepertoires,
-            public: publicRepertoires,
-            shared: sharedRepertoires,
-        };
-
-        return { success: true, value: data };
-    } catch (err) {
-        console.error("Neo4j error:", err);
-        throw new Error("Failed to fetch repertoires");
-    } finally {
-        await session.close();
-    }
-};
+    };
 
 export const getGlobalRepertoire =
     async (): ServerActionResponse<DbGlobalRepertoire> => {

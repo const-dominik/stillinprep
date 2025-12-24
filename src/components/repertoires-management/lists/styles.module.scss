@@ -48,3 +48,22 @@
     all: unset;
     cursor: pointer;
 }
+
+.window-container {
+    height: 90vh;
+    width: 100vw;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    user-select: none;
+
+    @media (width <= 768px) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        height: auto;
+        padding: 1rem 0;
+    }
+}

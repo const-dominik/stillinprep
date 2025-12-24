@@ -5,9 +5,9 @@ import styles from "./styles.module.scss";
 const ListElement = ({
     name,
     owner,
-    accessMode,
     id,
-    isPublic,
+    accessMode,
+    isPublic = false,
 }: {
     name: string;
     id: string;

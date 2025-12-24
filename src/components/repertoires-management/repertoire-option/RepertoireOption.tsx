@@ -40,7 +40,6 @@ const RepertoireOption = ({
         <Link
             href={`/repertoire/${id}`}
             className={styles["link"]}
-            prefetch={true}
             onClick={handleLinkClick}
         >
             <div className={classes.join(" ")}>

@@ -1,3 +1,5 @@
+"use client";
+
 import { Dispatch, SetStateAction, useState } from "react";
 
 import { createRepertoire } from "@/lib/actions/repertoire";
@@ -34,17 +36,9 @@ const ColorChoice = ({
     );
 };
 
-const GetCreateForm = ({
-    search,
-    setSearch,
-    hasRepertoires,
-    noAdd,
+const CreateForm = ({
     setCreatingRepertoire,
 }: {
-    search: string;
-    setSearch: Dispatch<SetStateAction<string>>;
-    hasRepertoires: boolean;
-    noAdd?: boolean;
     setCreatingRepertoire?: Dispatch<SetStateAction<string>>;
 }) => {
     const [name, setName] = useState("");
@@ -75,49 +69,34 @@ const GetCreateForm = ({
 
     return (
         <>
-            {!noAdd && (
-                <div className={styles["container-form"]}>
-                    <input
-                        type="text"
-                        placeholder={`Enter name of your new repertoire for ${creatingColor}...`}
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && addRepertoire()}
-                        className={styles["input"]}
-                    />
+            <div className={styles["container-form"]}>
+                <input
+                    type="text"
+                    placeholder={`Enter name of your new repertoire for ${creatingColor}...`}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && addRepertoire()}
+                    className={styles["input"]}
+                />
 
-                    <ColorChoice
-                        color={creatingColor}
-                        onClick={setCreatingColor}
-                    />
-                    {name.trim() && (
-                        <div
-                            className={styles["plus"]}
-                            onClick={() => !isCreating && addRepertoire()}
-                        >
-                            +
-                        </div>
-                    )}
-                </div>
-            )}
+                <ColorChoice color={creatingColor} onClick={setCreatingColor} />
+                {name.trim() && (
+                    <div
+                        className={styles["plus"]}
+                        onClick={() => !isCreating && addRepertoire()}
+                    >
+                        +
+                    </div>
+                )}
+            </div>
+
             {setCreatingRepertoire && name.length > 100 && (
                 <p className={styles["error"]}>
                     Repertoire name can be at most 100 characters long.
                 </p>
             )}
-            {hasRepertoires && (
-                <div className={styles["container-form"]}>
-                    <input
-                        type="text"
-                        placeholder="Find repertoire..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className={styles["input"]}
-                    />
-                </div>
-            )}
         </>
     );
 };
 
-export default GetCreateForm;
+export default CreateForm;

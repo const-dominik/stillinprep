@@ -11,7 +11,29 @@
 }
 
 .window {
-    @extend %single-window-page;
+    width: 90vw;
+    max-width: 90vw;
+    height: 80vh;
+    border-radius: 5px;
+    background: v.$palette-7;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: color.adjust(v.$palette-7, $lightness: -10%)
+        color.adjust(v.$palette-7, $lightness: 5%);
+
+    @media (width >= 768px) {
+        width: 30vw;
+        max-width: none;
+    }
 }
 
 .window-content {

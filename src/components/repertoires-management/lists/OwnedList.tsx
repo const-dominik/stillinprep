@@ -1,14 +1,15 @@
 "use client";
 
-import { WindowElement } from "@/components/utils/component/ClientOnlyUtils";
+import { WindowElement } from "@/components/utils/component/Utils";
 import { DbRepertoires } from "@/lib/types/backend-types";
 import { type User } from "next-auth";
 import { useState } from "react";
 import FakeRepertoireOption from "../repertoire-option/FakeRepertoireOption";
-import GetCreateForm from "../repertoire-option/GetCreateForm";
 import RepertoireEditMode from "../repertoire-option/RepertoireEditMode";
 import RepertoireOption from "../repertoire-option/RepertoireOption";
 import styles from "./styles.module.scss";
+import CreateForm from "./ui/CreateForm";
+import FilterForm from "./ui/FilterForm";
 
 const OwnedList = ({
     ownedRepertoires,
@@ -35,12 +36,8 @@ const OwnedList = ({
         <>
             {!editedSettingsId && (
                 <WindowElement title="Your repertoires">
-                    <GetCreateForm
-                        search={search}
-                        setSearch={setSearch}
-                        hasRepertoires={hasRepertoires}
-                        setCreatingRepertoire={setCreatingRepertoire}
-                    />
+                    <CreateForm setCreatingRepertoire={setCreatingRepertoire} />
+                    <FilterForm search={search} setSearch={setSearch} />
                     {!hasRepertoires && (
                         <p className={styles["no-repertoires"]}>
                             Create your first repertoire above.

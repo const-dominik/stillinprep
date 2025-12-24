@@ -35,6 +35,14 @@ export type ServerActionResponse<T> = Promise<
           value?: T;
       }
 >;
+export type DbOwnedRepertoires = z.infer<typeof OwnedRepertoireData>[];
+export type DbPublicRepertoires = z.infer<typeof PublicRepertoireData>[];
+export type DbSharedRepertoires = z.infer<typeof SharedRepertoireData>[];
+
+export type DbRepertoireList =
+    | DbSharedRepertoires
+    | DbPublicRepertoires
+    | DbOwnedRepertoires;
 
 export type DbRepertoires = {
     owned: z.infer<typeof OwnedRepertoireData>[];
