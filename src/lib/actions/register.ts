@@ -118,8 +118,8 @@ export const createVerificationToken = async (
         token: $token,
         expires: datetime($expires)
         })
-        CREATE (u)-[:HAS_TOKEN]->(t)
-        RETURN t
+    CREATE (u)-[:HAS_TOKEN]->(t)
+    RETURN t
         `;
 
     const deleteTokenQuery = `
@@ -141,7 +141,7 @@ export const createVerificationToken = async (
         const URL = process.env.APP_URL;
         await sendMail(
             email,
-            `Click here to verify your account: ${URL}/register/verify/${token}`,
+            `Click here to verify your account: ${URL}/verify-email/${token}`,
             "Verify your account"
         );
 
@@ -184,9 +184,7 @@ export const registerUser = async (
             email: $email,
             password: $password,
             nickname: $nickname,
-            name: null,
             emailVerified: null,
-            image: null
         })
         RETURN u { .id, .nickname, .email } AS user
     `;

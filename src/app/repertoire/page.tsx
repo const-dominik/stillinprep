@@ -1,25 +1,20 @@
 import RepertoireList from "@/components/repertoires-management/RepertoireList";
-import { SmallInfoPage } from "@/components/utils/Utils";
 import { getRepertoires } from "@/lib/actions/repertoire";
-import { protectRoute } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 
 const Content = async () => {
-    const user = await protectRoute();
+    const session = await auth();
 
-    try {
-        const response = await getRepertoires();
+    const response = await getRepertoires();
 
-        if (!response.success || !response.value) {
-            return <SmallInfoPage>Sorry. Something went wrong.</SmallInfoPage>;
-        }
-
-        return <RepertoireList allRepertoires={response.value} user={user!} />;
-    } catch (e) {
-        console.log(e);
-        throw new Error(
-            "Something wrong with db - no repertoires returned, probably instance paused :("
-        );
+    if (!response.success || !response.value || !session) {
+        // todo: Suspened this or do something iwth it
+        return <div>Sorry. Something went wrong.</div>;
     }
+
+    return (
+        <RepertoireList allRepertoires={response.value} user={session.user} />
+    );
 };
 
 export default Content;

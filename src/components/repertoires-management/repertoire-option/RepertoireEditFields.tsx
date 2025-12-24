@@ -2,7 +2,7 @@ import {
     getInputClasses,
     getLabelClasses,
     labelToId,
-} from "@/components/utils/Utils";
+} from "@/components/utils/component/ClientOnlyUtils";
 import { checkUserExists, deleteRepertoire } from "@/lib/actions/repertoire";
 import { useConfirm } from "@/lib/context/confirm/ConfirmContext";
 import { GivenAccess, MyOption, RepertoireEditData } from "@/lib/types/types";

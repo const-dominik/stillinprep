@@ -7,8 +7,8 @@ import { DbGlobalRepertoire, DbRepertoires } from "@/lib/types/backend-types";
 import { SpacedPuzzleData } from "@/lib/types/types";
 import Chessboard from "../repertoire/chessboard/Chessboard";
 import MoveHistory from "../repertoire/history/MoveHistory";
+import { Back } from "../utils/component/ClientOnlyUtils";
 import { MovesTreeNode } from "../utils/MovesTree";
-import { Back } from "../utils/Utils";
 import { createRepertoire, usePuzzleManager } from "./logic";
 import PuzzleInfo from "./PuzzleInfo";
 import PuzzleModeChoice from "./PuzzleModeChoice";
@@ -58,7 +58,7 @@ const PuzzlePage = ({
             >
                 <PositionProvider puzzle={puzzle}>
                     <div>
-                        <Back url="/mode" />
+                        <Back url="/" />
 
                         <div className={styles.container}>
                             <MoveHistory mode="puzzle" />

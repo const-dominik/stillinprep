@@ -1,4 +1,5 @@
 import { MovesTreeNode } from "@/components/utils/MovesTree";
+import { Path, RegisterOptions } from "react-hook-form";
 import { z } from "zod/v4";
 import {
     LichessMovePopularityResponse,
@@ -260,3 +261,11 @@ export type FeedbackLine = {
     line: string;
     fromNode: MovesTreeNode;
 };
+
+export type FormField<FormData extends object> = {
+    label: string;
+    name: Path<FormData>;
+    options: RegisterOptions<FormData>;
+};
+
+export type FormFields<FormData extends object> = FormField<FormData>[];

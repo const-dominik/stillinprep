@@ -2,20 +2,23 @@ import {
     BadCredentials,
     InvalidCredentials,
     SomethingWentWrong,
-} from "@/components/auth-forms/utils";
+} from "@/components/utils/auth";
 import { Neo4jAdapter } from "@auth/neo4j-adapter";
 import NextAuth from "next-auth";
-import { encode as defaultEncode } from "next-auth/jwt";
 import type { Provider } from "next-auth/providers";
 import Credentials from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
-import { redirect } from "next/navigation";
-import { v4 } from "uuid";
+import "server-only";
 import { loginUser } from "./actions/login";
 import { neoDriver } from "./neo4j";
 
 const sessionExpiry = 60 * 60 * 24 * 30;
+
+const isSupportedProvider = (
+    provider: string
+): provider is "github" | "google" | "credentials" =>
+    ["google", "github", "credentials"].includes(provider);
 
 const providers: Provider[] = [
     Google({
@@ -23,6 +26,8 @@ const providers: Provider[] = [
             return {
                 id: profile.sub,
                 email: profile.email,
+                isEmailVerified: true,
+                provider: "google",
             };
         },
     }),
@@ -30,7 +35,9 @@ const providers: Provider[] = [
         profile(profile) {
             return {
                 id: profile.id.toString(),
-                email: profile.email! || "",
+                email: profile.email!,
+                isEmailVerified: true,
+                provider: "github",
             };
         },
     }),
@@ -69,7 +76,9 @@ const providers: Provider[] = [
                 id: response.value.id,
                 email: response.value.email,
                 nickname: response.value.nickname,
-            };
+                isEmailVerified: !!response.value.emailVerified,
+                provider: "credentials",
+            } as const;
 
             return user;
         },
@@ -80,66 +89,48 @@ export const authOptions = NextAuth({
     providers: providers,
     adapter: Neo4jAdapter(neoDriver),
     session: {
-        strategy: "database",
+        strategy: "jwt",
+        maxAge: sessionExpiry,
     },
     pages: {
         signIn: "/login",
     },
-    // Logic to override default next-auth behaviour,
-    // which prevents storing session for users logged in via Credentials in database
-    jwt: {
-        encode: async (params) => {
-            if (params.token?.credentials) {
-                const sessionToken = v4();
 
-                const adapter = Neo4jAdapter(neoDriver);
-                await adapter.createSession!({
-                    sessionToken,
-                    userId: params.token.sub!,
-                    expires: new Date(Date.now() + sessionExpiry * 1000),
-                });
-
-                return sessionToken;
-            }
-
-            return defaultEncode(params);
-        },
-    },
     callbacks: {
-        async jwt({ token, account }) {
-            if (account?.provider === "credentials") {
-                token.credentials = true;
+        async jwt({ token, user, account, trigger }) {
+            if (user && account) {
+                token.id = user.id;
+                token.email = user.email;
+                token.nickname = user.nickname;
+                token.isEmailVerified = user.isEmailVerified ?? true;
+                if (isSupportedProvider(account.provider)) {
+                    token.provider = account.provider;
+                }
             }
+
+            if (trigger === "update") {
+                const adapter = Neo4jAdapter(neoDriver);
+                const dbUser = await adapter.getUser?.(token.id);
+
+                if (dbUser) {
+                    token.nickname = user.nickname;
+                    token.isEmailVerified = user.isEmailVerified ?? true;
+                }
+            }
+
             return token;
+        },
+        async session({ session, token }) {
+            if (token && session.user) {
+                session.user.id = token.id;
+                session.user.email = token.email;
+                session.user.nickname = token.nickname;
+                session.user.isEmailVerified = token.isEmailVerified;
+                session.user.provider = token.provider;
+            }
+            return session;
         },
     },
 });
 
 export const { handlers, signIn, signOut, auth } = authOptions;
-
-export const protectRoute = async (checkLogged: boolean = true) => {
-    if (process.env.TEST_ENV) return;
-    const session = await auth();
-
-    if (checkLogged) {
-        if (!session?.user) {
-            redirect("/login");
-        }
-    }
-
-    if (session?.user) {
-        const user = session.user;
-
-        const usedCredentials = !!user.password;
-
-        if (usedCredentials && !user.emailVerified) {
-            redirect("register/verify");
-        }
-
-        if (!user.nickname) {
-            redirect("register/complete-profile");
-        }
-
-        return user;
-    }
-};

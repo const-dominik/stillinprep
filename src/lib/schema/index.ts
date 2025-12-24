@@ -1,4 +1,4 @@
-import { validatePassword } from "@/components/auth-forms/utils";
+import { validatePassword } from "@/components/utils/auth";
 import { json, z } from "zod/v4";
 import { nicknameRegex } from "../utils";
 
@@ -114,9 +114,9 @@ export const LoginArgs = z.object({
 export const DbUserSchema = z.object({
     email: z.email(),
     id: z.string(),
-    nickname: z.optional(nicknameSchema).nullable(),
+    nickname: nicknameSchema,
     emailVerified: z.optional(z.looseObject({})).nullable(),
-    password: z.optional(z.string()),
+    password: z.string(),
 });
 
 // passwordRecovery

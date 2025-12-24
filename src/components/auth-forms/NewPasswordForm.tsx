@@ -1,11 +1,9 @@
 "use client";
 
-import styles from "@/components/utils/styles/formStyling.module.scss";
 import { changePassword } from "@/lib/actions/passwordRecovery";
-import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { SingleWindowPage, UseFormInput } from "../utils/Utils";
-import { validatePassword } from "./utils";
+import { FormFields } from "@/lib/types/types";
+import { validatePassword } from "../utils/auth";
+import GenericAuthForm from "../utils/component/GenericAuthForm";
 
 type NewPasswordData = {
     password: string;
@@ -13,96 +11,39 @@ type NewPasswordData = {
 };
 
 const NewPassword = ({ token }: { token: string }) => {
-    const {
-        register,
-        formState: { errors },
-        handleSubmit,
-        watch,
-        reset,
-    } = useForm<NewPasswordData>({
-        mode: "onChange",
-    });
+    const submitAction = async (data: NewPasswordData) =>
+        await changePassword(token, data.password);
 
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
-    const [awaiting, setAwaiting] = useState(false);
-
-    const onSubmit = useCallback(
-        async (data: NewPasswordData) => {
-            setError("");
-            setSuccess("");
-            setAwaiting(true);
-
-            const response = await changePassword(token, data.password);
-
-            setAwaiting(false);
-
-            if (!response.success) {
-                setError(response.error!);
-            } else {
-                setSuccess(response.message!);
-                reset();
-            }
+    const fields: FormFields<NewPasswordData> = [
+        {
+            label: "Password",
+            name: "password",
+            options: {
+                required: "Password is required!",
+                validate: validatePassword,
+            },
         },
-        [reset, token]
-    );
-    const password = watch("password");
-
-    const inputs = {
-        Password: register("password", {
-            required: "Password is required!",
-            validate: validatePassword,
-        }),
-        "Confirm Password": register("confirmPassword", {
-            required: "You need to confirm your password!",
-            validate: (value) => value === password || "Passwords don't match.",
-        }),
-    };
-
-    useEffect(() => {
-        const listener = (e: KeyboardEvent) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-
-                handleSubmit(onSubmit)();
-            }
-        };
-
-        document.addEventListener("keydown", listener);
-
-        return () => {
-            document.removeEventListener("keydown", listener);
-        };
-    }, [handleSubmit, onSubmit]);
+        {
+            label: "Confirm Password",
+            name: "confirmPassword",
+            options: {
+                required: "You need to confirm your password!",
+                validate: (value, formData) =>
+                    value === formData["password"] || "Passwords don't match.",
+            },
+        },
+    ];
 
     return (
-        <SingleWindowPage>
-            {" "}
-            <div className={styles["window-content"]}>
-                <p className={styles.title}>Change password</p>
-                {error && <p className={styles.error}>{error}</p>}
-                {success && <p className={styles.success}>{success}</p>}
-                {awaiting && (
-                    <p className={styles.awaiting}>Changing password...</p>
-                )}
-                <form className={styles.form}>
-                    {Object.entries(inputs).map(([label, inputSettings]) => (
-                        <UseFormInput
-                            label={label}
-                            settings={inputSettings}
-                            error={errors[inputSettings.name]}
-                            key={label}
-                        />
-                    ))}
-                    <div
-                        className={styles.submit}
-                        onClick={handleSubmit(onSubmit)}
-                    >
-                        SET PASSWORD
-                    </div>
-                </form>
-            </div>
-        </SingleWindowPage>
+        <GenericAuthForm<NewPasswordData>
+            mode="onChange"
+            awaitingMessage="Changing password..."
+            submitMessage="SET PASSWORD"
+            fields={fields}
+            submitAction={submitAction}
+            redirectPath="/login"
+            redirectDelay={500}
+        />
     );
 };
 

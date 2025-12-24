@@ -1,7 +1,6 @@
 import Repertoire from "@/components/repertoire/Repertoire";
-import { SmallInfoPage } from "@/components/utils/Utils";
+import { SmallInfoPage } from "@/components/utils/component/ClientOnlyUtils";
 import { getRepertoire } from "@/lib/actions/repertoire";
-import { protectRoute } from "@/lib/auth";
 import { DbRepertoire } from "@/lib/types/backend-types";
 import { getBaseDbRepertoire } from "@/lib/utils";
 
@@ -14,8 +13,6 @@ const Content = async ({
         { type: "new"; color: "black" | "white" } | { type: "public" } | null
     >;
 }) => {
-    await protectRoute();
-
     const { id } = await params;
     const searchParamsValue = await searchParams;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { WindowElement } from "../../utils/Utils";
+import { WindowElement } from "../../utils/component/ClientOnlyUtils";
 import GetCreateForm from "../repertoire-option/GetCreateForm";
 
 import { DbRepertoires } from "@/lib/types/backend-types";

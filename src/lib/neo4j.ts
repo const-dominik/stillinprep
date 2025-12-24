@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import { auth, driver } from "neo4j-driver";
+import "server-only";
 
 const URI = process.env.NEO4J_URI;
 const LOGIN = process.env.NEO4J_USERNAME;

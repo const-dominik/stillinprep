@@ -20,7 +20,6 @@ const ListElement = ({
         <Link
             href={`/repertoire/${id}${isPublic ? "?type=public" : ""}`}
             className={styles["link"]}
-            prefetch={true}
         >
             <div className={styles["list-element"]}>
                 <div className={styles["list-name"]}>{name}</div>

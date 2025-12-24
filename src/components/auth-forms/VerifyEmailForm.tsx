@@ -3,11 +3,12 @@
 import styles from "@/components/utils/styles/formStyling.module.scss";
 import { createVerificationToken } from "@/lib/actions/register";
 import { useEffect, useState } from "react";
-import { SmallWindowPage } from "../utils/Utils";
 
 const VerifyEmail = ({ email }: { email: string }) => {
     const [resendCounter, setResendCounter] = useState(0);
+    const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [awaiting, setAwaiting] = useState(false);
 
     useEffect(() => {
         if (resendCounter === 0) return;
@@ -26,43 +27,46 @@ const VerifyEmail = ({ email }: { email: string }) => {
     }, [resendCounter]);
 
     const resendEmail = async () => {
-        if (resendCounter > 0) return;
+        if (resendCounter > 0 || awaiting) return;
 
+        setAwaiting(true);
         setResendCounter(60);
+
         const response = await createVerificationToken(email);
+
+        setAwaiting(false);
 
         if (response.success) {
             setSuccess("Email sent!");
         }
+
+        if (!response.success) {
+            setError(response.error);
+        }
     };
 
+    const isCountdownActive = resendCounter > 0;
+    const buttonContent = isCountdownActive
+        ? `Resend in ${resendCounter}s`
+        : "RESEND";
+    const classes = [styles.submit];
+
+    if (!isCountdownActive) {
+        classes.push(styles["resend-active"]);
+    } else {
+        classes.push(styles["resend-inactive"]);
+    }
+
     return (
-        <SmallWindowPage>
-            <div className={styles["window-content"]}>
-                <p className={styles.title}>Verification Needed</p>
+        <>
+            {error && <p className={styles.error}>{error}</p>}
+            {success && <p className={styles.success}>{success}</p>}
+            {awaiting && <p className={styles.awaiting}>Sending email...</p>}
 
-                <p className={styles.awaiting}>
-                    To continue, please verify your email by clicking the link
-                    we sent you in an email.
-                </p>
-
-                {success && <p className={styles.success}>{success}</p>}
-
-                <div
-                    className={styles.submit}
-                    style={{
-                        cursor: resendCounter > 0 ? "not-allowed" : "pointer",
-                        opacity: resendCounter > 0 ? 0.5 : 1,
-                        userSelect: "none",
-                    }}
-                    onClick={resendEmail}
-                >
-                    {resendCounter > 0
-                        ? `Resend in ${resendCounter}s`
-                        : "RESEND"}
-                </div>
+            <div className={classes.join(" ")} onClick={resendEmail}>
+                {buttonContent}
             </div>
-        </SmallWindowPage>
+        </>
     );
 };
 
